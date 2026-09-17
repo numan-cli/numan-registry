@@ -249,6 +249,7 @@ class BuildSpecTests(unittest.TestCase):
         cls.mod = load_mod()
 
     def test_module_spec_includes_activation(self):
+        """Archive module specs carry activation and immutable source provenance."""
         spec = self.mod.build_spec(
             owner="someone",
             name="cool-module",
@@ -282,6 +283,7 @@ class BuildSpecTests(unittest.TestCase):
         )
 
     def test_script_spec_omits_activation(self):
+        """Archive script specs have no activation block."""
         spec = self.mod.build_spec(
             owner="someone",
             name="cool-script",

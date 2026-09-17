@@ -197,7 +197,31 @@
               ]
             }
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": { "const": "plugin" }
+              },
+              "required": ["type"]
+            },
+            "then": {
+              "properties": {
+                "versions": {
+                  "items": {
+                    "properties": {
+                      "source": {
+                        "type": "object",
+                        "required": ["git", "rev", "cargo_name"]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
       }
     }
   }

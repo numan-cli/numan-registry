@@ -244,6 +244,12 @@ def build_artifact(spec_artifact):
 
 
 def check_module_import_mode(spec_artifact, activation):
+    """Reject a mod.nu entry that would activate under the wrong module name.
+
+    Numan imports the entry file directly, so a mod.nu with
+    activation.import 'module' would activate as a module literally named
+    'mod' instead of the package name; require 'all' for mod.nu entries.
+    """
     if not activation or activation.get("kind") != "nu-module":
         return
     entry = spec_artifact.get("entry")
@@ -276,6 +282,10 @@ def copy_source_field(spec, version_entry):
     required for plugin-typed specs; optional cargo_lock_sha256/upstream.
     Extracted so unit tests can assert passthrough without downloading
     artifacts.
+
+    Cargo-less non-plugin sources are only publishable once the numan client
+    deserializes `source.cargo_name` as optional (numan-cli/numan#137); the
+    pinned numan-parser-check gate rejects such index entries until then.
     """
     if "source" not in spec:
         return

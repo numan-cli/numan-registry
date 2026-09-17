@@ -98,6 +98,7 @@ class CopySourceFieldTests(unittest.TestCase):
         self.assertNotIn("source", version_entry)
 
     def test_rejects_plugin_source_without_cargo_name(self):
+        """Plugin specs must still carry source.cargo_name."""
         version_entry = {}
         spec = {
             "type": "plugin",
@@ -108,6 +109,7 @@ class CopySourceFieldTests(unittest.TestCase):
         self.assertEqual(ctx.exception.code, 1)
 
     def test_rejects_source_missing_rev(self):
+        """All source specs require an immutable git revision."""
         version_entry = {}
         spec = {"type": "module", "source": {"git": "https://github.com/example/x"}}
         with self.assertRaises(SystemExit) as ctx:
@@ -115,6 +117,7 @@ class CopySourceFieldTests(unittest.TestCase):
         self.assertEqual(ctx.exception.code, 1)
 
     def test_copies_non_plugin_source_without_cargo_name(self):
+        """Non-plugin sources may omit cargo_name and keep git/rev."""
         version_entry = {}
         spec = {
             "type": "module",
@@ -232,6 +235,86 @@ class SchemaProvisionalTierTests(unittest.TestCase):
             }
         )
         self.jsonschema.validate(index, self.schema)
+
+
+class SchemaSourceCargoNameTests(unittest.TestCase):
+    """Confirm the schema requires source.cargo_name only for plugin packages."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        import json as _json
+
+        try:
+            import jsonschema
+
+            cls.jsonschema = jsonschema
+        except ImportError:
+            cls.jsonschema = None
+        schema_path = Path(__file__).resolve().parent.parent / "schemas" / "index-v1.json"
+        cls.schema = _json.loads(schema_path.read_text(encoding="utf-8"))
+
+    def _index(self, pkg_type, version_entry):
+        """Wrap a version entry in a minimal single-package index."""
+        return {
+            "schema_version": 1,
+            "updated_at": "2026-01-01T00:00:00Z",
+            "packages": [
+                {
+                    "id": {"owner": "o", "name": "p"},
+                    "description": "p",
+                    "repo": "https://example.invalid/o/p",
+                    "type": pkg_type,
+                    "tags": [],
+                    "versions": [version_entry],
+                }
+            ],
+        }
+
+    def _version(self, source):
+        """Build a minimal archive version entry carrying the given source."""
+        return {
+            "version": "1.0.0",
+            "nu_version": "*",
+            "artifact": {"kind": "archive", "url": "https://example.invalid/a.tar.gz"},
+            "source": source,
+        }
+
+    def test_plugin_source_without_cargo_name_is_rejected(self):
+        """Plugin source records must carry cargo_name."""
+        if self.jsonschema is None:
+            self.skipTest("jsonschema not installed")
+        index = self._index(
+            "plugin", self._version({"git": "https://example.invalid/o/p", "rev": "a" * 40})
+        )
+        with self.assertRaises(self.jsonschema.ValidationError):
+            self.jsonschema.validate(index, self.schema)
+
+    def test_plugin_source_with_cargo_name_is_accepted(self):
+        """Plugin source records with cargo_name pass the schema."""
+        if self.jsonschema is None:
+            self.skipTest("jsonschema not installed")
+        index = self._index(
+            "plugin",
+            self._version(
+                {
+                    "git": "https://example.invalid/o/p",
+                    "rev": "a" * 40,
+                    "cargo_name": "nu_plugin_p",
+                }
+            ),
+        )
+        self.jsonschema.validate(index, self.schema)
+
+    def test_non_plugin_source_without_cargo_name_is_accepted(self):
+        """Module/script sources may omit cargo_name and keep git/rev."""
+        if self.jsonschema is None:
+            self.skipTest("jsonschema not installed")
+        for pkg_type in ("module", "script", "completion"):
+            index = self._index(
+                pkg_type,
+                self._version({"git": "https://example.invalid/o/p", "rev": "a" * 40}),
+            )
+            self.jsonschema.validate(index, self.schema)
 
 
 class BuildVersionEntryProvenanceTests(unittest.TestCase):

@@ -250,7 +250,17 @@ def build_spec(
     activation_kind: str | None = None,
     activation_import: str | None = None,
 ) -> dict:
-    """Build a registry intake spec for a non-binary (archive-kind) package."""
+    """Build a registry intake spec for a non-binary (archive-kind) package.
+
+    ``source.rev`` is the resolved, immutable upstream commit (never the
+    input ref). ``artifact.sha256`` is intentionally omitted: add-package.py
+    computes the digest from the downloaded artifact, so an authored hash
+    would be ignored or worse mask a substitution. Because archive specs
+    carry no ``cargo_name``, only publish such entries to the signed index
+    once the numan client deserializes ``source.cargo_name`` as optional
+    (numan-cli/numan#137); the pinned numan-parser-check gate blocks
+    cargo-less entries until then.
+    """
     spec: dict = {
         "owner": owner,
         "name": name,
@@ -581,7 +591,7 @@ def main(argv: list[str] | None = None) -> int:
         published = _build_and_publish(args, src_dir, tag, version)
         if isinstance(published, int):
             return published
-        url, digest = published
+        url, _ = published
 
         spec = build_spec(
             owner=args.owner,

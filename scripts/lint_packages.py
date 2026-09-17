@@ -403,6 +403,7 @@ def lint_activation_and_provenance(
     entry_index: int | None = None,
     version_index: int | None = None,
 ) -> None:
+    """Lint activation, source provenance, and fork identity for one version."""
     label = version_label(
         pkg, version, entry_index=entry_index, version_index=version_index
     )

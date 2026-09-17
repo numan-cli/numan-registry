@@ -264,16 +264,19 @@ class TestLintSourceProvenance(unittest.TestCase):
         cls.lint = load_lint()
 
     def test_no_source_ok(self):
+        """Absent source blocks are always fine."""
         errors: list[str] = []
         self.lint._lint_source_provenance({}, {}, errors, label="p@1")
         self.assertEqual(errors, [])
 
     def test_source_not_dict(self):
+        """A non-object source is rejected for any package type."""
         errors: list[str] = []
         self.lint._lint_source_provenance({}, {"source": "nope"}, errors, label="p@1")
         self.assertEqual(errors, ["p@1: source must be an object when present"])
 
     def test_missing_source_fields(self):
+        """Plugin sources must supply git, rev, and cargo_name."""
         source = {"git": "", "rev": "  ", "cargo_name": None}
         errors: list[str] = []
         self.lint._lint_source_provenance(
@@ -289,6 +292,7 @@ class TestLintSourceProvenance(unittest.TestCase):
         )
 
     def test_non_plugin_source_without_cargo_name_ok(self):
+        """Non-plugin sources may omit cargo_name entirely."""
         errors: list[str] = []
         self.lint._lint_source_provenance(
             {"type": "module"},
@@ -299,6 +303,7 @@ class TestLintSourceProvenance(unittest.TestCase):
         self.assertEqual(errors, [])
 
     def test_non_plugin_source_still_requires_git_rev(self):
+        """Non-plugin sources still require git and rev."""
         errors: list[str] = []
         self.lint._lint_source_provenance(
             {"type": "module"}, {"source": {"git": "g"}}, errors, label="p@1"
@@ -306,6 +311,7 @@ class TestLintSourceProvenance(unittest.TestCase):
         self.assertEqual(errors, ["p@1: source.rev is missing or empty"])
 
     def test_non_immutable_rev(self):
+        """Branch-name revisions are rejected for every package type."""
         for rev in ("main", "MASTER", "Head"):
             errors: list[str] = []
             self.lint._lint_source_provenance(
@@ -320,6 +326,7 @@ class TestLintSourceProvenance(unittest.TestCase):
             )
 
     def test_immutable_rev_ok(self):
+        """Tag and commit revisions pass provenance checks."""
         for rev in ("v1.0.0", "abc123def456"):
             errors: list[str] = []
             self.lint._lint_source_provenance(
