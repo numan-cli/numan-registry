@@ -139,7 +139,7 @@
                 },
                 "source": {
                   "type": "object",
-                  "required": ["git", "rev", "cargo_name"],
+                  "required": ["git", "rev"],
                   "additionalProperties": false,
                   "properties": {
                     "git": { "type": "string" },

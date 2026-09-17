@@ -260,7 +260,7 @@ class BuildSpecTests(unittest.TestCase):
             nu_version=">=0.114.0",
             entry="mod.nu",
             url="https://github.com/owner/repo/releases/download/tag/asset.tar.gz",
-            sha256="d" * 64,
+            resolved_sha="d" * 40,
             activation_kind="nu-module",
             activation_import="all",
         )
@@ -271,10 +271,15 @@ class BuildSpecTests(unittest.TestCase):
                 "kind": "archive",
                 "url": "https://github.com/owner/repo/releases/download/tag/asset.tar.gz",
                 "entry": "mod.nu",
-                "sha256": "d" * 64,
             },
         )
-        self.assertNotIn("source", spec)
+        self.assertEqual(
+            spec["source"],
+            {
+                "git": "https://github.com/someone/cool-module",
+                "rev": "d" * 40,
+            },
+        )
 
     def test_script_spec_omits_activation(self):
         spec = self.mod.build_spec(
@@ -288,7 +293,7 @@ class BuildSpecTests(unittest.TestCase):
             nu_version="*",
             entry="run.nu",
             url="https://example.invalid/asset.tar.gz",
-            sha256="e" * 64,
+            resolved_sha="e" * 40,
         )
         self.assertNotIn("activation", spec)
 

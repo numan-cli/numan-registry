@@ -265,31 +265,38 @@ def check_module_import_mode(spec_artifact, activation):
         sys.exit(1)
 
 
-SOURCE_REQUIRED_KEYS = ("git", "rev", "cargo_name")
+SOURCE_REQUIRED_KEYS = ("git", "rev")
+PLUGIN_SOURCE_REQUIRED_KEYS = SOURCE_REQUIRED_KEYS + ("cargo_name",)
 
 
 def copy_source_field(spec, version_entry):
     """Copy optional `source` provenance onto a version entry.
 
-    Schema (index-v1): required git/rev/cargo_name; optional
-    cargo_lock_sha256/upstream. Extracted so unit tests can assert
-    passthrough without downloading artifacts.
+    Schema (index-v1): required git/rev; `cargo_name` is additionally
+    required for plugin-typed specs; optional cargo_lock_sha256/upstream.
+    Extracted so unit tests can assert passthrough without downloading
+    artifacts.
     """
     if "source" not in spec:
         return
     source = spec["source"]
     if not isinstance(source, dict):
-        print("FAIL: 'source' must be an object with git, rev, and cargo_name")
+        print("FAIL: 'source' must be an object with git and rev")
         sys.exit(1)
-    missing = [k for k in SOURCE_REQUIRED_KEYS if not source.get(k)]
+    required = (
+        PLUGIN_SOURCE_REQUIRED_KEYS
+        if spec.get("type") == "plugin"
+        else SOURCE_REQUIRED_KEYS
+    )
+    missing = [k for k in required if not source.get(k)]
     if missing:
         print(
             "FAIL: 'source' is missing required field(s): "
             + ", ".join(missing)
-            + " (need git, rev, cargo_name)"
+            + " (need git, rev; cargo_name for plugins)"
         )
         sys.exit(1)
-    out = {k: source[k] for k in SOURCE_REQUIRED_KEYS}
+    out = {k: source[k] for k in PLUGIN_SOURCE_REQUIRED_KEYS if k in source}
     if "cargo_lock_sha256" in source:
         out["cargo_lock_sha256"] = source["cargo_lock_sha256"]
     if "upstream" in source:

@@ -265,18 +265,20 @@ class TestLintSourceProvenance(unittest.TestCase):
 
     def test_no_source_ok(self):
         errors: list[str] = []
-        self.lint._lint_source_provenance({}, errors, label="p@1")
+        self.lint._lint_source_provenance({}, {}, errors, label="p@1")
         self.assertEqual(errors, [])
 
     def test_source_not_dict(self):
         errors: list[str] = []
-        self.lint._lint_source_provenance({"source": "nope"}, errors, label="p@1")
+        self.lint._lint_source_provenance({}, {"source": "nope"}, errors, label="p@1")
         self.assertEqual(errors, ["p@1: source must be an object when present"])
 
     def test_missing_source_fields(self):
         source = {"git": "", "rev": "  ", "cargo_name": None}
         errors: list[str] = []
-        self.lint._lint_source_provenance({"source": source}, errors, label="p@1")
+        self.lint._lint_source_provenance(
+            {"type": "plugin"}, {"source": source}, errors, label="p@1"
+        )
         self.assertEqual(
             errors,
             [
@@ -286,11 +288,31 @@ class TestLintSourceProvenance(unittest.TestCase):
             ],
         )
 
+    def test_non_plugin_source_without_cargo_name_ok(self):
+        errors: list[str] = []
+        self.lint._lint_source_provenance(
+            {"type": "module"},
+            {"source": {"git": "g", "rev": "abc123def456"}},
+            errors,
+            label="p@1",
+        )
+        self.assertEqual(errors, [])
+
+    def test_non_plugin_source_still_requires_git_rev(self):
+        errors: list[str] = []
+        self.lint._lint_source_provenance(
+            {"type": "module"}, {"source": {"git": "g"}}, errors, label="p@1"
+        )
+        self.assertEqual(errors, ["p@1: source.rev is missing or empty"])
+
     def test_non_immutable_rev(self):
         for rev in ("main", "MASTER", "Head"):
             errors: list[str] = []
             self.lint._lint_source_provenance(
-                {"source": {"git": "g", "rev": rev, "cargo_name": "c"}}, errors, label="p@1"
+                {"type": "plugin"},
+                {"source": {"git": "g", "rev": rev, "cargo_name": "c"}},
+                errors,
+                label="p@1",
             )
             self.assertEqual(
                 errors,
@@ -301,7 +323,10 @@ class TestLintSourceProvenance(unittest.TestCase):
         for rev in ("v1.0.0", "abc123def456"):
             errors: list[str] = []
             self.lint._lint_source_provenance(
-                {"source": {"git": "g", "rev": rev, "cargo_name": "c"}}, errors, label="p@1"
+                {"type": "plugin"},
+                {"source": {"git": "g", "rev": rev, "cargo_name": "c"}},
+                errors,
+                label="p@1",
             )
             self.assertEqual(errors, [])
 

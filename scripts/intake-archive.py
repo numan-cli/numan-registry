@@ -18,10 +18,11 @@ turns "here's a Git repo with Nu files" into a registry-intake-ready spec:
   7. Record the resolved SHA + original ref in manifest-archives.json for
      repeatable re-intake on version bumps.
 
-The registry index's `source` field is Rust-plugin-shaped (requires
-cargo_name) and existing non-binary entries all omit it; provenance for
-archive packages lives in manifest-archives.json instead, not in the
-registry index.
+The spec omits `artifact.sha256`: add-package.py computes the hash itself
+when downloading the artifact, so an authored hash would be ignored (or
+worse, mask a substitution). The resolved SHA is preserved as
+`source.rev` -- immutable upstream provenance for non-plugin sources,
+which carry no cargo_name.
 
 Usage:
   python scripts/intake-archive.py \\
@@ -245,7 +246,7 @@ def build_spec(
     nu_version: str,
     entry: str,
     url: str,
-    sha256: str,
+    resolved_sha: str,
     activation_kind: str | None = None,
     activation_import: str | None = None,
 ) -> dict:
@@ -263,7 +264,10 @@ def build_spec(
             "kind": "archive",
             "url": url,
             "entry": entry,
-            "sha256": sha256,
+        },
+        "source": {
+            "git": git_url,
+            "rev": resolved_sha,
         },
     }
     if activation_kind:
@@ -590,7 +594,7 @@ def main(argv: list[str] | None = None) -> int:
             nu_version=args.nu_version,
             entry=args.entry,
             url=url,
-            sha256=digest,
+            resolved_sha=resolved_sha,
             activation_kind=args.activation_kind,
             activation_import=args.activation_import,
         )

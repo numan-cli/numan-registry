@@ -97,12 +97,34 @@ class CopySourceFieldTests(unittest.TestCase):
         self.ap.copy_source_field({}, version_entry)
         self.assertNotIn("source", version_entry)
 
-    def test_rejects_partial_source(self):
+    def test_rejects_plugin_source_without_cargo_name(self):
         version_entry = {}
-        spec = {"source": {"git": "https://github.com/example/x", "rev": "v1"}}
+        spec = {
+            "type": "plugin",
+            "source": {"git": "https://github.com/example/x", "rev": "v1"},
+        }
         with self.assertRaises(SystemExit) as ctx:
             self.ap.copy_source_field(spec, version_entry)
         self.assertEqual(ctx.exception.code, 1)
+
+    def test_rejects_source_missing_rev(self):
+        version_entry = {}
+        spec = {"type": "module", "source": {"git": "https://github.com/example/x"}}
+        with self.assertRaises(SystemExit) as ctx:
+            self.ap.copy_source_field(spec, version_entry)
+        self.assertEqual(ctx.exception.code, 1)
+
+    def test_copies_non_plugin_source_without_cargo_name(self):
+        version_entry = {}
+        spec = {
+            "type": "module",
+            "source": {"git": "https://github.com/example/x", "rev": "a" * 40},
+        }
+        self.ap.copy_source_field(spec, version_entry)
+        self.assertEqual(
+            version_entry["source"],
+            {"git": "https://github.com/example/x", "rev": "a" * 40},
+        )
 
 
 class BuildVersionEntryEvidenceTierTests(unittest.TestCase):

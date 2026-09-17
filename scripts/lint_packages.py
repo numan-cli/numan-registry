@@ -327,19 +327,21 @@ def _lint_activation(
 
 
 def _lint_source_provenance(
+    pkg: dict,
     version: dict,
     errors: list[str],
     *,
     label: str,
 ) -> None:
-    """Validate the source provenance block (git/rev/cargo_name)."""
+    """Validate the source provenance block (git/rev, plus cargo_name for plugins)."""
     source = version.get("source")
     if source is None:
         return
     if not isinstance(source, dict):
         errors.append(f"{label}: source must be an object when present")
         return
-    for field in ("git", "rev", "cargo_name"):
+    required = ("git", "rev", "cargo_name") if pkg.get("type") == "plugin" else ("git", "rev")
+    for field in required:
         value = source.get(field)
         if not isinstance(value, str) or not value.strip():
             errors.append(f"{label}: source.{field} is missing or empty")
@@ -405,7 +407,7 @@ def lint_activation_and_provenance(
         pkg, version, entry_index=entry_index, version_index=version_index
     )
     _lint_activation(pkg, version, errors, label=label)
-    _lint_source_provenance(version, errors, label=label)
+    _lint_source_provenance(pkg, version, errors, label=label)
     _lint_fork_identity(pkg, version, errors, label=label)
 
 
