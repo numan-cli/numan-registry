@@ -1,3 +1,5 @@
+# Interactive opencode agent: /oc and /opencode comment commands for fixes,
+# follow-ups, and targeted changes, plus an automatic review on PR open.
 name: opencode
 
 on:
@@ -15,7 +17,8 @@ concurrency:
 jobs:
   opencode:
     if: |
-      github.event_name == 'pull_request' ||
+      (github.event_name == 'pull_request' &&
+        github.event.pull_request.head.repo.full_name == github.repository) ||
       ((github.event_name == 'pull_request_review_comment' || github.event.issue.pull_request != null) &&
        contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association) &&
        (contains(github.event.comment.body, '/oc') || contains(github.event.comment.body, '/opencode')))
@@ -28,300 +31,37 @@ jobs:
       issues: write
       actions: write
     steps:
+      - name: Record job start time
+        id: job_start
+        shell: bash
+        run: printf 'epoch=%s\n' "$(date +%s)" >> "$GITHUB_OUTPUT"
+
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - name: Probe model availability
-        id: probe
-        shell: bash
-        env:
-          COMMENT: ${{ github.event.comment.body }}
-          TRIGGERED_BY_PR_OPEN: ${{ github.event_name == 'pull_request' }}
-          ALIBABA_TOKEN_PLAN_API_KEY: ${{ secrets.ALIBABA_TOKEN_PLAN_API_KEY }}
-          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
-          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: |
-          if [[ -z "${OPENCODE_API_KEY:-}" ]]; then
-            echo "::error::OPENCODE_API_KEY secret is required but not set"
-            exit 1
-          fi
-
-          probe_zen() {
-            local id="$1"
-            local url="https://opencode.ai/zen/v1/chat/completions"
-            local body="{\"model\":\"${id}\",\"messages\":[{\"role\":\"user\",\"content\":\"ping\"}],\"max_tokens\":1}"
-            local auth="Authorization: Bearer ${OPENCODE_API_KEY}"
-            curl -sf --max-time 15 -X POST "${url}" \
-              -H "${auth}" -H "Content-Type: application/json" \
-              -d "${body}" >/dev/null 2>&1
-          }
-
-          # Decide task type: /oc review (or PR opened) vs /oc fix.
-          IS_REVIEW=false
-          if [[ "${TRIGGERED_BY_PR_OPEN}" == "true" ]] || [[ "${COMMENT}" =~ (^|[[:space:]])/(oc|opencode)[[:space:]]+review ]]; then
-            IS_REVIEW=true
-          fi
-
-          # Cloudflare Workers AI is the primary provider:
-          #   review -> GLM 5.2 (DeepSeek V4 Pro as CF fallback), fix -> DeepSeek V4 Flash.
-          if [[ "${IS_REVIEW}" == "true" ]]; then
-            CF_MODEL="@cf/zai-org/glm-5.2"
-            echo "::notice::Review requested - Cloudflare Workers AI primary: GLM 5.2 (${CF_MODEL})"
-          else
-            CF_MODEL="@cf/deepseek-ai/deepseek-v4-flash-0731"
-            echo "::notice::Fix requested - Cloudflare Workers AI primary: DeepSeek V4 Flash (${CF_MODEL})"
-          fi
-
-          # Emit the inline opencode config. OPENCODE_CONFIG_CONTENT is the highest-priority
-          # runtime override and is how `opencode github run` receives its model (it has no
-          # --model flag). We always carry the context7 MCP server so /oc reviews keep library
-          # lookup, and for Cloudflare we register the workers-ai provider.
-          emit_config() {
-            local model="$1"
-            local cf_provider="$2"   # "true" to also include the cloudflare-workers-ai provider block
-            if [[ "${cf_provider}" == "true" ]]; then
-              jq -n --arg model "$model" '{
-                "$schema": "https://opencode.ai/config.json",
-                "mcp": {
-                  "context7": {
-                    "type": "remote",
-                    "url": "https://mcp.context7.com/mcp",
-                    "oauth": false,
-                    "headers": { "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}" },
-                    "enabled": true
-                  }
-                },
-                "provider": {
-                  "cloudflare-workers-ai": {
-                    "models": {
-                      "@cf/zai-org/glm-5.2": { "name": "GLM 5.2" },
-                      "@cf/deepseek-ai/deepseek-v4-flash-0731": { "name": "DeepSeek V4 Flash" },
-                      "@cf/deepseek-ai/deepseek-v4-pro-0813": { "name": "DeepSeek V4 Pro" }
-                    }
-                  }
-                },
-                "model": $model
-              }'
-            else
-              jq -n --arg model "$model" '{
-                "$schema": "https://opencode.ai/config.json",
-                "mcp": {
-                  "context7": {
-                    "type": "remote",
-                    "url": "https://mcp.context7.com/mcp",
-                    "oauth": false,
-                    "headers": { "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}" },
-                    "enabled": true
-                  }
-                },
-                "model": $model
-              }'
-            fi
-          }
-
-          # Probe the Cloudflare Workers AI OpenAI-compatible endpoint directly.
-          probe_cf() {
-            local model="$1"
-            local url="https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1/chat/completions"
-            curl -sf --max-time 20 -X POST "${url}" \
-              -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
-              -H "Content-Type: application/json" \
-              -d "{\"model\":\"${model}\",\"messages\":[{\"role\":\"user\",\"content\":\"ping\"}],\"max_tokens\":1}" \
-              >/dev/null 2>&1
-          }
-
-          choose() {
-            local model="$1"
-            local variant="${2:-}"
-            local cf="${3:-false}"
-            local config_json
-            config_json="$(emit_config "${model}" "${cf}")"
-            {
-              echo "model=${model}"
-              echo "variant=${variant}"
-              echo "config<<EOF"
-              echo "${config_json}"
-              echo "EOF"
-            } >> "$GITHUB_OUTPUT"
-            exit 0
-          }
-
-          if [[ -n "${CLOUDFLARE_API_TOKEN:-}" && -n "${CLOUDFLARE_ACCOUNT_ID:-}" ]] && probe_cf "${CF_MODEL}"; then
-            choose "cloudflare-workers-ai/${CF_MODEL}" "" true
-          fi
-          echo "::warning::Cloudflare Workers AI primary unavailable (or secrets missing) - checking fallback"
-
-          if [[ "${IS_REVIEW}" == "true" ]]; then
-            # Review gets a second Cloudflare model before falling back to the Zen chain.
-            CF_FALLBACK="@cf/deepseek-ai/deepseek-v4-pro-0813"
-            if [[ -n "${CLOUDFLARE_API_TOKEN:-}" && -n "${CLOUDFLARE_ACCOUNT_ID:-}" ]] && probe_cf "${CF_FALLBACK}"; then
-              choose "cloudflare-workers-ai/${CF_FALLBACK}" "" true
-            fi
-            echo "::warning::Cloudflare Workers AI review fallback unavailable - falling back to OpenCode Zen chain"
-            if probe_zen big-pickle; then
-              choose "opencode/big-pickle"
-            fi
-            echo "::warning::big-pickle unavailable - trying free fallback (nemotron-3-ultra-free)"
-            if probe_zen nemotron-3-ultra-free; then
-              choose "opencode/nemotron-3-ultra-free"
-            fi
-            echo "::error::All review models unavailable"
-            exit 1
-          fi
-
-          # Fix chain: nemotron-3.5-lightning-free -> big-pickle -> nemotron-3-ultra-free -> deepseek-v4-flash.
-          if probe_zen nemotron-3.5-lightning-free; then
-            choose "opencode/nemotron-3.5-lightning-free"
-          fi
-          echo "::warning::Nemotron 3.5 Lightning free unavailable - trying big-pickle"
-          if probe_zen big-pickle; then
-            choose "opencode/big-pickle"
-          fi
-          echo "::warning::big-pickle unavailable - trying free fallback (nemotron-3-ultra-free)"
-          if probe_zen nemotron-3-ultra-free; then
-            choose "opencode/nemotron-3-ultra-free"
-          fi
-          echo "::warning::Nemotron 3 Ultra free unavailable - trying deepseek-v4-flash"
-          if probe_zen deepseek-v4-flash; then
-            choose "opencode/deepseek-v4-flash"
-          fi
-          echo "::error::All fix models unavailable"
-          exit 1
-
-      - name: Get opencode version and asset
-        id: version
-        shell: bash
-        run: |
-          RELEASE=$(curl -sf https://api.github.com/repos/anomalyco/opencode/releases/latest)
-          VERSION=$(echo "${RELEASE}" | jq -r '.tag_name // empty')
-          URL=$(echo "${RELEASE}" | jq -r '.assets[] | select(.name=="opencode-linux-x64.tar.gz") | .browser_download_url // empty')
-          DIGEST=$(echo "${RELEASE}" | jq -r '.assets[] | select(.name=="opencode-linux-x64.tar.gz") | .digest // empty' | sed 's/^sha256://')
-          if [[ -z "${VERSION}" || -z "${URL}" || -z "${DIGEST}" ]]; then
-            echo "::error::Failed to fetch opencode release metadata"
-            exit 1
-          fi
-          {
-            echo "version=${VERSION}"
-            echo "url=${URL}"
-            echo "digest=${DIGEST}"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Cache opencode
-        id: cache
-        continue-on-error: true
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.opencode/bin
-          key: opencode-${{ runner.os }}-${{ runner.arch }}-${{ steps.version.outputs.version }}
-
-      - name: Install opencode
-        if: steps.cache.outputs.cache-hit != 'true'
-        shell: bash
-        env:
-          OPENCODE_URL: ${{ steps.version.outputs.url }}
-          OPENCODE_DIGEST: ${{ steps.version.outputs.digest }}
-        run: |
-          mkdir -p "$HOME/.opencode/bin"
-          TAR_FILE="$(mktemp --suffix=.tar.gz)"
-          curl -fsSL -o "${TAR_FILE}" "${OPENCODE_URL}"
-          echo "${OPENCODE_DIGEST}  ${TAR_FILE}" | sha256sum -c -
-          tar -xzf "${TAR_FILE}" -C "$HOME/.opencode/bin" opencode
-          chmod 755 "$HOME/.opencode/bin/opencode"
-          rm -f "${TAR_FILE}"
-
+      # Model probing, verified install, agent run with retry/salvage, and the
+      # leaked-path comment guard are handled by the action. The pull_request
+      # trigger runs the review model chain; /oc comments pick review vs fix
+      # per the comment. `use-github-token` keeps the job token
+      # (contents: write) as the push credential. `job-started-at` anchors the
+      # 85-minute agent budget to job start so the retry and the guard still
+      # run inside the 90-minute job limit. The model probe chains are left at
+      # the action defaults, which match this repo's documented chains
+      # (see .opencode/github-commands.md).
       - name: Run opencode
-        id: run_opencode
-        shell: bash
+        uses: tonythethompson/opencode-action@8b917d4ce4f10a967e9d29ae263d05580c3ed395 # v0.8.0
         env:
-          USE_GITHUB_TOKEN: "true"
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ALIBABA_TOKEN_PLAN_API_KEY: ${{ secrets.ALIBABA_TOKEN_PLAN_API_KEY }}
-          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
-          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
-          CONTEXT7_API_KEY: ${{ secrets.CONTEXT7_API_KEY }}
-          OPENCODE_CONFIG_CONTENT: ${{ steps.probe.outputs.config }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          MODEL: ${{ steps.probe.outputs.model }}
-          VARIANT: ${{ steps.probe.outputs.variant }}
-        run: |
-          set -u
-          echo "$HOME/.opencode/bin" >> "$GITHUB_PATH"
-          export PATH="$HOME/.opencode/bin:$PATH"
-
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          # Absolute wall-clock deadline for agent work, ~5 minutes before the
-          # 90-minute job timeout. `timeout` SIGTERMs opencode at the deadline so
-          # it can finish the current task and post, with a kill-after backstop so
-          # a stuck agent cannot eat into the remaining headroom. Both attempts
-          # share the same deadline, so the retry never overruns the job.
-          STEP_DEADLINE=$(( $(date +%s) + 5100 ))   # 85 minutes from now
-
-          run_opencode() {
-            local budget=$(( STEP_DEADLINE - $(date +%s) ))
-            if (( budget <= 0 )); then
-              return 124
-            fi
-            timeout --signal=TERM --kill-after=60 "${budget}" opencode github run
-          }
-
-          if run_opencode; then
-            echo "::notice::opencode github run succeeded (attempt 1)"
-            exit 0
-          fi
-          echo "::warning::opencode github run failed on attempt 1"
-
-          BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo '')"
-
-          # Salvage: the CLI committed locally before a rejected push (remote
-          # advanced mid-run). Rebase those commits onto the updated remote and
-          # push. This matters because review threads may already be resolved,
-          # so a plain re-run would find nothing to do and silently lose work.
-          if [[ -n "${BRANCH}" && "${BRANCH}" != "HEAD" ]]; then
-            echo "==> salvaging agent commits onto updated remote (branch: ${BRANCH})"
-            git config --local http.https://github.com/.extraheader \
-              "AUTHORIZATION: basic $(printf 'x-access-token:%s' "${GH_TOKEN}" | base64 -w 0)" 2>/dev/null || true
-            git fetch --prune origin 2>/dev/null || true
-            if git rev-parse --verify "origin/${BRANCH}" >/dev/null 2>&1; then
-              if [[ "$(git rev-list --count "origin/${BRANCH}"..HEAD 2>/dev/null || echo 0)" -gt 0 ]]; then
-                if git rebase "origin/${BRANCH}"; then
-                  if git push 2>/dev/null; then
-                    echo "::notice::salvaged agent work: rebased onto origin/${BRANCH} and pushed"
-                    exit 0
-                  fi
-                  echo "::warning::salvage push failed; falling back to synced re-run"
-                fi
-                git rebase --abort 2>/dev/null || true
-              else
-                echo "::notice::no local-only commits; failure was not a rejected push"
-              fi
-            fi
-          fi
-
-          # Fallback: sync this checkout's branch to the remote (discarding the
-          # failed run's local state) and run a fresh session against the
-          # current base, so a subsequent push is a fast-forward.
-          echo "==> syncing branch to remote and retrying once"
-          if [[ -n "${BRANCH}" && "${BRANCH}" != "HEAD" ]]; then
-            git fetch --prune origin 2>/dev/null || true
-            if git rev-parse --verify "origin/${BRANCH}" >/dev/null 2>&1; then
-              git checkout -B "${BRANCH}" "origin/${BRANCH}" >/dev/null 2>&1 || true
-              git reset --hard "origin/${BRANCH}" >/dev/null 2>&1 || true
-            fi
-          fi
-
-          if run_opencode; then
-            echo "::notice::opencode github run succeeded on retry"
-            exit 0
-          fi
-          echo "::error::opencode github run failed on both attempts"
-          exit 1
+          # The action expects CLOUDFLARE_API_TOKEN; fall back to the legacy
+          # CLOUDFLARE_API_KEY name just in case.
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CLOUDFLARE_API_KEY }}
+          CONTEXT7_API_KEY: ${{ secrets.CONTEXT7_API_KEY }}
+        with:
+          use-github-token: 'true'
+          job-started-at: ${{ steps.job_start.outputs.epoch }}
+          timeout-minutes: '85'
