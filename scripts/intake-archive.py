@@ -278,6 +278,11 @@ def build_spec(
         "source": {
             "git": git_url,
             "rev": resolved_sha,
+            # Temporary: include cargo_name for client compatibility until
+            # numan-cli/numan#137 makes SourceInfo.cargo_name optional.
+            # Archive-backed modules don't have a Rust crate, so use the
+            # package name as a placeholder.
+            "cargo_name": name,
         },
     }
     if activation_kind:
