@@ -41,6 +41,18 @@ jobs:
         with:
           persist-credentials: false
 
+      # persist-credentials leaves git without auth for the agent's own pushes;
+      # the action only configures this header inside its salvage path.
+      - name: Configure git for agent pushes
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local http.https://github.com/.extraheader \
+            "AUTHORIZATION: basic $(printf 'x-access-token:%s' "${GH_TOKEN}" | base64 -w 0)"
+
       # Model probing, verified install, agent run with retry/salvage, and the
       # leaked-path comment guard are handled by the action. The pull_request
       # trigger runs the review model chain; /oc comments pick review vs fix
