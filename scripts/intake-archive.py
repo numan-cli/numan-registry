@@ -21,8 +21,9 @@ turns "here's a Git repo with Nu files" into a registry-intake-ready spec:
 The spec omits `artifact.sha256`: add-package.py computes the hash itself
 when downloading the artifact, so an authored hash would be ignored (or
 worse, mask a substitution). The resolved SHA is preserved as
-`source.rev` -- immutable upstream provenance for non-plugin sources,
-which carry no cargo_name.
+`source.rev` -- immutable upstream provenance for non-plugin sources.
+Emitted specs include `source.cargo_name` as a temporary compatibility
+placeholder (the package name) until numan-cli/numan#137 makes it optional.
 
 Usage:
   python scripts/intake-archive.py \\
@@ -51,6 +52,8 @@ from pathlib import Path
 
 if str(Path(__file__).resolve().parent) not in sys.path:
     sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from url_safety import ensure_http_url, http_opener
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
@@ -452,7 +455,9 @@ def _build_and_publish(args: argparse.Namespace, src_dir: Path, tag: str, versio
     # Verify the published asset matches the pre-upload digest
     print(f"Verifying published asset integrity at {url}", file=sys.stderr)
     try:
-        with urllib.request.urlopen(url, timeout=60) as response:
+        ensure_http_url(url)
+        req = urllib.request.Request(url, method="GET")
+        with http_opener().open(req, timeout=60) as response:
             downloaded_bytes = response.read()
         post_upload_digest = hashlib.sha256(downloaded_bytes).hexdigest()
     except Exception as exc:

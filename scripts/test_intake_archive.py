@@ -340,9 +340,10 @@ class BuildAndPublishTests(unittest.TestCase):
                     "upload_to_release",
                     return_value="https://example.invalid/asset.tar.gz",
                 ),
-                mock.patch("urllib.request.urlopen", side_effect=OSError("download failed")),
+                mock.patch.object(self.mod, "http_opener") as http_opener,
                 mock.patch.object(self.mod, "_cleanup_release_and_tag") as cleanup,
             ):
+                http_opener.return_value.open.side_effect = OSError("download failed")
                 result = self.mod._build_and_publish(
                     self._args(), src_dir, "archive-someone-cool-module-1.0.0", "1.0.0"
                 )
@@ -363,9 +364,10 @@ class BuildAndPublishTests(unittest.TestCase):
                     "upload_to_release",
                     return_value="https://example.invalid/asset.tar.gz",
                 ),
-                mock.patch("urllib.request.urlopen", return_value=response),
+                mock.patch.object(self.mod, "http_opener") as http_opener,
                 mock.patch.object(self.mod, "_cleanup_release_and_tag") as cleanup,
             ):
+                http_opener.return_value.open.return_value = response
                 result = self.mod._build_and_publish(
                     self._args(), src_dir, "archive-someone-cool-module-1.0.0", "1.0.0"
                 )
@@ -557,13 +559,15 @@ class MainEndToEndTests(unittest.TestCase):
     def _verified_upload(self, url):
         upload = mock.Mock(return_value=url)
 
-        def urlopen(_url, timeout):
+        def open_verified(_req, timeout):
             response = mock.MagicMock()
             response.read.return_value = upload.call_args.args[3].read_bytes()
             response.__enter__.return_value = response
             return response
 
-        return upload, urlopen
+        http_opener = mock.Mock()
+        http_opener.return_value.open.side_effect = open_verified
+        return upload, http_opener
 
     def test_full_flow_writes_spec_and_manifest_without_write_flag(self):
         sha = "f" * 40
@@ -580,7 +584,7 @@ class MainEndToEndTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out_path = Path(tmp) / "spec.json"
             manifest_path = Path(tmp) / "manifest-archives.json"
-            upload, urlopen = self._verified_upload(
+            upload, http_opener = self._verified_upload(
                 "https://github.com/owner/repo/releases/download/tag/asset.tar.gz"
             )
 
@@ -588,7 +592,7 @@ class MainEndToEndTests(unittest.TestCase):
                 mock.patch.object(self.mod.subprocess, "run", side_effect=fake_ls_remote),
                 mock.patch.object(self.mod, "shallow_clone_at", side_effect=fake_clone),
                 mock.patch.object(self.mod, "upload_to_release", new=upload),
-                mock.patch("urllib.request.urlopen", side_effect=urlopen),
+                mock.patch.object(self.mod, "http_opener", new=http_opener),
             ):
                 code = self.mod.main(
                     [
@@ -707,13 +711,13 @@ class MainEndToEndTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out_path = Path(tmp) / "spec.json"
             manifest_path = Path(tmp) / "manifest-archives.json"
-            mock_upload, urlopen = self._verified_upload(upload_url)
+            mock_upload, http_opener = self._verified_upload(upload_url)
 
             with (
                 mock.patch.object(self.mod.subprocess, "run", side_effect=fake_run),
                 mock.patch.object(self.mod, "shallow_clone_at", side_effect=fake_clone),
                 mock.patch.object(self.mod, "upload_to_release", new=mock_upload),
-                mock.patch("urllib.request.urlopen", side_effect=urlopen),
+                mock.patch.object(self.mod, "http_opener", new=http_opener),
             ):
                 code = self.mod.main(
                     [
@@ -759,13 +763,13 @@ class MainEndToEndTests(unittest.TestCase):
             out_path = Path(tmp) / "spec.json"
             manifest_path = Path(tmp) / "manifest-archives.json"
             upload_url = "https://github.com/owner/repo/releases/download/tag/asset.tar.gz"
-            mock_upload, urlopen = self._verified_upload(upload_url)
+            mock_upload, http_opener = self._verified_upload(upload_url)
 
             with (
                 mock.patch.object(self.mod.subprocess, "run", side_effect=fake_run),
                 mock.patch.object(self.mod, "shallow_clone_at", side_effect=fake_clone),
                 mock.patch.object(self.mod, "upload_to_release", new=mock_upload),
-                mock.patch("urllib.request.urlopen", side_effect=urlopen),
+                mock.patch.object(self.mod, "http_opener", new=http_opener),
                 mock.patch.object(self.mod, "_cleanup_release_and_tag") as cleanup,
             ):
                 code = self.mod.main(
@@ -813,13 +817,13 @@ class MainEndToEndTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out_path = Path(tmp) / "spec.json"
             manifest_path = Path(tmp) / "manifest-archives.json"
-            mock_upload, urlopen = self._verified_upload(upload_url)
+            mock_upload, http_opener = self._verified_upload(upload_url)
 
             with (
                 mock.patch.object(self.mod.subprocess, "run", side_effect=fake_run),
                 mock.patch.object(self.mod, "shallow_clone_at", side_effect=fake_clone),
                 mock.patch.object(self.mod, "upload_to_release", new=mock_upload),
-                mock.patch("urllib.request.urlopen", side_effect=urlopen),
+                mock.patch.object(self.mod, "http_opener", new=http_opener),
             ):
                 code = self.mod.main(
                     [
