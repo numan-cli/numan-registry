@@ -253,10 +253,13 @@ def build_spec(
     """Build a registry intake spec for a non-binary (archive-kind) package.
 
     ``source.rev`` is the resolved, immutable upstream commit (never the
-    input ref). ``artifact.sha256`` is intentionally omitted: add-package.py
+    input ref). Emitted specs include ``source.cargo_name`` as a temporary
+    compatibility placeholder, using the package name for archive-backed
+    modules that have no Rust crate.
+
+    ``artifact.sha256`` is intentionally omitted: add-package.py
     computes the digest from the downloaded artifact, so an authored hash
-    would be ignored or worse mask a substitution. Because archive specs
-    carry no ``cargo_name``, only publish such entries to the signed index
+    would be ignored or worse mask a substitution. Only publish such entries
     once the numan client deserializes ``source.cargo_name`` as optional
     (numan-cli/numan#137); the pinned numan-parser-check gate blocks
     cargo-less entries until then.
@@ -395,23 +398,43 @@ def _checkout_and_validate_entry(args: argparse.Namespace, resolved_sha: str, tm
 def _build_and_publish(args: argparse.Namespace, src_dir: Path, tag: str, version: str) -> tuple[str, str] | int:
     """Build the deterministic archive and upload it to the release.
 
+    Retains the pre-upload digest and verifies the downloaded release asset
+    matches that digest before returning. Rejects mismatches to prevent
+    publishing substituted bytes under the original source.rev.
+
     Returns (url, sha256), or an exit code on failure.
     """
+    import urllib.request
+
     archive_path = src_dir.parent / f"{args.owner}-{args.name}-{version}.tar.gz"
     try:
         build_archive(src_dir, archive_path)
     except ValueError as exc:
         print(f"FAIL: {exc}", file=sys.stderr)
         return 1
-    digest = hashlib.sha256(archive_path.read_bytes()).hexdigest()
-    print(f"Built {archive_path.name} sha256={digest}", file=sys.stderr)
+    pre_upload_digest = hashlib.sha256(archive_path.read_bytes()).hexdigest()
+    print(f"Built {archive_path.name} sha256={pre_upload_digest}", file=sys.stderr)
 
     try:
         url = upload_to_release(args.release_repo, tag, f"{args.owner}/{args.name} {version}", archive_path)
     except ValueError as exc:
         print(f"FAIL: {exc}", file=sys.stderr)
         return 1
-    return url, digest
+
+    # Verify the published asset matches the pre-upload digest
+    print(f"Verifying published asset integrity at {url}", file=sys.stderr)
+    try:
+        with urllib.request.urlopen(url, timeout=60) as response:
+            downloaded_bytes = response.read()
+        post_upload_digest = hashlib.sha256(downloaded_bytes).hexdigest()
+    except Exception as exc:
+        print(f"FAIL: could not download published asset for verification: {exc}", file=sys.stderr)
+        return 1
+
+    if post_upload_digest != pre_upload_digest:
+        print(f"FAIL: published asset digest mismatch: expected {pre_upload_digest}, got {post_upload_digest}", file=sys.stderr)
+        return 1
+    return url, pre_upload_digest
 
 
 def _write_registry_and_manifest(args: argparse.Namespace, out_path: Path, resolved_sha: str, tag: str) -> int | None:
