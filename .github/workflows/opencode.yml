@@ -57,9 +57,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # The action expects CLOUDFLARE_API_TOKEN; fall back to the legacy
-          # CLOUDFLARE_API_KEY name just in case.
+          # The action's cf: probe reads CLOUDFLARE_API_TOKEN while opencode's
+          # cloudflare-workers-ai provider authenticates with
+          # CLOUDFLARE_API_KEY; supply both, tolerating either secret name.
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CLOUDFLARE_API_KEY }}
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY || secrets.CLOUDFLARE_API_TOKEN }}
           CONTEXT7_API_KEY: ${{ secrets.CONTEXT7_API_KEY }}
         with:
           use-github-token: 'true'
