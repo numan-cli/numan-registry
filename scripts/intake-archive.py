@@ -62,6 +62,7 @@ VALID_GIT_URL_RE = re.compile(
 )
 MAX_ARCHIVE_FILES = 10_000
 MAX_ARCHIVE_BYTES = 100 * 1024 * 1024
+_RELEASES_CREATED_BY_INVOCATION: set[tuple[str, str]] = set()
 
 
 def _load_add_package() -> ModuleType:
@@ -210,22 +211,30 @@ def upload_to_release(release_repo: str, tag: str, title: str, asset: Path) -> s
             timeout=300,
         )
     except subprocess.TimeoutExpired:
-        _cleanup_release_and_tag(release_repo, tag)
         raise ValueError(
-            f"gh release create timed out after 300s; cleanup attempted for release tag {tag!r}"
+            f"gh release create timed out after 300s; release ownership is indeterminate for tag {tag!r}"
         )
 
     if result is None:
-        _cleanup_release_and_tag(release_repo, tag)
         raise ValueError("gh CLI unavailable")
     if result.returncode != 0:
-        _cleanup_release_and_tag(release_repo, tag)
         raise ValueError(f"gh release create failed: {result.stderr.strip()}")
+    _RELEASES_CREATED_BY_INVOCATION.add((release_repo, tag))
     return f"https://github.com/{release_repo}/releases/download/{tag}/{asset.name}"
 
 
 def _cleanup_release_and_tag(release_repo: str, tag: str) -> None:
-    """Best-effort removal of an intake release and its Git tag."""
+    """Best-effort removal of a release and tag created by this invocation."""
+    release_identity = (release_repo, tag)
+    if release_identity not in _RELEASES_CREATED_BY_INVOCATION:
+        print(
+            f"WARN: refusing to clean up unowned release tag {tag!r} on {release_repo}",
+            file=sys.stderr,
+        )
+        return
+    # Consume ownership before making remote calls so repeated cleanup cannot
+    # delete a same-named release created later by another invocation.
+    _RELEASES_CREATED_BY_INVOCATION.remove(release_identity)
     gh_helpers = importlib.import_module("gh_helpers")
     commands = (
         ["release", "delete", tag, "--repo", release_repo, "--yes"],
@@ -482,8 +491,9 @@ def _write_registry_and_manifest(args: argparse.Namespace, out_path: Path, resol
             check=False,
         )
         if result.returncode != 0:
+            _cleanup_release_and_tag(args.release_repo, tag)
             print(
-                f"FAIL: registry update failed; release {tag} was already published on {args.release_repo}",
+                f"FAIL: registry update failed; cleanup attempted for release {tag} on {args.release_repo}",
                 file=sys.stderr,
             )
             return result.returncode

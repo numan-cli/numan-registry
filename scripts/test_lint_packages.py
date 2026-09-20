@@ -327,7 +327,13 @@ class TestLintSourceProvenance(unittest.TestCase):
 
     def test_immutable_rev_ok(self):
         """Tag and commit revisions pass provenance checks."""
-        for rev in ("v1.0.0", "a" * 40):
+        for rev in (
+            "v1.0.0",
+            "1.2.3-alpha.1",
+            "1.2.3+build.5",
+            "v1.2.3-rc.1+build.5",
+            "a" * 40,
+        ):
             errors: list[str] = []
             self.lint._lint_source_provenance(
                 {"type": "plugin"},
@@ -336,6 +342,18 @@ class TestLintSourceProvenance(unittest.TestCase):
                 label="p@1",
             )
             self.assertEqual(errors, [])
+
+    def test_arbitrarily_long_malformed_version_tag_is_rejected(self):
+        rev = "v1.2.3" + "-a" * 50_000 + "!"
+        errors: list[str] = []
+        self.lint._lint_source_provenance(
+            {"type": "plugin"},
+            {"source": {"git": "g", "rev": rev, "cargo_name": "c"}},
+            errors,
+            label="p@1",
+        )
+        self.assertEqual(len(errors), 1)
+        self.assertIn("not immutable provenance", errors[0])
 
 
 class TestLintForkIdentity(unittest.TestCase):

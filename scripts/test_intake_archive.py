@@ -168,6 +168,9 @@ class UploadToReleaseTests(unittest.TestCase):
 
         cls.gh_helpers = gh_helpers
 
+    def setUp(self) -> None:
+        self.mod._RELEASES_CREATED_BY_INVOCATION.clear()
+
     def test_refuses_existing_tag(self):
         with mock.patch.object(
             self.gh_helpers,
@@ -230,7 +233,7 @@ class UploadToReleaseTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "gh CLI unavailable"):
                 self.mod.upload_to_release("owner/repo", "tag", "title", Path("asset.tar.gz"))
 
-    def test_raises_indeterminate_on_timeout(self):
+    def test_timeout_does_not_clean_up_indeterminate_release(self):
         calls = []
 
         def fake_gh_run(args):
@@ -249,14 +252,11 @@ class UploadToReleaseTests(unittest.TestCase):
                 side_effect=subprocess.TimeoutExpired(cmd="gh", timeout=300),
             ),
         ):
-            with self.assertRaisesRegex(ValueError, "timed out.*cleanup attempted"):
+            with self.assertRaisesRegex(ValueError, "timed out.*ownership is indeterminate"):
                 self.mod.upload_to_release("owner/repo", "tag", "title", Path("asset.tar.gz"))
-        self.assertIn(["release", "delete", "tag", "--repo", "owner/repo", "--yes"], calls)
-        self.assertIn(
-            ["api", "--method", "DELETE", "repos/owner/repo/git/refs/tags/tag"], calls
-        )
+        self.assertNotIn(["release", "delete", "tag", "--repo", "owner/repo", "--yes"], calls)
 
-    def test_failed_create_cleans_up_release_and_tag(self):
+    def test_failed_create_does_not_clean_up_release_or_tag(self):
         calls = []
 
         def fake_gh_run(args):
@@ -272,12 +272,52 @@ class UploadToReleaseTests(unittest.TestCase):
         ):
             with self.assertRaisesRegex(ValueError, "upload failed"):
                 self.mod.upload_to_release("owner/repo", "tag", "title", Path("asset.tar.gz"))
-        self.assertEqual(
-            calls[-2:],
-            [
-                ["release", "delete", "tag", "--repo", "owner/repo", "--yes"],
-                ["api", "--method", "DELETE", "repos/owner/repo/git/refs/tags/tag"],
-            ],
+        self.assertNotIn(
+            ["release", "delete", "tag", "--repo", "owner/repo", "--yes"], calls
+        )
+
+    def test_none_create_result_does_not_clean_up_release_or_tag(self):
+        calls = []
+
+        def fake_gh_run(args):
+            calls.append(args)
+            return subprocess.CompletedProcess(args, 1, stdout="", stderr="not found")
+
+        with (
+            mock.patch.object(self.gh_helpers, "gh_run", side_effect=fake_gh_run),
+            mock.patch.object(self.gh_helpers, "gh_run_with_timeout", return_value=None),
+        ):
+            with self.assertRaisesRegex(ValueError, "gh CLI unavailable"):
+                self.mod.upload_to_release("owner/repo", "tag", "title", Path("asset.tar.gz"))
+        self.assertNotIn(
+            ["release", "delete", "tag", "--repo", "owner/repo", "--yes"], calls
+        )
+
+    def test_cleanup_only_deletes_release_owned_by_this_invocation(self):
+        calls = []
+        view_result = subprocess.CompletedProcess([], 1, stdout="", stderr="not found")
+
+        def fake_gh_run(args):
+            calls.append(args)
+            return view_result
+
+        with (
+            mock.patch.object(self.gh_helpers, "gh_run", side_effect=fake_gh_run),
+            mock.patch.object(
+                self.gh_helpers,
+                "gh_run_with_timeout",
+                return_value=subprocess.CompletedProcess([], 0, stdout="", stderr=""),
+            ),
+        ):
+            self.mod._cleanup_release_and_tag("owner/repo", "unowned-tag")
+            self.mod.upload_to_release("owner/repo", "owned-tag", "title", Path("asset.tar.gz"))
+            self.mod._cleanup_release_and_tag("owner/repo", "owned-tag")
+
+        self.assertNotIn(
+            ["release", "delete", "unowned-tag", "--repo", "owner/repo", "--yes"], calls
+        )
+        self.assertIn(
+            ["release", "delete", "owned-tag", "--repo", "owner/repo", "--yes"], calls
         )
 
 
@@ -726,6 +766,7 @@ class MainEndToEndTests(unittest.TestCase):
                 mock.patch.object(self.mod, "shallow_clone_at", side_effect=fake_clone),
                 mock.patch.object(self.mod, "upload_to_release", new=mock_upload),
                 mock.patch("urllib.request.urlopen", side_effect=urlopen),
+                mock.patch.object(self.mod, "_cleanup_release_and_tag") as cleanup,
             ):
                 code = self.mod.main(
                     [
@@ -747,6 +788,9 @@ class MainEndToEndTests(unittest.TestCase):
 
             self.assertEqual(code, 3)
             mock_upload.assert_called_once()
+            cleanup.assert_called_once_with(
+                "owner/repo", "archive-someone-cool-script-0.1.0-ddddddd"
+            )
             self.assertFalse(manifest_path.exists(), "manifest should not record a package the registry rejected")
 
     def test_repo_and_commit_aliases_and_deferral_reason(self):

@@ -39,7 +39,9 @@ KNOWN_TRIPLES = frozenset(
 SHA256_RE = re.compile(r"^[a-fA-F0-9]{64}$")
 GIT_FULL_SHA1_RE = re.compile(r"^[a-fA-F0-9]{40}$")
 VERSION_TAG_RE = re.compile(
-    r"^v?\d+\.\d+\.\d+(?:[-+][0-9A-Za-z][0-9A-Za-z.-]*)*$"
+    r"^v?\d+\.\d+\.\d+"
+    r"(?:-[0-9A-Za-z][0-9A-Za-z.-]*(?:\+[0-9A-Za-z][0-9A-Za-z.-]*)?"
+    r"|\+[0-9A-Za-z][0-9A-Za-z.-]*)?$"
 )
 PACKAGE_TYPES = frozenset({"plugin", "module", "script", "completion"})
 ARTIFACT_KINDS = frozenset({"binary", "archive", "source"})
