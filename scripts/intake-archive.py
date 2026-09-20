@@ -210,15 +210,34 @@ def upload_to_release(release_repo: str, tag: str, title: str, asset: Path) -> s
             timeout=300,
         )
     except subprocess.TimeoutExpired:
+        _cleanup_release_and_tag(release_repo, tag)
         raise ValueError(
-            f"gh release create timed out after 300s; release tag {tag!r} may already exist and require manual cleanup"
+            f"gh release create timed out after 300s; cleanup attempted for release tag {tag!r}"
         )
 
     if result is None:
+        _cleanup_release_and_tag(release_repo, tag)
         raise ValueError("gh CLI unavailable")
     if result.returncode != 0:
+        _cleanup_release_and_tag(release_repo, tag)
         raise ValueError(f"gh release create failed: {result.stderr.strip()}")
     return f"https://github.com/{release_repo}/releases/download/{tag}/{asset.name}"
+
+
+def _cleanup_release_and_tag(release_repo: str, tag: str) -> None:
+    """Best-effort removal of an intake release and its Git tag."""
+    gh_helpers = importlib.import_module("gh_helpers")
+    commands = (
+        ["release", "delete", tag, "--repo", release_repo, "--yes"],
+        ["api", "--method", "DELETE", f"repos/{release_repo}/git/refs/tags/{tag}"],
+    )
+    for command in commands:
+        result = gh_helpers.gh_run(command)
+        if result is None or result.returncode != 0:
+            print(
+                f"WARN: cleanup command failed for release tag {tag!r}: gh {' '.join(command)}",
+                file=sys.stderr,
+            )
 
 
 def derive_version(ref: str, resolved_sha: str) -> str:
@@ -429,10 +448,12 @@ def _build_and_publish(args: argparse.Namespace, src_dir: Path, tag: str, versio
         post_upload_digest = hashlib.sha256(downloaded_bytes).hexdigest()
     except Exception as exc:
         print(f"FAIL: could not download published asset for verification: {exc}", file=sys.stderr)
+        _cleanup_release_and_tag(args.release_repo, tag)
         return 1
 
     if post_upload_digest != pre_upload_digest:
         print(f"FAIL: published asset digest mismatch: expected {pre_upload_digest}, got {post_upload_digest}", file=sys.stderr)
+        _cleanup_release_and_tag(args.release_repo, tag)
         return 1
     return url, pre_upload_digest
 

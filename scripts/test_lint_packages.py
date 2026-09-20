@@ -296,7 +296,7 @@ class TestLintSourceProvenance(unittest.TestCase):
         errors: list[str] = []
         self.lint._lint_source_provenance(
             {"type": "module"},
-            {"source": {"git": "g", "rev": "abc123def456"}},
+            {"source": {"git": "g", "rev": "a" * 40}},
             errors,
             label="p@1",
         )
@@ -311,8 +311,8 @@ class TestLintSourceProvenance(unittest.TestCase):
         self.assertEqual(errors, ["p@1: source.rev is missing or empty"])
 
     def test_non_immutable_rev(self):
-        """Branch-name revisions are rejected for every package type."""
-        for rev in ("main", "MASTER", "Head"):
+        """Branch names and abbreviated SHAs are rejected for every package type."""
+        for rev in ("main", "MASTER", "Head", "develop", "abc123def456"):
             errors: list[str] = []
             self.lint._lint_source_provenance(
                 {"type": "plugin"},
@@ -327,7 +327,7 @@ class TestLintSourceProvenance(unittest.TestCase):
 
     def test_immutable_rev_ok(self):
         """Tag and commit revisions pass provenance checks."""
-        for rev in ("v1.0.0", "abc123def456"):
+        for rev in ("v1.0.0", "a" * 40):
             errors: list[str] = []
             self.lint._lint_source_provenance(
                 {"type": "plugin"},

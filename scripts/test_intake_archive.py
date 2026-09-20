@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Unit checks for scripts/intake-archive.py (no network: mocks git/gh)."""
+"""Unit checks for scripts/intake-archive.py (no network: mocks git/gh).
+
+Archive source objects include the temporary ``cargo_name`` compatibility field.
+"""
 
 from __future__ import annotations
 
@@ -11,6 +14,7 @@ import tarfile
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest import mock
 
 SCRIPT = Path(__file__).resolve().parent / "intake-archive.py"
@@ -227,11 +231,17 @@ class UploadToReleaseTests(unittest.TestCase):
                 self.mod.upload_to_release("owner/repo", "tag", "title", Path("asset.tar.gz"))
 
     def test_raises_indeterminate_on_timeout(self):
+        calls = []
+
+        def fake_gh_run(args):
+            calls.append(args)
+            return subprocess.CompletedProcess(args, 1, stdout="", stderr="not found")
+
         with (
             mock.patch.object(
                 self.gh_helpers,
                 "gh_run",
-                return_value=subprocess.CompletedProcess([], 1, stdout="", stderr="not found"),
+                side_effect=fake_gh_run,
             ),
             mock.patch.object(
                 self.gh_helpers,
@@ -239,8 +249,88 @@ class UploadToReleaseTests(unittest.TestCase):
                 side_effect=subprocess.TimeoutExpired(cmd="gh", timeout=300),
             ),
         ):
-            with self.assertRaisesRegex(ValueError, "timed out.*manual cleanup"):
+            with self.assertRaisesRegex(ValueError, "timed out.*cleanup attempted"):
                 self.mod.upload_to_release("owner/repo", "tag", "title", Path("asset.tar.gz"))
+        self.assertIn(["release", "delete", "tag", "--repo", "owner/repo", "--yes"], calls)
+        self.assertIn(
+            ["api", "--method", "DELETE", "repos/owner/repo/git/refs/tags/tag"], calls
+        )
+
+    def test_failed_create_cleans_up_release_and_tag(self):
+        calls = []
+
+        def fake_gh_run(args):
+            calls.append(args)
+            return subprocess.CompletedProcess(args, 1, stdout="", stderr="not found")
+
+        create_result = subprocess.CompletedProcess([], 1, stdout="", stderr="upload failed")
+        with (
+            mock.patch.object(self.gh_helpers, "gh_run", side_effect=fake_gh_run),
+            mock.patch.object(
+                self.gh_helpers, "gh_run_with_timeout", return_value=create_result
+            ),
+        ):
+            with self.assertRaisesRegex(ValueError, "upload failed"):
+                self.mod.upload_to_release("owner/repo", "tag", "title", Path("asset.tar.gz"))
+        self.assertEqual(
+            calls[-2:],
+            [
+                ["release", "delete", "tag", "--repo", "owner/repo", "--yes"],
+                ["api", "--method", "DELETE", "repos/owner/repo/git/refs/tags/tag"],
+            ],
+        )
+
+
+class BuildAndPublishTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.mod = load_mod()
+
+    def _args(self):
+        return SimpleNamespace(owner="someone", name="cool-module", release_repo="owner/repo")
+
+    def test_download_failure_cleans_up_release_and_tag(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            src_dir = Path(tmp) / "src"
+            src_dir.mkdir()
+            (src_dir / "mod.nu").write_text("export def run [] {}\n", encoding="utf-8")
+            with (
+                mock.patch.object(
+                    self.mod,
+                    "upload_to_release",
+                    return_value="https://example.invalid/asset.tar.gz",
+                ),
+                mock.patch("urllib.request.urlopen", side_effect=OSError("download failed")),
+                mock.patch.object(self.mod, "_cleanup_release_and_tag") as cleanup,
+            ):
+                result = self.mod._build_and_publish(
+                    self._args(), src_dir, "archive-someone-cool-module-1.0.0", "1.0.0"
+                )
+        self.assertEqual(result, 1)
+        cleanup.assert_called_once_with("owner/repo", "archive-someone-cool-module-1.0.0")
+
+    def test_digest_mismatch_cleans_up_release_and_tag(self):
+        response = mock.MagicMock()
+        response.read.return_value = b"substituted bytes"
+        response.__enter__.return_value = response
+        with tempfile.TemporaryDirectory() as tmp:
+            src_dir = Path(tmp) / "src"
+            src_dir.mkdir()
+            (src_dir / "mod.nu").write_text("export def run [] {}\n", encoding="utf-8")
+            with (
+                mock.patch.object(
+                    self.mod,
+                    "upload_to_release",
+                    return_value="https://example.invalid/asset.tar.gz",
+                ),
+                mock.patch("urllib.request.urlopen", return_value=response),
+                mock.patch.object(self.mod, "_cleanup_release_and_tag") as cleanup,
+            ):
+                result = self.mod._build_and_publish(
+                    self._args(), src_dir, "archive-someone-cool-module-1.0.0", "1.0.0"
+                )
+        self.assertEqual(result, 1)
+        cleanup.assert_called_once_with("owner/repo", "archive-someone-cool-module-1.0.0")
 
 
 class BuildSpecTests(unittest.TestCase):
@@ -279,6 +369,7 @@ class BuildSpecTests(unittest.TestCase):
             {
                 "git": "https://github.com/someone/cool-module",
                 "rev": "d" * 40,
+                "cargo_name": "cool-module",
             },
         )
 
@@ -423,6 +514,17 @@ class MainEndToEndTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.mod = load_mod()
 
+    def _verified_upload(self, url):
+        upload = mock.Mock(return_value=url)
+
+        def urlopen(_url, timeout):
+            response = mock.MagicMock()
+            response.read.return_value = upload.call_args.args[3].read_bytes()
+            response.__enter__.return_value = response
+            return response
+
+        return upload, urlopen
+
     def test_full_flow_writes_spec_and_manifest_without_write_flag(self):
         sha = "f" * 40
 
@@ -438,15 +540,15 @@ class MainEndToEndTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out_path = Path(tmp) / "spec.json"
             manifest_path = Path(tmp) / "manifest-archives.json"
+            upload, urlopen = self._verified_upload(
+                "https://github.com/owner/repo/releases/download/tag/asset.tar.gz"
+            )
 
             with (
                 mock.patch.object(self.mod.subprocess, "run", side_effect=fake_ls_remote),
                 mock.patch.object(self.mod, "shallow_clone_at", side_effect=fake_clone),
-                mock.patch.object(
-                    self.mod,
-                    "upload_to_release",
-                    return_value="https://github.com/owner/repo/releases/download/tag/asset.tar.gz",
-                ),
+                mock.patch.object(self.mod, "upload_to_release", new=upload),
+                mock.patch("urllib.request.urlopen", side_effect=urlopen),
             ):
                 code = self.mod.main(
                     [
@@ -565,11 +667,13 @@ class MainEndToEndTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out_path = Path(tmp) / "spec.json"
             manifest_path = Path(tmp) / "manifest-archives.json"
+            mock_upload, urlopen = self._verified_upload(upload_url)
 
             with (
                 mock.patch.object(self.mod.subprocess, "run", side_effect=fake_run),
                 mock.patch.object(self.mod, "shallow_clone_at", side_effect=fake_clone),
-                mock.patch.object(self.mod, "upload_to_release", return_value=upload_url) as mock_upload,
+                mock.patch.object(self.mod, "upload_to_release", new=mock_upload),
+                mock.patch("urllib.request.urlopen", side_effect=urlopen),
             ):
                 code = self.mod.main(
                     [
@@ -614,15 +718,14 @@ class MainEndToEndTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out_path = Path(tmp) / "spec.json"
             manifest_path = Path(tmp) / "manifest-archives.json"
+            upload_url = "https://github.com/owner/repo/releases/download/tag/asset.tar.gz"
+            mock_upload, urlopen = self._verified_upload(upload_url)
 
             with (
                 mock.patch.object(self.mod.subprocess, "run", side_effect=fake_run),
                 mock.patch.object(self.mod, "shallow_clone_at", side_effect=fake_clone),
-                mock.patch.object(
-                    self.mod,
-                    "upload_to_release",
-                    return_value="https://github.com/owner/repo/releases/download/tag/asset.tar.gz",
-                ) as mock_upload,
+                mock.patch.object(self.mod, "upload_to_release", new=mock_upload),
+                mock.patch("urllib.request.urlopen", side_effect=urlopen),
             ):
                 code = self.mod.main(
                     [
@@ -666,11 +769,13 @@ class MainEndToEndTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out_path = Path(tmp) / "spec.json"
             manifest_path = Path(tmp) / "manifest-archives.json"
+            mock_upload, urlopen = self._verified_upload(upload_url)
 
             with (
                 mock.patch.object(self.mod.subprocess, "run", side_effect=fake_run),
                 mock.patch.object(self.mod, "shallow_clone_at", side_effect=fake_clone),
-                mock.patch.object(self.mod, "upload_to_release", return_value=upload_url) as mock_upload,
+                mock.patch.object(self.mod, "upload_to_release", new=mock_upload),
+                mock.patch("urllib.request.urlopen", side_effect=urlopen),
             ):
                 code = self.mod.main(
                     [
