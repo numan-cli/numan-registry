@@ -41,14 +41,23 @@ jobs:
         with:
           persist-credentials: false
 
+      # Committer identity for agent commits. Push and API auth come from the
+      # OpenCode app token the CLI resolves via OIDC (use-github-token is off),
+      # so summaries and pushes post as opencode-agent[bot] while ad-hoc `gh`
+      # calls use the job token and appear as github-actions[bot].
+      - name: Configure git identity
+        shell: bash
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
       # Model probing, verified install, agent run with retry/salvage, and the
       # leaked-path comment guard are handled by the action. The pull_request
       # trigger runs the review model chain; /oc comments pick review vs fix
-      # per the comment. `use-github-token` keeps the job token
-      # (contents: write) as the push credential. `job-started-at` anchors the
-      # 85-minute agent budget to job start so the retry and the guard still
-      # run inside the 90-minute job limit. The model probe chains are left at
-      # the action defaults, which match this repo's documented chains
+      # per the comment. `job-started-at` anchors the 85-minute agent budget
+      # to job start so the retry and the guard still run inside the 90-minute
+      # job limit. The model probe chains are left at the action defaults,
+      # which match this repo's documented chains
       # (see .opencode/github-commands.md).
       - name: Run opencode
         uses: tonythethompson/opencode-action@8b917d4ce4f10a967e9d29ae263d05580c3ed395 # v0.8.0
@@ -64,6 +73,5 @@ jobs:
           CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY || secrets.CLOUDFLARE_API_TOKEN }}
           CONTEXT7_API_KEY: ${{ secrets.CONTEXT7_API_KEY }}
         with:
-          use-github-token: 'true'
           job-started-at: ${{ steps.job_start.outputs.epoch }}
           timeout-minutes: '85'
