@@ -18,10 +18,12 @@ turns "here's a Git repo with Nu files" into a registry-intake-ready spec:
   7. Record the resolved SHA + original ref in manifest-archives.json for
      repeatable re-intake on version bumps.
 
-The registry index's `source` field is Rust-plugin-shaped (requires
-cargo_name) and existing non-binary entries all omit it; provenance for
-archive packages lives in manifest-archives.json instead, not in the
-registry index.
+The spec omits `artifact.sha256`: add-package.py computes the hash itself
+when downloading the artifact, so an authored hash would be ignored (or
+worse, mask a substitution). The resolved SHA is preserved as
+`source.rev` -- immutable upstream provenance for non-plugin sources.
+Emitted specs include `source.cargo_name` as a temporary compatibility
+placeholder (the package name) until numan-cli/numan#137 makes it optional.
 
 Usage:
   python scripts/intake-archive.py \\
@@ -51,6 +53,8 @@ from pathlib import Path
 if str(Path(__file__).resolve().parent) not in sys.path:
     sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from url_safety import ensure_http_url, http_opener
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 COMMAND_TIMEOUT_SECONDS = 120
@@ -61,6 +65,7 @@ VALID_GIT_URL_RE = re.compile(
 )
 MAX_ARCHIVE_FILES = 10_000
 MAX_ARCHIVE_BYTES = 100 * 1024 * 1024
+_RELEASES_CREATED_BY_INVOCATION: set[tuple[str, str]] = set()
 
 
 def _load_add_package() -> ModuleType:
@@ -210,14 +215,41 @@ def upload_to_release(release_repo: str, tag: str, title: str, asset: Path) -> s
         )
     except subprocess.TimeoutExpired:
         raise ValueError(
-            f"gh release create timed out after 300s; release tag {tag!r} may already exist and require manual cleanup"
+            f"gh release create timed out after 300s; release ownership is indeterminate for tag {tag!r}"
         )
 
     if result is None:
         raise ValueError("gh CLI unavailable")
     if result.returncode != 0:
         raise ValueError(f"gh release create failed: {result.stderr.strip()}")
+    _RELEASES_CREATED_BY_INVOCATION.add((release_repo, tag))
     return f"https://github.com/{release_repo}/releases/download/{tag}/{asset.name}"
+
+
+def _cleanup_release_and_tag(release_repo: str, tag: str) -> None:
+    """Best-effort removal of a release and tag created by this invocation."""
+    release_identity = (release_repo, tag)
+    if release_identity not in _RELEASES_CREATED_BY_INVOCATION:
+        print(
+            f"WARN: refusing to clean up unowned release tag {tag!r} on {release_repo}",
+            file=sys.stderr,
+        )
+        return
+    # Consume ownership before making remote calls so repeated cleanup cannot
+    # delete a same-named release created later by another invocation.
+    _RELEASES_CREATED_BY_INVOCATION.remove(release_identity)
+    gh_helpers = importlib.import_module("gh_helpers")
+    commands = (
+        ["release", "delete", tag, "--repo", release_repo, "--yes"],
+        ["api", "--method", "DELETE", f"repos/{release_repo}/git/refs/tags/{tag}"],
+    )
+    for command in commands:
+        result = gh_helpers.gh_run(command)
+        if result is None or result.returncode != 0:
+            print(
+                f"WARN: cleanup command failed for release tag {tag!r}: gh {' '.join(command)}",
+                file=sys.stderr,
+            )
 
 
 def derive_version(ref: str, resolved_sha: str) -> str:
@@ -245,11 +277,24 @@ def build_spec(
     nu_version: str,
     entry: str,
     url: str,
-    sha256: str,
+    resolved_sha: str,
     activation_kind: str | None = None,
     activation_import: str | None = None,
 ) -> dict:
-    """Build a registry intake spec for a non-binary (archive-kind) package."""
+    """Build a registry intake spec for a non-binary (archive-kind) package.
+
+    ``source.rev`` is the resolved, immutable upstream commit (never the
+    input ref). Emitted specs include ``source.cargo_name`` as a temporary
+    compatibility placeholder, using the package name for archive-backed
+    modules that have no Rust crate.
+
+    ``artifact.sha256`` is intentionally omitted: add-package.py
+    computes the digest from the downloaded artifact, so an authored hash
+    would be ignored or worse mask a substitution. Only publish such entries
+    once the numan client deserializes ``source.cargo_name`` as optional
+    (numan-cli/numan#137); the pinned numan-parser-check gate blocks
+    cargo-less entries until then.
+    """
     spec: dict = {
         "owner": owner,
         "name": name,
@@ -263,7 +308,15 @@ def build_spec(
             "kind": "archive",
             "url": url,
             "entry": entry,
-            "sha256": sha256,
+        },
+        "source": {
+            "git": git_url,
+            "rev": resolved_sha,
+            # Temporary: include cargo_name for client compatibility until
+            # numan-cli/numan#137 makes SourceInfo.cargo_name optional.
+            # Archive-backed modules don't have a Rust crate, so use the
+            # package name as a placeholder.
+            "cargo_name": name,
         },
     }
     if activation_kind:
@@ -376,23 +429,47 @@ def _checkout_and_validate_entry(args: argparse.Namespace, resolved_sha: str, tm
 def _build_and_publish(args: argparse.Namespace, src_dir: Path, tag: str, version: str) -> tuple[str, str] | int:
     """Build the deterministic archive and upload it to the release.
 
+    Retains the pre-upload digest and verifies the downloaded release asset
+    matches that digest before returning. Rejects mismatches to prevent
+    publishing substituted bytes under the original source.rev.
+
     Returns (url, sha256), or an exit code on failure.
     """
+    import urllib.request
+
     archive_path = src_dir.parent / f"{args.owner}-{args.name}-{version}.tar.gz"
     try:
         build_archive(src_dir, archive_path)
     except ValueError as exc:
         print(f"FAIL: {exc}", file=sys.stderr)
         return 1
-    digest = hashlib.sha256(archive_path.read_bytes()).hexdigest()
-    print(f"Built {archive_path.name} sha256={digest}", file=sys.stderr)
+    pre_upload_digest = hashlib.sha256(archive_path.read_bytes()).hexdigest()
+    print(f"Built {archive_path.name} sha256={pre_upload_digest}", file=sys.stderr)
 
     try:
         url = upload_to_release(args.release_repo, tag, f"{args.owner}/{args.name} {version}", archive_path)
     except ValueError as exc:
         print(f"FAIL: {exc}", file=sys.stderr)
         return 1
-    return url, digest
+
+    # Verify the published asset matches the pre-upload digest
+    print(f"Verifying published asset integrity at {url}", file=sys.stderr)
+    try:
+        ensure_http_url(url)
+        req = urllib.request.Request(url, method="GET")
+        with http_opener().open(req, timeout=60) as response:
+            downloaded_bytes = response.read()
+        post_upload_digest = hashlib.sha256(downloaded_bytes).hexdigest()
+    except Exception as exc:
+        print(f"FAIL: could not download published asset for verification: {exc}", file=sys.stderr)
+        _cleanup_release_and_tag(args.release_repo, tag)
+        return 1
+
+    if post_upload_digest != pre_upload_digest:
+        print(f"FAIL: published asset digest mismatch: expected {pre_upload_digest}, got {post_upload_digest}", file=sys.stderr)
+        _cleanup_release_and_tag(args.release_repo, tag)
+        return 1
+    return url, pre_upload_digest
 
 
 def _write_registry_and_manifest(args: argparse.Namespace, out_path: Path, resolved_sha: str, tag: str) -> int | None:
@@ -419,8 +496,9 @@ def _write_registry_and_manifest(args: argparse.Namespace, out_path: Path, resol
             check=False,
         )
         if result.returncode != 0:
+            _cleanup_release_and_tag(args.release_repo, tag)
             print(
-                f"FAIL: registry update failed; release {tag} was already published on {args.release_repo}",
+                f"FAIL: registry update failed; cleanup attempted for release {tag} on {args.release_repo}",
                 file=sys.stderr,
             )
             return result.returncode
@@ -577,7 +655,7 @@ def main(argv: list[str] | None = None) -> int:
         published = _build_and_publish(args, src_dir, tag, version)
         if isinstance(published, int):
             return published
-        url, digest = published
+        url, _ = published
 
         spec = build_spec(
             owner=args.owner,
@@ -590,7 +668,7 @@ def main(argv: list[str] | None = None) -> int:
             nu_version=args.nu_version,
             entry=args.entry,
             url=url,
-            sha256=digest,
+            resolved_sha=resolved_sha,
             activation_kind=args.activation_kind,
             activation_import=args.activation_import,
         )

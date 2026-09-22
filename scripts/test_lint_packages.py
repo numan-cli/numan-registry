@@ -264,19 +264,24 @@ class TestLintSourceProvenance(unittest.TestCase):
         cls.lint = load_lint()
 
     def test_no_source_ok(self):
+        """Absent source blocks are always fine."""
         errors: list[str] = []
-        self.lint._lint_source_provenance({}, errors, label="p@1")
+        self.lint._lint_source_provenance({}, {}, errors, label="p@1")
         self.assertEqual(errors, [])
 
     def test_source_not_dict(self):
+        """A non-object source is rejected for any package type."""
         errors: list[str] = []
-        self.lint._lint_source_provenance({"source": "nope"}, errors, label="p@1")
+        self.lint._lint_source_provenance({}, {"source": "nope"}, errors, label="p@1")
         self.assertEqual(errors, ["p@1: source must be an object when present"])
 
     def test_missing_source_fields(self):
+        """Plugin sources must supply git, rev, and cargo_name."""
         source = {"git": "", "rev": "  ", "cargo_name": None}
         errors: list[str] = []
-        self.lint._lint_source_provenance({"source": source}, errors, label="p@1")
+        self.lint._lint_source_provenance(
+            {"type": "plugin"}, {"source": source}, errors, label="p@1"
+        )
         self.assertEqual(
             errors,
             [
@@ -286,11 +291,34 @@ class TestLintSourceProvenance(unittest.TestCase):
             ],
         )
 
+    def test_non_plugin_source_without_cargo_name_ok(self):
+        """Non-plugin sources may omit cargo_name entirely."""
+        errors: list[str] = []
+        self.lint._lint_source_provenance(
+            {"type": "module"},
+            {"source": {"git": "g", "rev": "a" * 40}},
+            errors,
+            label="p@1",
+        )
+        self.assertEqual(errors, [])
+
+    def test_non_plugin_source_still_requires_git_rev(self):
+        """Non-plugin sources still require git and rev."""
+        errors: list[str] = []
+        self.lint._lint_source_provenance(
+            {"type": "module"}, {"source": {"git": "g"}}, errors, label="p@1"
+        )
+        self.assertEqual(errors, ["p@1: source.rev is missing or empty"])
+
     def test_non_immutable_rev(self):
-        for rev in ("main", "MASTER", "Head"):
+        """Branch names and abbreviated SHAs are rejected for every package type."""
+        for rev in ("main", "MASTER", "Head", "develop", "abc123def456"):
             errors: list[str] = []
             self.lint._lint_source_provenance(
-                {"source": {"git": "g", "rev": rev, "cargo_name": "c"}}, errors, label="p@1"
+                {"type": "plugin"},
+                {"source": {"git": "g", "rev": rev, "cargo_name": "c"}},
+                errors,
+                label="p@1",
             )
             self.assertEqual(
                 errors,
@@ -298,12 +326,34 @@ class TestLintSourceProvenance(unittest.TestCase):
             )
 
     def test_immutable_rev_ok(self):
-        for rev in ("v1.0.0", "abc123def456"):
+        """Tag and commit revisions pass provenance checks."""
+        for rev in (
+            "v1.0.0",
+            "1.2.3-alpha.1",
+            "1.2.3+build.5",
+            "v1.2.3-rc.1+build.5",
+            "a" * 40,
+        ):
             errors: list[str] = []
             self.lint._lint_source_provenance(
-                {"source": {"git": "g", "rev": rev, "cargo_name": "c"}}, errors, label="p@1"
+                {"type": "plugin"},
+                {"source": {"git": "g", "rev": rev, "cargo_name": "c"}},
+                errors,
+                label="p@1",
             )
             self.assertEqual(errors, [])
+
+    def test_arbitrarily_long_malformed_version_tag_is_rejected(self):
+        rev = "v1.2.3" + "-a" * 50_000 + "!"
+        errors: list[str] = []
+        self.lint._lint_source_provenance(
+            {"type": "plugin"},
+            {"source": {"git": "g", "rev": rev, "cargo_name": "c"}},
+            errors,
+            label="p@1",
+        )
+        self.assertEqual(len(errors), 1)
+        self.assertIn("not immutable provenance", errors[0])
 
 
 class TestLintForkIdentity(unittest.TestCase):

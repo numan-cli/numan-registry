@@ -37,6 +37,12 @@ KNOWN_TRIPLES = frozenset(
 )
 
 SHA256_RE = re.compile(r"^[a-fA-F0-9]{64}$")
+GIT_FULL_SHA1_RE = re.compile(r"^[a-fA-F0-9]{40}$")
+VERSION_TAG_RE = re.compile(
+    r"^v?\d+\.\d+\.\d+"
+    r"(?:-[0-9A-Za-z][0-9A-Za-z.-]*(?:\+[0-9A-Za-z][0-9A-Za-z.-]*)?"
+    r"|\+[0-9A-Za-z][0-9A-Za-z.-]*)?$"
+)
 PACKAGE_TYPES = frozenset({"plugin", "module", "script", "completion"})
 ARTIFACT_KINDS = frozenset({"binary", "archive", "source"})
 ACTIVATABLE_TYPES = frozenset({"plugin", "module"})
@@ -327,24 +333,31 @@ def _lint_activation(
 
 
 def _lint_source_provenance(
+    pkg: dict,
     version: dict,
     errors: list[str],
     *,
     label: str,
 ) -> None:
-    """Validate the source provenance block (git/rev/cargo_name)."""
+    """Validate the source provenance block (git/rev, plus cargo_name for plugins)."""
     source = version.get("source")
     if source is None:
         return
     if not isinstance(source, dict):
         errors.append(f"{label}: source must be an object when present")
         return
-    for field in ("git", "rev", "cargo_name"):
+    required = ("git", "rev", "cargo_name") if pkg.get("type") == "plugin" else ("git", "rev")
+    for field in required:
         value = source.get(field)
         if not isinstance(value, str) or not value.strip():
             errors.append(f"{label}: source.{field} is missing or empty")
     rev = source.get("rev")
-    if isinstance(rev, str) and rev.strip().lower() in {"main", "master", "head"}:
+    if (
+        isinstance(rev, str)
+        and rev.strip()
+        and GIT_FULL_SHA1_RE.fullmatch(rev.strip()) is None
+        and VERSION_TAG_RE.fullmatch(rev.strip()) is None
+    ):
         errors.append(
             f"{label}: source.rev {rev!r} is not immutable provenance "
             "(use a tag or full commit)"
@@ -401,11 +414,12 @@ def lint_activation_and_provenance(
     entry_index: int | None = None,
     version_index: int | None = None,
 ) -> None:
+    """Lint activation, source provenance, and fork identity for one version."""
     label = version_label(
         pkg, version, entry_index=entry_index, version_index=version_index
     )
     _lint_activation(pkg, version, errors, label=label)
-    _lint_source_provenance(version, errors, label=label)
+    _lint_source_provenance(pkg, version, errors, label=label)
     _lint_fork_identity(pkg, version, errors, label=label)
 
 

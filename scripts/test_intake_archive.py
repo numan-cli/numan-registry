@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Unit checks for scripts/intake-archive.py (no network: mocks git/gh)."""
+"""Unit checks for scripts/intake-archive.py (no network: mocks git/gh).
+
+Archive source objects include the temporary ``cargo_name`` compatibility field.
+"""
 
 from __future__ import annotations
 
@@ -11,6 +14,7 @@ import tarfile
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest import mock
 
 SCRIPT = Path(__file__).resolve().parent / "intake-archive.py"
@@ -164,6 +168,9 @@ class UploadToReleaseTests(unittest.TestCase):
 
         cls.gh_helpers = gh_helpers
 
+    def setUp(self) -> None:
+        self.mod._RELEASES_CREATED_BY_INVOCATION.clear()
+
     def test_refuses_existing_tag(self):
         with mock.patch.object(
             self.gh_helpers,
@@ -226,12 +233,18 @@ class UploadToReleaseTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "gh CLI unavailable"):
                 self.mod.upload_to_release("owner/repo", "tag", "title", Path("asset.tar.gz"))
 
-    def test_raises_indeterminate_on_timeout(self):
+    def test_timeout_does_not_clean_up_indeterminate_release(self):
+        calls = []
+
+        def fake_gh_run(args):
+            calls.append(args)
+            return subprocess.CompletedProcess(args, 1, stdout="", stderr="not found")
+
         with (
             mock.patch.object(
                 self.gh_helpers,
                 "gh_run",
-                return_value=subprocess.CompletedProcess([], 1, stdout="", stderr="not found"),
+                side_effect=fake_gh_run,
             ),
             mock.patch.object(
                 self.gh_helpers,
@@ -239,8 +252,127 @@ class UploadToReleaseTests(unittest.TestCase):
                 side_effect=subprocess.TimeoutExpired(cmd="gh", timeout=300),
             ),
         ):
-            with self.assertRaisesRegex(ValueError, "timed out.*manual cleanup"):
+            with self.assertRaisesRegex(ValueError, "timed out.*ownership is indeterminate"):
                 self.mod.upload_to_release("owner/repo", "tag", "title", Path("asset.tar.gz"))
+        self.assertNotIn(["release", "delete", "tag", "--repo", "owner/repo", "--yes"], calls)
+
+    def test_failed_create_does_not_clean_up_release_or_tag(self):
+        calls = []
+
+        def fake_gh_run(args):
+            calls.append(args)
+            return subprocess.CompletedProcess(args, 1, stdout="", stderr="not found")
+
+        create_result = subprocess.CompletedProcess([], 1, stdout="", stderr="upload failed")
+        with (
+            mock.patch.object(self.gh_helpers, "gh_run", side_effect=fake_gh_run),
+            mock.patch.object(
+                self.gh_helpers, "gh_run_with_timeout", return_value=create_result
+            ),
+        ):
+            with self.assertRaisesRegex(ValueError, "upload failed"):
+                self.mod.upload_to_release("owner/repo", "tag", "title", Path("asset.tar.gz"))
+        self.assertNotIn(
+            ["release", "delete", "tag", "--repo", "owner/repo", "--yes"], calls
+        )
+
+    def test_none_create_result_does_not_clean_up_release_or_tag(self):
+        calls = []
+
+        def fake_gh_run(args):
+            calls.append(args)
+            return subprocess.CompletedProcess(args, 1, stdout="", stderr="not found")
+
+        with (
+            mock.patch.object(self.gh_helpers, "gh_run", side_effect=fake_gh_run),
+            mock.patch.object(self.gh_helpers, "gh_run_with_timeout", return_value=None),
+        ):
+            with self.assertRaisesRegex(ValueError, "gh CLI unavailable"):
+                self.mod.upload_to_release("owner/repo", "tag", "title", Path("asset.tar.gz"))
+        self.assertNotIn(
+            ["release", "delete", "tag", "--repo", "owner/repo", "--yes"], calls
+        )
+
+    def test_cleanup_only_deletes_release_owned_by_this_invocation(self):
+        calls = []
+        view_result = subprocess.CompletedProcess([], 1, stdout="", stderr="not found")
+
+        def fake_gh_run(args):
+            calls.append(args)
+            return view_result
+
+        with (
+            mock.patch.object(self.gh_helpers, "gh_run", side_effect=fake_gh_run),
+            mock.patch.object(
+                self.gh_helpers,
+                "gh_run_with_timeout",
+                return_value=subprocess.CompletedProcess([], 0, stdout="", stderr=""),
+            ),
+        ):
+            self.mod._cleanup_release_and_tag("owner/repo", "unowned-tag")
+            self.mod.upload_to_release("owner/repo", "owned-tag", "title", Path("asset.tar.gz"))
+            self.mod._cleanup_release_and_tag("owner/repo", "owned-tag")
+
+        self.assertNotIn(
+            ["release", "delete", "unowned-tag", "--repo", "owner/repo", "--yes"], calls
+        )
+        self.assertIn(
+            ["release", "delete", "owned-tag", "--repo", "owner/repo", "--yes"], calls
+        )
+
+
+class BuildAndPublishTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.mod = load_mod()
+
+    def _args(self):
+        return SimpleNamespace(owner="someone", name="cool-module", release_repo="owner/repo")
+
+    def test_download_failure_cleans_up_release_and_tag(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            src_dir = Path(tmp) / "src"
+            src_dir.mkdir()
+            (src_dir / "mod.nu").write_text("export def run [] {}\n", encoding="utf-8")
+            with (
+                mock.patch.object(
+                    self.mod,
+                    "upload_to_release",
+                    return_value="https://example.invalid/asset.tar.gz",
+                ),
+                mock.patch.object(self.mod, "http_opener") as http_opener,
+                mock.patch.object(self.mod, "_cleanup_release_and_tag") as cleanup,
+            ):
+                http_opener.return_value.open.side_effect = OSError("download failed")
+                result = self.mod._build_and_publish(
+                    self._args(), src_dir, "archive-someone-cool-module-1.0.0", "1.0.0"
+                )
+        self.assertEqual(result, 1)
+        cleanup.assert_called_once_with("owner/repo", "archive-someone-cool-module-1.0.0")
+
+    def test_digest_mismatch_cleans_up_release_and_tag(self):
+        response = mock.MagicMock()
+        response.read.return_value = b"substituted bytes"
+        response.__enter__.return_value = response
+        with tempfile.TemporaryDirectory() as tmp:
+            src_dir = Path(tmp) / "src"
+            src_dir.mkdir()
+            (src_dir / "mod.nu").write_text("export def run [] {}\n", encoding="utf-8")
+            with (
+                mock.patch.object(
+                    self.mod,
+                    "upload_to_release",
+                    return_value="https://example.invalid/asset.tar.gz",
+                ),
+                mock.patch.object(self.mod, "http_opener") as http_opener,
+                mock.patch.object(self.mod, "_cleanup_release_and_tag") as cleanup,
+            ):
+                http_opener.return_value.open.return_value = response
+                result = self.mod._build_and_publish(
+                    self._args(), src_dir, "archive-someone-cool-module-1.0.0", "1.0.0"
+                )
+        self.assertEqual(result, 1)
+        cleanup.assert_called_once_with("owner/repo", "archive-someone-cool-module-1.0.0")
 
 
 class BuildSpecTests(unittest.TestCase):
@@ -249,6 +381,7 @@ class BuildSpecTests(unittest.TestCase):
         cls.mod = load_mod()
 
     def test_module_spec_includes_activation(self):
+        """Archive module specs carry activation and immutable source provenance."""
         spec = self.mod.build_spec(
             owner="someone",
             name="cool-module",
@@ -260,7 +393,7 @@ class BuildSpecTests(unittest.TestCase):
             nu_version=">=0.114.0",
             entry="mod.nu",
             url="https://github.com/owner/repo/releases/download/tag/asset.tar.gz",
-            sha256="d" * 64,
+            resolved_sha="d" * 40,
             activation_kind="nu-module",
             activation_import="all",
         )
@@ -271,12 +404,19 @@ class BuildSpecTests(unittest.TestCase):
                 "kind": "archive",
                 "url": "https://github.com/owner/repo/releases/download/tag/asset.tar.gz",
                 "entry": "mod.nu",
-                "sha256": "d" * 64,
             },
         )
-        self.assertNotIn("source", spec)
+        self.assertEqual(
+            spec["source"],
+            {
+                "git": "https://github.com/someone/cool-module",
+                "rev": "d" * 40,
+                "cargo_name": "cool-module",
+            },
+        )
 
     def test_script_spec_omits_activation(self):
+        """Archive script specs have no activation block."""
         spec = self.mod.build_spec(
             owner="someone",
             name="cool-script",
@@ -288,7 +428,7 @@ class BuildSpecTests(unittest.TestCase):
             nu_version="*",
             entry="run.nu",
             url="https://example.invalid/asset.tar.gz",
-            sha256="e" * 64,
+            resolved_sha="e" * 40,
         )
         self.assertNotIn("activation", spec)
 
@@ -416,6 +556,19 @@ class MainEndToEndTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.mod = load_mod()
 
+    def _verified_upload(self, url):
+        upload = mock.Mock(return_value=url)
+
+        def open_verified(_req, timeout):
+            response = mock.MagicMock()
+            response.read.return_value = upload.call_args.args[3].read_bytes()
+            response.__enter__.return_value = response
+            return response
+
+        http_opener = mock.Mock()
+        http_opener.return_value.open.side_effect = open_verified
+        return upload, http_opener
+
     def test_full_flow_writes_spec_and_manifest_without_write_flag(self):
         sha = "f" * 40
 
@@ -431,15 +584,15 @@ class MainEndToEndTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out_path = Path(tmp) / "spec.json"
             manifest_path = Path(tmp) / "manifest-archives.json"
+            upload, http_opener = self._verified_upload(
+                "https://github.com/owner/repo/releases/download/tag/asset.tar.gz"
+            )
 
             with (
                 mock.patch.object(self.mod.subprocess, "run", side_effect=fake_ls_remote),
                 mock.patch.object(self.mod, "shallow_clone_at", side_effect=fake_clone),
-                mock.patch.object(
-                    self.mod,
-                    "upload_to_release",
-                    return_value="https://github.com/owner/repo/releases/download/tag/asset.tar.gz",
-                ),
+                mock.patch.object(self.mod, "upload_to_release", new=upload),
+                mock.patch.object(self.mod, "http_opener", new=http_opener),
             ):
                 code = self.mod.main(
                     [
@@ -558,11 +711,13 @@ class MainEndToEndTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out_path = Path(tmp) / "spec.json"
             manifest_path = Path(tmp) / "manifest-archives.json"
+            mock_upload, http_opener = self._verified_upload(upload_url)
 
             with (
                 mock.patch.object(self.mod.subprocess, "run", side_effect=fake_run),
                 mock.patch.object(self.mod, "shallow_clone_at", side_effect=fake_clone),
-                mock.patch.object(self.mod, "upload_to_release", return_value=upload_url) as mock_upload,
+                mock.patch.object(self.mod, "upload_to_release", new=mock_upload),
+                mock.patch.object(self.mod, "http_opener", new=http_opener),
             ):
                 code = self.mod.main(
                     [
@@ -607,15 +762,15 @@ class MainEndToEndTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out_path = Path(tmp) / "spec.json"
             manifest_path = Path(tmp) / "manifest-archives.json"
+            upload_url = "https://github.com/owner/repo/releases/download/tag/asset.tar.gz"
+            mock_upload, http_opener = self._verified_upload(upload_url)
 
             with (
                 mock.patch.object(self.mod.subprocess, "run", side_effect=fake_run),
                 mock.patch.object(self.mod, "shallow_clone_at", side_effect=fake_clone),
-                mock.patch.object(
-                    self.mod,
-                    "upload_to_release",
-                    return_value="https://github.com/owner/repo/releases/download/tag/asset.tar.gz",
-                ) as mock_upload,
+                mock.patch.object(self.mod, "upload_to_release", new=mock_upload),
+                mock.patch.object(self.mod, "http_opener", new=http_opener),
+                mock.patch.object(self.mod, "_cleanup_release_and_tag") as cleanup,
             ):
                 code = self.mod.main(
                     [
@@ -637,6 +792,9 @@ class MainEndToEndTests(unittest.TestCase):
 
             self.assertEqual(code, 3)
             mock_upload.assert_called_once()
+            cleanup.assert_called_once_with(
+                "owner/repo", "archive-someone-cool-script-0.1.0-ddddddd"
+            )
             self.assertFalse(manifest_path.exists(), "manifest should not record a package the registry rejected")
 
     def test_repo_and_commit_aliases_and_deferral_reason(self):
@@ -659,11 +817,13 @@ class MainEndToEndTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out_path = Path(tmp) / "spec.json"
             manifest_path = Path(tmp) / "manifest-archives.json"
+            mock_upload, http_opener = self._verified_upload(upload_url)
 
             with (
                 mock.patch.object(self.mod.subprocess, "run", side_effect=fake_run),
                 mock.patch.object(self.mod, "shallow_clone_at", side_effect=fake_clone),
-                mock.patch.object(self.mod, "upload_to_release", return_value=upload_url) as mock_upload,
+                mock.patch.object(self.mod, "upload_to_release", new=mock_upload),
+                mock.patch.object(self.mod, "http_opener", new=http_opener),
             ):
                 code = self.mod.main(
                     [
