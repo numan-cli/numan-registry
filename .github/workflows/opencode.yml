@@ -41,15 +41,17 @@ jobs:
         with:
           persist-credentials: false
 
-      # Committer identity for agent commits. Push and API auth come from the
-      # OpenCode app token the CLI resolves via OIDC (use-github-token is off),
-      # so summaries and pushes post as opencode-agent[bot] while ad-hoc `gh`
-      # calls use the job token and appear as github-actions[bot].
-      - name: Configure git identity
+      # persist-credentials leaves git without auth for the agent's own pushes;
+      # the action only configures this header inside its salvage path.
+      - name: Configure git for agent pushes
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local http.https://github.com/.extraheader \
+            "AUTHORIZATION: basic $(printf 'x-access-token:%s' "${GH_TOKEN}" | base64 -w 0)"
 
       # Model probing, verified install, agent run with retry/salvage, and the
       # leaked-path comment guard are handled by the action. The pull_request
