@@ -63,7 +63,7 @@ jobs:
       # the action defaults, which match this repo's documented chains
       # (see .opencode/github-commands.md).
       - name: Run opencode
-        uses: tonythethompson/opencode-action@8b917d4ce4f10a967e9d29ae263d05580c3ed395 # v0.8.0
+        uses: tonythethompson/opencode-review-threads@v1
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -79,3 +79,13 @@ jobs:
           use-github-token: 'true'
           job-started-at: ${{ steps.job_start.outputs.epoch }}
           timeout-minutes: '85'
+          models-review: >-
+            cf:@cf/zai-org/glm-5.3,
+            cf:@cf/deepseek-ai/deepseek-v4-pro-0813,
+            zen:big-pickle,
+            zen:glm-5-free
+          models-fix: >-
+            cf:@cf/zai-org/glm-5.3-flash,
+            cf:@cf/deepseek-ai/deepseek-v4-flash-0731,
+            zen:nemotron-3.5-lightning-free,
+            zen:big-pickle
