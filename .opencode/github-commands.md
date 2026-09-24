@@ -52,9 +52,9 @@ agent's training data can go stale. Use its `resolve-library-id` and `query-docs
 
 ## `/oc review`
 
-A review also runs **automatically when a pull request is first opened** (the workflow's
-`pull_request: [opened]` trigger), in addition to on-demand. It does NOT re-run on later
-commits to the same PR.
+A review also runs **automatically when a pull request is first opened** (the existing
+`opencode.yml` `pull_request: [opened]` trigger), and `opencode-review.yml` posts incremental
+reviews on subsequent pushes (`synchronize`), `reopened`, and `ready_for_review` events.
 
 When a user message is exactly `/oc review` or begins with `/oc review`, treat it as a
 request to review the current pull request. Extra text after the shortcut, e.g.
