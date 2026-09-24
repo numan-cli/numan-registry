@@ -11,16 +11,17 @@ The workflow probes and selects the agent model per command (see `.github/workfl
 
 | Command      | Primary model                          | Fallback chain                                                                                |
 | ------------ | -------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `/oc review` | `cloudflare-workers-ai/@cf/zai-org/glm-5.2` (CF-first) | `cloudflare-workers-ai/@cf/deepseek-ai/deepseek-v4-pro-0813` → `opencode/big-pickle` → `opencode/nemotron-3-ultra-free` |
-| `/oc fix`    | `cloudflare-workers-ai/@cf/deepseek-ai/deepseek-v4-flash-0731` (CF-first) | `opencode/nemotron-3.5-lightning-free` → `opencode/big-pickle` → `opencode/nemotron-3-ultra-free` → `opencode/deepseek-v4-flash` |
+| `/oc review` | `cloudflare-workers-ai/@cf/zai-org/glm-5.3` (CF-first) | `cloudflare-workers-ai/@cf/deepseek-ai/deepseek-v4-pro-0813` → `cloudflare-workers-ai/@cf/openai/gpt-oss-120b` → `cloudflare-workers-ai/@cf/moonshotai/kimi-k2.7-code` → `opencode/big-pickle` → `opencode/glm-5-free` → `opencode/nemotron-3-ultra-free` → `openrouter/openrouter/free` |
+| `/oc fix`    | `cloudflare-workers-ai/@cf/zai-org/glm-5.3-flash` (CF-first) | `cloudflare-workers-ai/@cf/deepseek-ai/deepseek-v4-flash-0731` → `cloudflare-workers-ai/@cf/moonshotai/kimi-k2.7-code` → `cloudflare-workers-ai/@cf/qwen/qwen3.8-27b` → `cloudflare-workers-ai/@cf/openai/gpt-oss-120b` → `opencode/nemotron-3.5-lightning-free` → `opencode/big-pickle` → `opencode/glm-5-free` → `openrouter/openrouter/free` |
 
 Each model is probed with a minimal request before the run; a disabled or unavailable model
 falls through to the next in the chain. The `opencode/*` models are probed through the
 opencode.ai `/zen` gateway; the Cloudflare models are probed through the Cloudflare Workers
 AI OpenAI-compatible endpoint behind the `CLOUDFLARE_ACCOUNT_ID` / `CLOUDFLARE_API_TOKEN`
-secrets. `/oc review` runs get a second Cloudflare model (`deepseek-v4-pro-0813`) before
-falling back to the free Zen chain; `/oc fix` runs lead with the free
-`nemotron-3.5-lightning-free`. No `variant` (reasoning-effort) is applied.
+secrets, and the `openrouter/*` models through OpenRouter behind `OPENROUTER_API_KEY`. Both
+chains lead with a Cloudflare model and end with the free OpenRouter fallback; `/oc review`
+runs four Cloudflare models before the Zen fallbacks. No `variant` (reasoning-effort) is
+applied.
 
 ## Using context7
 
@@ -52,9 +53,9 @@ agent's training data can go stale. Use its `resolve-library-id` and `query-docs
 
 ## `/oc review`
 
-A review also runs **automatically when a pull request is first opened** (the workflow's
-`pull_request: [opened]` trigger), in addition to on-demand. It does NOT re-run on later
-commits to the same PR.
+A review also runs **automatically when a pull request is first opened** (the existing
+`opencode.yml` `pull_request: [opened]` trigger), and `opencode-review.yml` posts incremental
+reviews on subsequent pushes (`synchronize`), `reopened`, and `ready_for_review` events.
 
 When a user message is exactly `/oc review` or begins with `/oc review`, treat it as a
 request to review the current pull request. Extra text after the shortcut, e.g.
