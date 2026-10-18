@@ -79,9 +79,11 @@ test("activation guidance follows version metadata and never activates install-o
     assert.ok(html.includes("Lifecycle-tested Nu"));
     assert.ok(html.includes("SHA256:"));
     if (catalog.canActivate(p, v) && !(v.verified_with || []).length && v.evidence_tier !== "provisional") {
-      assert.ok(html.includes("Lifecycle proof is missing"));
+      assert.ok(html.includes("Lifecycle proof is missing"), `${p.id.owner}/${p.id.name}@${v.version}`);
     }
   }));
+  const missingVersion = { version: "1.0.0", activation: { kind: "nu-module" }, artifact: { entry: "mod.nu" } };
+  assert.ok(catalog.detailHtml({ id: { owner: "o", name: "n" }, type: "module" }, missingVersion, filters).includes("Lifecycle proof is missing"));
 });
 
 test("untrusted catalog text and links cannot inject markup or shell commands", () => {
