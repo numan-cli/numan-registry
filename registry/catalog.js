@@ -139,6 +139,22 @@
     }).join("");
   }
 
+  function installationHtml(id, version, supported) {
+    var html = "";
+    // Catalog values are displayed as text. Only safe package tokens become shell commands.
+    if (/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(id) && /^[A-Za-z0-9_.+-]+$/.test(version.version || "")) {
+      html += "<h3>Install this version</h3><p>After the initial setup above, inspect and install:</p>" +
+        command("numan info " + id) + command("numan install " + id + "@" + version.version);
+      if (supported) {
+        html += "<p>Installation is inert. Register this package with Nushell explicitly:</p>" + command("numan activate " + id) +
+          "<p>For modules, open a new Nu session to load the generated autoload. Follow upstream documentation for exported commands.</p>";
+      } else {
+        html += "<p>Install-only: this catalog version has no supported activation path. Numan does not execute it. Inspect the installed files with <code>numan list</code> and follow upstream usage instructions.</p>";
+      }
+    }
+    return html;
+  }
+
   function detailHtml(pkg, version, filters) {
     var id = pkg.id.owner + "/" + pkg.id.name;
     var repo = safeUrl(pkg.repo);
@@ -160,17 +176,7 @@
       "<dt>Published targets</dt><dd>" + escapeHtml(targetSummary(version)) +
       (filters.target && !targetMatches(version, filters.target) ? '<span class="compatibility" data-compatible="false">No binary published for your selected target</span>' : "") + "</dd>" +
       "<dt>Source revision</dt><dd>" + escapeHtml(source.rev || "Not recorded") + (version.provenance ? " · " + escapeHtml(version.provenance) : "") + "</dd></dl>";
-    // Catalog values are displayed as text. Only safe package tokens become shell commands.
-    if (/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(id) && /^[A-Za-z0-9_.+-]+$/.test(version.version || "")) {
-      html += "<h3>Install this version</h3><p>After the initial setup above, inspect and install:</p>" +
-        command("numan info " + id) + command("numan install " + id + "@" + version.version);
-      if (supported) {
-        html += "<p>Installation is inert. Register this package with Nushell explicitly:</p>" + command("numan activate " + id) +
-          "<p>For modules, open a new Nu session to load the generated autoload. Follow upstream documentation for exported commands.</p>";
-      } else {
-        html += "<p>Install-only: this catalog version has no supported activation path. Numan does not execute it. Inspect the installed files with <code>numan list</code> and follow upstream usage instructions.</p>";
-      }
-    }
+    html += installationHtml(id, version, supported);
     html += '<details class="guide"><summary>Artifact hashes and provenance</summary><p>Numan verifies artifact hashes. A catalog signature authenticates the index publisher; it does not guarantee package safety.</p><ul>' + assetHtml + "</ul>";
     [source.git, source.upstream].forEach(function (value) {
       var url = safeUrl(value);
