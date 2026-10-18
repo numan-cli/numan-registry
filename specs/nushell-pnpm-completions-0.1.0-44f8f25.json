@@ -1,0 +1,20 @@
+{
+  "owner": "nushell",
+  "name": "pnpm-completions",
+  "description": "pnpm custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/pnpm @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+  "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/pnpm",
+  "type": "completion",
+  "tags": [
+    "completion",
+    "pnpm",
+    "mirror",
+    "install-only"
+  ],
+  "version": "0.1.0-44f8f25",
+  "nu_version": "*",
+  "artifact": {
+    "kind": "archive",
+    "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-pnpm-completions-44f8f25/pnpm-completions-44f8f25.zip",
+    "archive_root": "pnpm-completions-44f8f25"
+  }
+}

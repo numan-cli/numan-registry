@@ -1,6 +1,6 @@
 # Numan Registry Roadmap
 
-**Status date:** 2026-08-07
+**Status date:** 2026-10-18
 
 **Consolidated plan:** Cross-repo priorities and the 1.0 gate live in
 [`numan/docs/plans/consolidated-multi-repo-roadmap.md`](https://github.com/numan-cli/numan/blob/master/docs/plans/consolidated-multi-repo-roadmap.md).
@@ -16,16 +16,20 @@ JSON edits.
   `Production registry` workflow.
 - Source-tree `registry/index.json.sig` remains a placeholder by design;
   production signing happens in the protected workflow.
-- Committed index: **44** packages (26 plugins, 7 modules, 6 completions, 5 scripts).
+- Committed production candidate: **56** packages (34 plugins, 10 modules, 6 completions, 6 scripts).
   Public CDN updates after production signing/publish.
   Human overview: [`docs/catalog-compat.md`](catalog-compat.md) (regenerated from
-  `registry/index.json`). Latest-version Nu bands: **19** on **0.114.x**, plus
+  `registry/index.json`). Latest-version Nu bands: **26** on **0.114.x**, plus
   older minors and `*` / install-only entries (see catalog-compat summary).
 - Intake tooling scaffolds entries from specs, computes artifact hashes,
   validates schemas, scans secrets, runs preflight checks, parses the catalog
   with the production Numan parser, and lints Nu constraints against
   `numan-plugins/manifest.json`.
 - Stage 1 lifecycle evidence is mandatory for activatable package promotion.
+- Nine previously provisional versions now have real Windows x86_64 lifecycle
+  evidence, with all their published artifact digests verified. Six failed
+  candidates remain in `registry/provisional.json`, merged into staging only.
+  See [the recorded results](evidence/2026-10-18-lifecycle/summary.json).
 - Stage 2 package lint + PR evidence checklist landed in
   [PR #31](https://github.com/numan-cli/numan-registry/pull/31).
 - Intake Stages 3–6 landed in

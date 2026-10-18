@@ -20,5 +20,8 @@
   "activation": {
     "kind": "nu-module",
     "import": "all"
-  }
+  },
+  "verified_with": [
+    "0.114.1"
+  ]
 }

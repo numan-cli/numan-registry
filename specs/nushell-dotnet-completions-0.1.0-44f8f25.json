@@ -1,0 +1,20 @@
+{
+  "owner": "nushell",
+  "name": "dotnet-completions",
+  "description": ".NET (dotnet) custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/dotnet @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+  "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/dotnet",
+  "type": "completion",
+  "tags": [
+    "completion",
+    "dotnet",
+    "mirror",
+    "install-only"
+  ],
+  "version": "0.1.0-44f8f25",
+  "nu_version": "*",
+  "artifact": {
+    "kind": "archive",
+    "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-dotnet-completions-44f8f25/dotnet-completions-44f8f25.zip",
+    "archive_root": "dotnet-completions-44f8f25"
+  }
+}

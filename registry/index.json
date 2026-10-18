@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-08-16T15:22:29Z",
+  "updated_at": "2026-10-18T18:04:25Z",
   "registry_revision": "seed-2026-07-02",
   "packages": [
     {
@@ -2147,8 +2147,7 @@
         {
           "version": "0.0.0-snapshot.20260816.49ab341",
           "nu_version": ">=0.104.0 <0.105.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Commit snapshot awaiting lifecycle proof on target Nu minor",
+          "evidence_tier": "proven",
           "provenance": "commit-snapshot",
           "source": {
             "git": "https://github.com/Euphrasiologist/nu_plugin_bio",
@@ -2179,7 +2178,10 @@
                 "executable_path": "nu_plugin_bio"
               }
             }
-          }
+          },
+          "verified_with": [
+            "0.104.0"
+          ]
         }
       ]
     },
@@ -2201,8 +2203,7 @@
         {
           "version": "0.0.0-snapshot.20260816.8e5872a",
           "nu_version": ">=0.114.0 <0.115.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Commit snapshot awaiting lifecycle proof on target Nu minor",
+          "evidence_tier": "proven",
           "provenance": "commit-snapshot",
           "source": {
             "git": "https://github.com/kik4444/nu_plugin_mime",
@@ -2233,7 +2234,10 @@
                 "executable_path": "nu_plugin_mime"
               }
             }
-          }
+          },
+          "verified_with": [
+            "0.114.1"
+          ]
         }
       ]
     },
@@ -2255,8 +2259,7 @@
         {
           "version": "0.0.0-snapshot.20260816.47854d9",
           "nu_version": ">=0.114.0 <0.115.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Commit snapshot awaiting lifecycle proof on target Nu minor",
+          "evidence_tier": "proven",
           "provenance": "commit-snapshot",
           "source": {
             "git": "https://github.com/WindSoilder/nu_plugin_mongo",
@@ -2287,56 +2290,10 @@
                 "executable_path": "nu_plugin_mongo"
               }
             }
-          }
-        }
-      ]
-    },
-    {
-      "id": {
-        "owner": "hulthe",
-        "name": "nu_plugin_msgpack"
-      },
-      "description": "Commands to convert nushell data to and from MsgPack. CI-built from hulthe/nu_plugin_msgpack@38eb492 (commit snapshot, no tagged release) and pinned + hash-verified + signed downstream in numan-registry.",
-      "repo": "https://github.com/hulthe/nu_plugin_msgpack",
-      "type": "plugin",
-      "tags": [
-        "plugin",
-        "msgpack",
-        "serialization",
-        "ci-built"
-      ],
-      "versions": [
-        {
-          "version": "0.0.0-snapshot.20260816.38eb492",
-          "nu_version": ">=0.90.0 <0.91.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Commit snapshot awaiting lifecycle proof on target Nu minor",
-          "provenance": "commit-snapshot",
-          "source": {
-            "git": "https://github.com/hulthe/nu_plugin_msgpack",
-            "rev": "38eb4924ca1500ef52274eacbf1b59a9e7d4493c",
-            "cargo_name": "nu_plugin_msgpack"
           },
-          "artifact": {
-            "kind": "binary",
-            "targets": {
-              "aarch64-unknown-linux-gnu": {
-                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_msgpack-0.0.0-snapshot.20260816.38eb492/nu_plugin_msgpack-0.0.0-snapshot.20260816.38eb492-aarch64-unknown-linux-gnu.tar.gz",
-                "sha256": "16b136560b56eed8dfbe546f84a8f533b77e6180e70c883626a90fb3802fdac3",
-                "executable_path": "nu_plugin_msgpack"
-              },
-              "x86_64-pc-windows-msvc": {
-                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_msgpack-0.0.0-snapshot.20260816.38eb492/nu_plugin_msgpack-0.0.0-snapshot.20260816.38eb492-x86_64-pc-windows-msvc.zip",
-                "sha256": "ca3252c161df6efbca6d644e6dc4409d9d87c9bd7f6941f0bd334df9fb0c8d71",
-                "executable_path": "nu_plugin_msgpack.exe"
-              },
-              "x86_64-unknown-linux-gnu": {
-                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_msgpack-0.0.0-snapshot.20260816.38eb492/nu_plugin_msgpack-0.0.0-snapshot.20260816.38eb492-x86_64-unknown-linux-gnu.tar.gz",
-                "sha256": "d04d1cd218ddcb2df30a609d7c37095fccbd05133ece53abd49bfbbad956f60b",
-                "executable_path": "nu_plugin_msgpack"
-              }
-            }
-          }
+          "verified_with": [
+            "0.114.1"
+          ]
         }
       ]
     },
@@ -2358,8 +2315,7 @@
         {
           "version": "0.0.0-snapshot.20260816.5a1ca2a",
           "nu_version": ">=0.105.0 <0.106.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Commit snapshot awaiting lifecycle proof on target Nu minor",
+          "evidence_tier": "proven",
           "provenance": "commit-snapshot",
           "source": {
             "git": "https://github.com/Euphrasiologist/nu_plugin_plot",
@@ -2385,7 +2341,10 @@
                 "executable_path": "nu_plugin_plot"
               }
             }
-          }
+          },
+          "verified_with": [
+            "0.105.0"
+          ]
         }
       ]
     },
@@ -2408,8 +2367,7 @@
         {
           "version": "0.0.0-snapshot.20260816.15518dd",
           "nu_version": ">=0.109.0 <0.110.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Commit snapshot awaiting lifecycle proof on target Nu minor",
+          "evidence_tier": "proven",
           "provenance": "commit-snapshot",
           "source": {
             "git": "https://github.com/yybit/nu_plugin_x509",
@@ -2440,7 +2398,10 @@
                 "executable_path": "nu_plugin_x509"
               }
             }
-          }
+          },
+          "verified_with": [
+            "0.109.0"
+          ]
         }
       ]
     },
@@ -2461,9 +2422,8 @@
       "versions": [
         {
           "version": "0.0.0-snapshot.20260816.892c4f9",
-          "nu_version": ">=0.100.0 <0.101.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Snapshot build of Go plugin; awaiting live Nu test harness",
+          "nu_version": ">=0.101.0 <0.102.0",
+          "evidence_tier": "proven",
           "provenance": "commit-snapshot",
           "source": {
             "git": "https://github.com/oderwat/nu_plugin_logfmt",
@@ -2494,7 +2454,10 @@
                 "executable_path": "nu_plugin_logfmt"
               }
             }
-          }
+          },
+          "verified_with": [
+            "0.101.0"
+          ]
         }
       ]
     },
@@ -2519,7 +2482,9 @@
           "nu_version": ">=0.114.0 <0.115.0",
           "evidence_tier": "provisional",
           "deferral_reason": "Requires active Google Cloud Platform credentials (ADC/service account) for live query execution",
-          "verified_with": ["0.114.1"],
+          "verified_with": [
+            "0.114.1"
+          ],
           "source": {
             "git": "https://github.com/galuszkak/nu_plugin_bigquery",
             "rev": "5fff4d8d3e6e6e348a1bd999f55b0fb24bdd489e",
@@ -2572,8 +2537,7 @@
         {
           "version": "0.1.0-2e71068",
           "nu_version": ">=0.114.0 <0.115.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Wave 4 Lane 2 non-binary script archive intake",
+          "evidence_tier": "proven",
           "artifact": {
             "kind": "archive",
             "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-fj0r-ai.nu-0.1.0-2e71068/fj0r-ai.nu-0.1.0-2e71068.tar.gz",
@@ -2583,72 +2547,10 @@
           "activation": {
             "kind": "nu-module",
             "import": "all"
-          }
-        }
-      ]
-    },
-    {
-      "id": {
-        "owner": "fj0r",
-        "name": "docker.nu"
-      },
-      "description": "Docker and container management helper functions and utilities for Nushell",
-      "repo": "https://github.com/fj0r/docker.nu",
-      "type": "module",
-      "tags": [
-        "module",
-        "docker",
-        "containers"
-      ],
-      "versions": [
-        {
-          "version": "0.1.0-7e2d26a",
-          "nu_version": ">=0.114.0 <0.115.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Wave 4 Lane 2 non-binary script archive intake",
-          "artifact": {
-            "kind": "archive",
-            "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-fj0r-docker.nu-0.1.0-7e2d26a/fj0r-docker.nu-0.1.0-7e2d26a.tar.gz",
-            "sha256": "285c648cc9618f288b69e456970bc3b3b016ba3fc0d4a6c154de16dfbe1d109e",
-            "entry": "docker/mod.nu"
           },
-          "activation": {
-            "kind": "nu-module",
-            "import": "all"
-          }
-        }
-      ]
-    },
-    {
-      "id": {
-        "owner": "fj0r",
-        "name": "kubernetes.nu"
-      },
-      "description": "Kubernetes and kubectl helper functions, context management, and tools for Nushell",
-      "repo": "https://github.com/fj0r/kubernetes.nu",
-      "type": "module",
-      "tags": [
-        "module",
-        "kubernetes",
-        "k8s",
-        "kubectl"
-      ],
-      "versions": [
-        {
-          "version": "0.1.0-0e09475",
-          "nu_version": ">=0.114.0 <0.115.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Wave 4 Lane 2 non-binary script archive intake",
-          "artifact": {
-            "kind": "archive",
-            "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-fj0r-kubernetes.nu-0.1.0-0e09475/fj0r-kubernetes.nu-0.1.0-0e09475.tar.gz",
-            "sha256": "77908dd5866897060531047f3a9bb1798aaead26b067dcba89b248f80682dff3",
-            "entry": "kubernetes/mod.nu"
-          },
-          "activation": {
-            "kind": "nu-module",
-            "import": "all"
-          }
+          "verified_with": [
+            "0.114.1"
+          ]
         }
       ]
     },
@@ -2668,8 +2570,7 @@
         {
           "version": "0.1.0-2241050",
           "nu_version": ">=0.114.0 <0.115.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Wave 4 Lane 2 non-binary script archive intake",
+          "evidence_tier": "proven",
           "artifact": {
             "kind": "archive",
             "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-fj0r-git.nu-0.1.0-2241050/fj0r-git.nu-0.1.0-2241050.tar.gz",
@@ -2679,7 +2580,10 @@
           "activation": {
             "kind": "nu-module",
             "import": "all"
-          }
+          },
+          "verified_with": [
+            "0.114.1"
+          ]
         }
       ]
     },
@@ -2700,8 +2604,7 @@
         {
           "version": "0.1.0-44dc459",
           "nu_version": ">=0.114.0 <0.115.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Wave 4 Lane 2 non-binary script archive intake",
+          "evidence_tier": "proven",
           "artifact": {
             "kind": "archive",
             "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-lassoColombo-conventional-commits-0.1.0-44dc459/lassoColombo-conventional-commits-0.1.0-44dc459.tar.gz",
@@ -2711,39 +2614,10 @@
           "activation": {
             "kind": "nu-module",
             "import": "all"
-          }
-        }
-      ]
-    },
-    {
-      "id": {
-        "owner": "nushell-prophet",
-        "name": "nu-history-tools"
-      },
-      "description": "Tools and analytics for working with Nushell command history",
-      "repo": "https://github.com/nushell-prophet/nu-history-tools",
-      "type": "module",
-      "tags": [
-        "module",
-        "history",
-        "analytics"
-      ],
-      "versions": [
-        {
-          "version": "0.1.0-59a97f1",
-          "nu_version": ">=0.114.0 <0.115.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Wave 4 Lane 2 non-binary script archive intake",
-          "artifact": {
-            "kind": "archive",
-            "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-nushell-prophet-nu-history-tools-0.1.0-59a97f1/nushell-prophet-nu-history-tools-0.1.0-59a97f1.tar.gz",
-            "sha256": "eea62b666c9b59bbd8bcfa6eac500d86dafbb64af734f2d606409848c5949c1d",
-            "entry": "nu-history-tools/mod.nu"
           },
-          "activation": {
-            "kind": "nu-module",
-            "import": "all"
-          }
+          "verified_with": [
+            "0.114.1"
+          ]
         }
       ]
     },
@@ -2771,68 +2645,6 @@
             "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-ArmoredPony-nu-digital-rain-0.1.0-6602c6a/ArmoredPony-nu-digital-rain-0.1.0-6602c6a.tar.gz",
             "sha256": "841139fc009611e2ec49869bed4946035df1924dcc95da9862d21eda88f77efa",
             "entry": "digital-rain.nu"
-          }
-        }
-      ]
-    },
-    {
-      "id": {
-        "owner": "yh17549",
-        "name": "nu-dir-bookmark"
-      },
-      "description": "Directory bookmarking and navigation helpers for Nushell",
-      "repo": "https://github.com/yh17549/nu-dir-bookmark",
-      "type": "module",
-      "tags": [
-        "module",
-        "bookmark",
-        "navigation"
-      ],
-      "versions": [
-        {
-          "version": "0.1.0-b1382d5",
-          "nu_version": ">=0.114.0 <0.115.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Wave 4 Lane 2 non-binary script archive intake",
-          "artifact": {
-            "kind": "archive",
-            "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-yh17549-nu-dir-bookmark-0.1.0-b1382d5/yh17549-nu-dir-bookmark-0.1.0-b1382d5.tar.gz",
-            "sha256": "975c47eedb21aff35e150e5817afac1ec5f76db2ab58687241e733d592d71996",
-            "entry": "bookmark_for_dir.nu"
-          },
-          "activation": {
-            "kind": "nu-module"
-          }
-        }
-      ]
-    },
-    {
-      "id": {
-        "owner": "Yethal",
-        "name": "terraform-importer"
-      },
-      "description": "Terraform resource import and HCL generator module for Nushell",
-      "repo": "https://github.com/Yethal/terraform-importer",
-      "type": "module",
-      "tags": [
-        "module",
-        "terraform",
-        "iac"
-      ],
-      "versions": [
-        {
-          "version": "0.1.0-47c3cb2",
-          "nu_version": ">=0.114.0 <0.115.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "Wave 4 Lane 2 non-binary script archive intake",
-          "artifact": {
-            "kind": "archive",
-            "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-Yethal-terraform-importer-0.1.0-47c3cb2/Yethal-terraform-importer-0.1.0-47c3cb2.tar.gz",
-            "sha256": "604d549359d6cf2127066b4a596fdd319e73c7cbb3e0ea264eba3de041578dfb",
-            "entry": "terraform-importer.nu"
-          },
-          "activation": {
-            "kind": "nu-module"
           }
         }
       ]
@@ -2877,6 +2689,264 @@
                 "executable_path": "nu_plugin_net-x86_64-apple-darwin/nu_plugin_net"
               }
             }
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "docker-completions"
+      },
+      "description": "Docker custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/docker @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/docker",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "docker",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
+          "nu_version": "*",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-docker-completions-44f8f25/docker-completions-44f8f25.zip",
+            "sha256": "6eb0940f364e997684ad9edba962d196e886f6be6dd38114639e41290ce0a5be",
+            "archive_root": "docker-completions-44f8f25"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "gh-completions"
+      },
+      "description": "GitHub CLI (gh) custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/gh @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/gh",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "gh",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "nu_version": "*",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-gh-completions-44f8f25/gh-completions-44f8f25.zip",
+            "sha256": "747e49beec05a668ea99069ff78e38511675fef85d16b9b821f31e33ad0b8906",
+            "archive_root": "gh-completions-44f8f25"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "dotnet-completions"
+      },
+      "description": ".NET (dotnet) custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/dotnet @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/dotnet",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "dotnet",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "nu_version": "*",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-dotnet-completions-44f8f25/dotnet-completions-44f8f25.zip",
+            "sha256": "8234dc9cbb042f16d28a71f1f8277c88117263a590f43da137b80dda629e1867",
+            "archive_root": "dotnet-completions-44f8f25"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "uv-completions"
+      },
+      "description": "uv custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/uv @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/uv",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "uv",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "nu_version": "*",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-uv-completions-44f8f25/uv-completions-44f8f25.zip",
+            "sha256": "90183fcd95fe278d2f19b493ecea6fec7e627bb8464bdae2bfc14a9e5ab5cfb7",
+            "archive_root": "uv-completions-44f8f25"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "pnpm-completions"
+      },
+      "description": "pnpm custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/pnpm @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/pnpm",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "pnpm",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "nu_version": "*",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-pnpm-completions-44f8f25/pnpm-completions-44f8f25.zip",
+            "sha256": "fa8a237e9b7d5d399828a36d684f3123124d9ff357b6980069ce4e0b38d01101",
+            "archive_root": "pnpm-completions-44f8f25"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "ssh-completions"
+      },
+      "description": "SSH custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/ssh @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/ssh",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "ssh",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "nu_version": "*",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-ssh-completions-44f8f25/ssh-completions-44f8f25.zip",
+            "sha256": "2a41deda669113e609923a8ffb255a308a2513356a4b12f78c2ea230b093bdec",
+            "archive_root": "ssh-completions-44f8f25"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "bat-completions"
+      },
+      "description": "Bat custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/bat @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/bat",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "bat",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "nu_version": "*",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-bat-completions-44f8f25/bat-completions-44f8f25.zip",
+            "sha256": "124fe60801f49e5641502ec4c5990c0ac72bfa411d1d35b7b7f3cc5089bc2daa",
+            "archive_root": "bat-completions-44f8f25"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "aws-completions"
+      },
+      "description": "AWS custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/aws @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/aws",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "aws",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "nu_version": "*",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-aws-completions-44f8f25/aws-completions-44f8f25.zip",
+            "sha256": "7b782acccf64b6dbe6820eadaee8ee15f72bcb17a82fb16cc3b13f19e00e69ed",
+            "archive_root": "aws-completions-44f8f25"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "rg-completions"
+      },
+      "description": "Ripgrep custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/rg @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/rg",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "rg",
+        "ripgrep",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "nu_version": "*",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-rg-completions-44f8f25/rg-completions-44f8f25.zip",
+            "sha256": "674a065656c1ced6e7db62650799bb081aa6535a4934e3deaba15b2c2dd0d9d9",
+            "archive_root": "rg-completions-44f8f25"
           }
         }
       ]

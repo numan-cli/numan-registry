@@ -1,0 +1,90 @@
+isolated Nu probe: {"version": "0.114.1", "plugin_path": "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\nushell-prophet__nu-history-tools-root\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\nushell-prophet__nu-history-tools-root\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\nushell-prophet__nu-history-tools-root\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: 49fb6abfefc74325d398138ce4d3dc0e9ea68aac5a739e638e0f00cb081e445f
+Numan SHA256: e1d66c387d9f255991e686bd6298005a76e6780db224819c5683b79cae18b18d
+package: nushell-prophet/nu-history-tools
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      C:\Users\tonyt\AppData\Local\numan\tools\nushell\0.114.1\nu.exe
+root:    D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root
+
+candidate package version: 0.1.0-59a97f1
+candidate file SHA256: 878761d998604f23c65391dc4fdd5dc65a1a30d400f0dd7b8d8581e3ce52df03
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root'.
+  Nu executable: C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-shim-errzwfmi\nu.exe
+  Nu version:    0.114.1
+  Plugin registry: D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root registry add lifecycle-candidate http://127.0.0.1:51484/index.json --key wvswwUTR7Qt2+sd2CN7OrhvMv1+JQDRV4HYzwtHpUpo=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:51484/index.json
+  Fingerprint: sha256:e8a99af4f77189c23a626871777c1ce2669bc14410b19e99d351efddffb85859
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:51484/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: c6c5908c).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root search nu-history-tools
+Found 1 package(s) matching 'nu-history-tools':
+checked against: Nu 0.114.1 (x86_64-pc-windows-msvc)
+
+  nushell-prophet/nu-history-tools  v0.1.0-59a97f1  [module] [not ABI-locked] [provisional]
+    Tools and analytics for working with Nushell command history
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root info nushell-prophet/nu-history-tools
+Package:    nushell-prophet/nu-history-tools
+Type:       module
+Status:     verified upstream artifact
+Description: Tools and analytics for working with Nushell command history
+Repository: https://github.com/nushell-prophet/nu-history-tools
+Tags:       module, history, analytics
+Your Nu:    0.114.1 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.1.0-59a97f1  [nu >=0.114.0 <0.115.0]  (compatible)
+    evidence:    provisional — Wave 4 Lane 2 non-binary script archive intake
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root install nushell-prophet/nu-history-tools@0.1.0-59a97f1
+✓ Installed nushell-prophet/nu-history-tools@0.1.0-59a97f1 to D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root\packages\modules\nushell-prophet\nu-history-tools\0.1.0-59a97f1-eea62b66
+! This package has not been lifecycle-tested. It passed integrity checks. (Wave 4 Lane 2 non-binary script archive intake)
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root activate nushell-prophet/nu-history-tools
+
+Module startup autoload
+  nushell-prophet/nu-history-tools -> D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root\lifecycle-home\xdg\data\nushell\vendor\autoload/numan.nu
+
+✗ Module candidate validation failed: Module candidate validation failed for package(s): nushell-prophet/nu-history-tools
+Nu candidate validation failed (exit Some(1)).
+stderr: Error: nu::parser::type_mismatch
+
+  x Type mismatch.
+    ,-[\\?\D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root\packages\modules\nushell-prophet\nu-history-tools\0.1.0-59a97f1-eea62b66\nu-history-tools\utils\bar.nu:20:15]
+ 19 |         let $fraction = $blocks
+ 20 | ,->         | get (
+ 21 | |               ($percentage * $width) mod 1
+ 22 | |               | $in * ($blocks | length | $in - 1)
+ 23 | |               | math round
+ 24 | |->         )
+    : `---- expected cell-path, found number
+ 25 |     
+    `----
+stdout: 
+Error: One or more packages failed to activate. Successful activations have been persisted.
+FAILED at step 'activate' (exit 1)
+kept root at D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nushell-prophet__nu-history-tools-root

@@ -1,0 +1,87 @@
+isolated Nu probe: {"version": "0.114.1", "plugin_path": "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\Yethal__terraform-importer-root\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\Yethal__terraform-importer-root\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\Yethal__terraform-importer-root\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: 49fb6abfefc74325d398138ce4d3dc0e9ea68aac5a739e638e0f00cb081e445f
+Numan SHA256: e1d66c387d9f255991e686bd6298005a76e6780db224819c5683b79cae18b18d
+package: Yethal/terraform-importer
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      C:\Users\tonyt\AppData\Local\numan\tools\nushell\0.114.1\nu.exe
+root:    D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root
+
+candidate package version: 0.1.0-47c3cb2
+candidate file SHA256: 878761d998604f23c65391dc4fdd5dc65a1a30d400f0dd7b8d8581e3ce52df03
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root'.
+  Nu executable: C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-shim-rhlab1vo\nu.exe
+  Nu version:    0.114.1
+  Plugin registry: D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root registry add lifecycle-candidate http://127.0.0.1:51546/index.json --key X+WGKqih9KFtKezVILZsiCQ9GZyUNiaHtt1AOn+9pco=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:51546/index.json
+  Fingerprint: sha256:212821147d8969d1425f4320e904e564738510d404538ab75440a080ed5184e6
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:51546/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: c6c5908c).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root search terraform-importer
+Found 1 package(s) matching 'terraform-importer':
+checked against: Nu 0.114.1 (x86_64-pc-windows-msvc)
+
+  Yethal/terraform-importer  v0.1.0-47c3cb2  [module] [not ABI-locked] [provisional]
+    Terraform resource import and HCL generator module for Nushell
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root info Yethal/terraform-importer
+Package:    Yethal/terraform-importer
+Type:       module
+Status:     verified upstream artifact
+Description: Terraform resource import and HCL generator module for Nushell
+Repository: https://github.com/Yethal/terraform-importer
+Tags:       module, terraform, iac
+Your Nu:    0.114.1 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.1.0-47c3cb2  [nu >=0.114.0 <0.115.0]  (compatible)
+    evidence:    provisional — Wave 4 Lane 2 non-binary script archive intake
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root install Yethal/terraform-importer@0.1.0-47c3cb2
+✓ Installed Yethal/terraform-importer@0.1.0-47c3cb2 to D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root\packages\modules\Yethal\terraform-importer\0.1.0-47c3cb2-604d5493
+! This package has not been lifecycle-tested. It passed integrity checks. (Wave 4 Lane 2 non-binary script archive intake)
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root activate Yethal/terraform-importer
+
+Module startup autoload
+  Yethal/terraform-importer -> D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root\lifecycle-home\xdg\data\nushell\vendor\autoload/numan.nu
+
+✗ Module candidate validation failed: Module candidate validation failed for package(s): Yethal/terraform-importer
+Nu candidate validation failed (exit Some(1)).
+stderr: Error: nu::parser::expected_keyword
+
+  x Expected keyword.
+   ,-[\\?\D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root\packages\modules\Yethal\terraform-importer\0.1.0-47c3cb2-604d5493\terraform-importer.nu:8:1]
+ 7 | # Identifier is a closure that generates the import command that is passed together with the resource address to terraform import
+ 8 | let resources_map = {
+   : ^|^
+   :  `-- expected def, const, extern, alias, use, module, export or export-env keyword
+ 9 |     aws_iam_role_policy_attachment: {
+   `----
+stdout: 
+Error: One or more packages failed to activate. Successful activations have been persisted.
+FAILED at step 'activate' (exit 1)
+kept root at D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Yethal__terraform-importer-root

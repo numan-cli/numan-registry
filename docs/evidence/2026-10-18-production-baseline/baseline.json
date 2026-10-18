@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "record_type": "verified-existing-production-snapshot",
+  "captured_at": "2026-10-18T17:39:12.686761+00:00",
+  "new_baseline_deployment_performed": false,
+  "source_commit": "16530cf1bdda15bc6953876ecf4d767aa64df99a",
+  "production_workflow_run": {
+    "repository": "numan-cli/numan-registry",
+    "id": 31158897784,
+    "event": "workflow_dispatch",
+    "conclusion": "success",
+    "url": "https://github.com/numan-cli/numan-registry/actions/runs/31158897784"
+  },
+  "pages_commit": "26d0dfb2d97dabf019a5f6780fa073645b5835bf",
+  "index_url": "https://numan-cli.github.io/numan-registry/index.json",
+  "signature_url": "https://numan-cli.github.io/numan-registry/index.json.sig",
+  "key_id": "official-2026-07-01",
+  "signature_algorithm": "ed25519",
+  "package_count": 44,
+  "canonical_index_sha256": "674c49f971ed1bd4f2dee329e1ba07a648dd12b659176171dfe0009c644eed5c",
+  "byte_sha256": {
+    "index.json": "5b12adf175fccb400482a493f2ecd550d4397f32a9df33027f3a3d8f23e24e51",
+    "index.json.sig": "b071200e77425fd410f13e27570aee0f65a41552b0caffb9cada310709ecb7aa",
+    "official.pub": "e0a5923997f46949c82206b4d6779ca41c5ebb164be2ffa2dd0289fede904079",
+    "catalog-reconciliation.json": "7924806d1ad7bae2e23b19f762a7aad3eb26b4bb6aa028f1637c6686e1658c05"
+  },
+  "reconciliation_capture": {
+    "original_sha256": "2358766a5d4be30eeede820dcd8fd5ce98fc7ac8263fce4e97ead19402c0fbe7",
+    "archived_line_endings": "LF",
+    "values_unchanged": true
+  },
+  "verification": {
+    "ed25519_signature": true,
+    "public_bytes_match_pages_commit": true,
+    "public_index_bytes_match_protected_source_commit": true
+  },
+  "reconciliation": {
+    "source_commit": "b43307bc3a1f7663f6f9faef042ed218a5c1a434",
+    "source_package_count": 62,
+    "source_added_packages": 18,
+    "source_changed_existing_packages": 39,
+    "review_candidate_commit": "1aca751ed1276864f86e0a1886e0f4d6652abb5f",
+    "review_candidate_pull_request": 92,
+    "review_candidate_package_count": 56,
+    "review_candidate_added_packages": 12,
+    "review_candidate_changed_existing_packages": 39,
+    "complete_difference_approved": false,
+    "production_publication_authorized_by_this_record": false
+  }
+}
