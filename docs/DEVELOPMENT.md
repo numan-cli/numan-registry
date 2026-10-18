@@ -5,7 +5,7 @@ This document details the CI tooling, local verification workflows, and environm
 ## Dependencies
 
 - **Python 3.12**: Core runtime matching CI.
-- **Third-Party Python Packages**: `cryptography` and `jsonschema` (installed via `python3 -m pip install --user cryptography jsonschema`).
+- **Third-Party Python Packages**: `cryptography`, `jsonschema`, and `PyYAML` (installed via `python3 -m pip install --user cryptography jsonschema PyYAML==6.0.3`). `PyYAML` is required by `scripts/check_workflows.py`.
 - **CI Test Tooling**: `coverage` (e.g. `coverage==7.15.4`) used in `repo-safety.yml` for statement-coverage reports.
 - **Node.js 22+**: Runs dependency-free registry browser logic tests with `node --test scripts/test_catalog.cjs`. Python 3 must also be on PATH as `python3` for constraint parity tests (or set `PYTHON` to its executable).
 
@@ -25,6 +25,7 @@ Catalog updates remain a separate intake task: do not widen Nu ranges or add pla
 
 - `python3 scripts/scan_for_secrets.py` — Scans git-tracked files for private key leaks.
 - `python3 scripts/preflight.py` — Runs key and workflow consistency checks.
+- `python3 scripts/check_workflows.py` — Strict YAML parse of every tracked workflow plus duplicate-key detection.
 - `python3 scripts/validate.py --index registry/index.json --sig registry/index.json.sig --pub keys/official.pub` — Validates schema, canonical JSON, and Ed25519 signature. Use `--skip-artifacts` to skip network artifact-digest verification.
 - `cargo run --locked --manifest-path tools/numan-parser-check/Cargo.toml -- registry/index.json` — Parses catalog using Numan's Rust parser.
 - `python3 scripts/lint-manifest-index.py --index registry/index.json --manifest <numan-plugins/manifest.json>` — Stage 2 gate checking active plugin version agreement.

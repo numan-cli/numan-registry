@@ -6,6 +6,10 @@ on:
     - cron: '0 6 * * *'
   workflow_dispatch:
 
+concurrency:
+  group: registry-intake-doc-sync
+  cancel-in-progress: false
+
 permissions:
   contents: write
   pull-requests: write
@@ -15,6 +19,7 @@ jobs:
   sync-candidates:
     name: Sync Intake Candidates
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     timeout-minutes: 20
 
     steps:
@@ -28,55 +33,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Run intake candidate sync
-        id: sync
+      - name: Sync intake candidates and open sync PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          python scripts/sync-intake-candidates.py
-          git status --short
-
-      - name: Open PR if docs or candidate state changed
-        id: open_pr
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [ -z "$(git status --porcelain docs/)" ]; then
-            echo "No drift detected in candidate tracking."
-            exit 0
-          fi
-
-          DATE_STR=$(date -u +'%Y%m%d')
-          BRANCH="chore/sync-intake-candidates-${DATE_STR}"
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b "${BRANCH}"
-
-          git add docs/intake-candidates.md docs/intake-state.json docs/upstream-release-outreach.md
-          git commit -m "chore(intake): daily sync of candidate tracking and signals [${DATE_STR}]"
-          git push origin "${BRANCH}" --force-with-lease
-
-          PR_BODY=$(cat <<'EOF'
-## Daily Intake Candidate & Signal Sync
-
-Automated refresh of candidate status, intake state, and upstream outreach signals from live repository data.
-
-- Updated `docs/intake-candidates.md`
-- Updated `docs/intake-state.json`
-- Updated `docs/upstream-release-outreach.md`
-
-_Automated by `.github/workflows/daily-upstream-sync.yml`._
-EOF
-          )
-
-          PR_URL=$(gh pr create \
-            --title "chore(intake): sync candidates and signals (${DATE_STR})" \
-            --body "${PR_BODY}" \
-            --head "${BRANCH}" \
-            --base main)
-
-          echo "Created PR: ${PR_URL}"
-
-          # Enable auto-merge
-          gh pr merge "${PR_URL}" --auto --squash || echo "Auto-merge could not be enabled; manual merge required."
+        run: python scripts/sync_intake_pr.py

@@ -8,6 +8,7 @@ import json
 import sys
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
@@ -704,6 +705,50 @@ class FilesChangedSinceLastSyncTests(unittest.TestCase):
             ):
                 self.sync.save_checksums([watched])
                 self.assertFalse(self.sync.files_changed_since_last_sync([watched]))
+
+
+class DeterministicRenderTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.sync = SYNC
+
+    def test_render_identical_across_mocked_dates(self):
+        state = {"ready": [], "mirror": [], "blocked": [], "changelog": []}
+        renders = []
+        for year in (2020, 2030):
+            with patch.object(self.sync, "datetime", create=True) as mock_dt:
+                mock_dt.now.return_value = datetime(year, 1, 1, tzinfo=timezone.utc)
+                renders.append(
+                    self.sync.render_intake_doc(state, {}, {"packages": []}, {})
+                )
+        self.assertEqual(renders[0], renders[1])
+        self.assertNotRegex(renders[0], r"Auto-synced \d{4}-\d{2}-\d{2}")
+        self.assertIn("_Auto-synced from `docs/intake-state.json`", renders[0])
+
+    def test_sync_bytes_identical_across_utc_dates(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            state_path = root / "intake-state.json"
+            out_path = root / "intake-candidates.md"
+            index_path = root / "index.json"
+            outreach_doc = root / "outreach.md"
+            state = {"ready": [], "mirror": [], "blocked": [], "changelog": []}
+            state_path.write_text(json.dumps(state), encoding="utf-8")
+            first = None
+            for year in (2020, 2030):
+                with patch.object(self.sync, "STATE_PATH", state_path), patch.object(
+                    self.sync, "OUT_PATH", out_path
+                ), patch.object(self.sync, "INDEX_PATH", index_path), patch.object(
+                    self.sync, "OUTREACH_DOC", outreach_doc
+                ), patch.object(self.sync, "datetime", create=True) as mock_dt:
+                    mock_dt.now.return_value = datetime(year, 6, 15, tzinfo=timezone.utc)
+                    changed = self.sync.sync()
+                snapshot = out_path.read_bytes()
+                if first is None:
+                    first = snapshot
+                else:
+                    self.assertFalse(changed)
+                    self.assertEqual(first, snapshot)
 
 
 if __name__ == "__main__":
