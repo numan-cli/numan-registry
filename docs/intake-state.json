@@ -72,7 +72,7 @@
       "owner": "tesujimath",
       "type": "module",
       "version": "0.19.0",
-      "platforms": "all platforms (`.zip` archive \u00e2\u20ac\u201d platform-agnostic Nu module)",
+      "platforms": "all platforms (`.zip` archive — platform-agnostic Nu module)",
       "repo": "https://github.com/tesujimath/bash-env-nushell",
       "spec": "specs/tesujimath-bash-env-nushell-0.19.0.json",
       "pr": 16
