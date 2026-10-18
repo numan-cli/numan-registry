@@ -214,7 +214,7 @@ def _verify_pr_head(repo_root: Path, existing: dict) -> None:
         if _ref_exists(repo_root, f"refs/remotes/origin/{BRANCH}")
         else None
     )
-    if not re.fullmatch(r"[0-9a-f]{40,64}", oid) or remote_oid != oid:
+    if not re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", oid) or remote_oid != oid:
         raise SyncError(
             f"open PR {existing['url']} head oid {oid or '<missing>'} does not "
             f"match origin/{BRANCH} ({remote_oid or '<missing>'}).\n"

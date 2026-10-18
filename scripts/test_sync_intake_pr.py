@@ -530,6 +530,18 @@ class MockedSyncPrTests(unittest.TestCase):
             with self.assertRaises(sync_intake_pr.SyncError):
                 sync_intake_pr._verify_pr_head(Path("/repo"), existing)
 
+    def test_mid_length_pr_head_oid_rejected(self):
+        for length in (41, 50, 63):
+            existing = {
+                "url": "https://example.test/pr/1",
+                "headRefOid": "f" * length,
+            }
+            with patch.object(
+                sync_intake_pr, "_ref_exists", return_value=True
+            ), patch.object(sync_intake_pr, "_git_out", return_value="f" * length):
+                with self.assertRaises(sync_intake_pr.SyncError):
+                    sync_intake_pr._verify_pr_head(Path("/repo"), existing)
+
 
 if __name__ == "__main__":
     unittest.main()
