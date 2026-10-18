@@ -27,6 +27,9 @@ def merge_catalogs(production: dict, provisional: dict) -> dict:
         seen.add(ident)
         if ident not in packages:
             package = copy.deepcopy(candidate)
+            candidate_versions = [v["version"] for v in package["versions"]]
+            if len(candidate_versions) != len(set(candidate_versions)):
+                raise ValueError(f"new candidate package has duplicate versions: {ident}")
             merged["packages"].append(package)
             packages[ident] = package
             continue

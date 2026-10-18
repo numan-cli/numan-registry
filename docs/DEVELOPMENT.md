@@ -7,7 +7,7 @@ This document details the CI tooling, local verification workflows, and environm
 - **Python 3.12**: Core runtime matching CI.
 - **Third-Party Python Packages**: `cryptography` and `jsonschema` (installed via `python3 -m pip install --user cryptography jsonschema`).
 - **CI Test Tooling**: `coverage` (e.g. `coverage==7.15.4`) used in `repo-safety.yml` for statement-coverage reports.
-- **Node.js 22+**: Runs dependency-free registry browser logic tests with `node --test scripts/test_catalog.cjs`. Python must also be on PATH for constraint parity tests (or set `PYTHON` to its executable).
+- **Node.js 22+**: Runs dependency-free registry browser logic tests with `node --test scripts/test_catalog.cjs`. Python 3 must also be on PATH as `python3` for constraint parity tests (or set `PYTHON` to its executable).
 
 ## Registry Website
 

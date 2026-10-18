@@ -337,6 +337,8 @@ def candidate_version(candidate_index, package_id, package_version, probe):
     package = next((p for p in index["packages"] if p["id"]["owner"] + "/" + p["id"]["name"] == package_id), None)
     if package is None:
         raise ValueError(f"package absent from candidate: {package_id}")
+    if not package["versions"]:
+        raise ValueError(f"candidate has no versions: {package_id}")
     version = next((v for v in package["versions"] if v["version"] == package_version), None) if package_version else package["versions"][-1]
     if version is None:
         raise ValueError(f"version absent from candidate: {package_version}")

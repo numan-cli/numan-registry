@@ -24,7 +24,7 @@ Ed25519 key. This exercises signature verification without production secrets,
 an unsigned bypass, or publishing to a shared registry:
 
 ```bash
-python scripts/lifecycle-prove.py \
+python3 scripts/lifecycle-prove.py \
   --package owner/name --package-version 1.2.3 \
   --candidate-index registry/index.json \
   --numan /path/to/numan --nu /path/to/nu
@@ -59,8 +59,8 @@ ephemeral signature does not grant production trust. To reproduce a quarantined
 candidate locally:
 
 ```bash
-python scripts/prepare-staging.py --output /tmp/staging-index.json
-python scripts/lifecycle-prove.py --package owner/name \
+python3 scripts/prepare-staging.py --output /tmp/staging-index.json
+python3 scripts/lifecycle-prove.py --package owner/name \
   --candidate-index /tmp/staging-index.json --numan /path/to/numan --nu /path/to/nu
 ```
 
