@@ -168,7 +168,7 @@
       (repo ? '<a href="' + escapeHtml(repo) + '">Upstream documentation</a>' : "") +
       '<a href="' + escapeHtml(packageHash(id, version.version)) + '">Link to this version</a>' +
       '<button class="plain-button" type="button" data-copy="' + escapeHtml(id) + '">Copy package ID</button></div>' +
-      '<p><label for="package-version">Catalog version </label><select id="package-version">' + pkg.versions.slice().reverse().map(function (v) {
+      '<p><label for="package-version">Catalog version </label><select id="package-version">' + (pkg.versions || []).slice().reverse().map(function (v) {
         return '<option value="' + escapeHtml(v.version) + '"' + (v === version ? " selected" : "") + ">" + escapeHtml(v.version) + (v === latest(pkg) ? " (latest in catalog)" : "") + "</option>";
       }).join("") + "</select></p><dl><dt>Package type</dt><dd>" + escapeHtml(pkg.type) + (supported ? " · explicit activation supported" : " · install-only") + "</dd>" +
       "<dt>Declared Nu range</dt><dd><code>" + escapeHtml(version.nu_version || "Unknown") + "</code>" + compatibility(version, filters.nu) + "</dd>" +
@@ -302,9 +302,9 @@
   window.addEventListener("hashchange", function () { readLocation(); renderDetail(true); });
   window.addEventListener("popstate", function () { readLocation(); refresh(); });
 
-  var metadataController = new AbortController();
-  var metadataTimeout = setTimeout(function () { metadataController.abort(); }, 15000);
-  fetch("./publication.json", { signal: metadataController.signal }).then(function (response) {
+  var metadataController = window.AbortController ? new AbortController() : null;
+  var metadataTimeout = metadataController ? setTimeout(function () { metadataController.abort(); }, 15000) : null;
+  fetch("./publication.json", metadataController ? { signal: metadataController.signal } : undefined).then(function (response) {
     if (!response.ok) throw new Error("No publication metadata");
     return response.json();
   }).then(function (metadata) {
@@ -313,11 +313,13 @@
     el("publication-build").innerHTML = html;
   }).catch(function () {
     el("publication-build").textContent = "Publication build metadata unavailable (local preview or older publication). See production publication history below.";
-  }).finally(function () { clearTimeout(metadataTimeout); });
+  }).finally(function () { if (metadataTimeout !== null) clearTimeout(metadataTimeout); });
 
-  var controller = new AbortController();
-  var timeout = setTimeout(function () { controller.abort(); }, 15000);
-  fetch("./index.json", { credentials: "same-origin", signal: controller.signal }).then(function (response) {
+  var controller = window.AbortController ? new AbortController() : null;
+  var timeout = controller ? setTimeout(function () { controller.abort(); }, 15000) : null;
+  var catalogOptions = { credentials: "same-origin" };
+  if (controller) catalogOptions.signal = controller.signal;
+  fetch("./index.json", catalogOptions).then(function (response) {
     if (!response.ok) throw new Error("HTTP " + response.status);
     return response.json();
   }).then(function (index) {
@@ -344,6 +346,6 @@
     status.dataset.state = "error";
     el("publication-status").textContent = "Catalog metadata unavailable. Check production publication history below.";
     el("catalog-controls").hidden = true;
+    el("package-table").hidden = true;
   }).finally(function () { if (timeout !== null) clearTimeout(timeout); });
-  }).finally(function () { clearTimeout(timeout); });
 })();
