@@ -1,0 +1,1474 @@
+{
+  "source_diff_from_public": {
+    "FMotalleb/nu_plugin_desktop_notifications": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "FMotalleb/nu_plugin_image": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-x86_64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-x86_64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "FMotalleb/nu_plugin_port_extension": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-x86_64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-x86_64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-x86_64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "KamilKleina/git-aliases": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-KamilKleina-git-aliases-109cc61/git-aliases-109cc61.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-KamilKleina-git-aliases-109cc61/git-aliases-109cc61.zip"
+      }
+    ],
+    "Kissaki/nu_plugin_bson": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "Sanceilaks/nufetch": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-Sanceilaks-nufetch-15e0645/nufetch-15e0645.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-Sanceilaks-nufetch-15e0645/nufetch-15e0645.zip"
+      }
+    ],
+    "SuaveIV/nu_script_gh_status": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-SuaveIV-nu_script_gh_status-81756dc/nu_script_gh_status-81756dc.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-SuaveIV-nu_script_gh_status-81756dc/nu_script_gh_status-81756dc.zip"
+      }
+    ],
+    "SuaveIV/nu_script_hnews": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-SuaveIV-nu_script_hnews-6cd8aef/nu_script_hnews-6cd8aef.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-SuaveIV-nu_script_hnews-6cd8aef/nu_script_hnews-6cd8aef.zip"
+      }
+    ],
+    "SuaveIV/nu_script_wttr": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-SuaveIV-nu_script_wttr-main/nu_script_wttr-main.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-SuaveIV-nu_script_wttr-main/nu_script_wttr-main.zip"
+      }
+    ],
+    "Trivernis/nu-plugin-dialog": [
+      {
+        "path": "/description",
+        "before": "Nushell plugin for user interaction dialogs. The catalog remains Windows-only pending intake and lifecycle evidence for the supported upstream Linux/macOS .tar.xz assets.",
+        "after": "Nushell plugin for user interaction dialogs."
+      },
+      {
+        "path": "/tags/2",
+        "before": "windows-only",
+        "after": "ui"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin",
+        "before": null,
+        "after": {
+          "url": "https://github.com/Trivernis/nu-plugin-dialog/releases/download/v0.1.0/nu_plugin_dialog-v0.1.0-aarch64-apple-darwin.tar.xz",
+          "sha256": "3f3c2aa9ce3865175c89ccc6341484b10f56b7fee5a5ca6cc81a4daf2171f9c3",
+          "executable_path": "nu_plugin_dialog-v0.1.0-aarch64-apple-darwin/nu_plugin_dialog"
+        },
+        "before_present": false,
+        "after_present": true
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-apple-darwin",
+        "before": null,
+        "after": {
+          "url": "https://github.com/Trivernis/nu-plugin-dialog/releases/download/v0.1.0/nu_plugin_dialog-v0.1.0-x86_64-apple-darwin.tar.xz",
+          "sha256": "b13b81c8c9c30eb1538a2af16e8c2de143f337fe63dd6ba2a0919026dd2d079b",
+          "executable_path": "nu_plugin_dialog-v0.1.0-x86_64-apple-darwin/nu_plugin_dialog"
+        },
+        "before_present": false,
+        "after_present": true
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu",
+        "before": null,
+        "after": {
+          "url": "https://github.com/Trivernis/nu-plugin-dialog/releases/download/v0.1.0/nu_plugin_dialog-v0.1.0-x86_64-unknown-linux-gnu.tar.xz",
+          "sha256": "e84cf56e6edda3313867bfa13721943c00a06fb55f50d2d4f63a29c7cd99ad0a",
+          "executable_path": "nu_plugin_dialog-v0.1.0-x86_64-unknown-linux-gnu/nu_plugin_dialog"
+        },
+        "before_present": false,
+        "after_present": true
+      }
+    ],
+    "Yethal/nu_plugin_hcl": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "abusch/nu_plugin_semver": [
+      {
+        "path": "/description",
+        "before": "A Nushell plugin to manipulate SemVer versions: parse, compare, sort, bump, and match against version requirements. The catalog remains Windows-only pending intake and lifecycle evidence for the supported upstream Linux/macOS .tar.xz assets.",
+        "after": "A Nushell plugin to manipulate SemVer versions: parse, compare, sort, bump, and match against version requirements."
+      },
+      {
+        "path": "/tags",
+        "before": [
+          "plugin",
+          "semver",
+          "versioning",
+          "windows-only"
+        ],
+        "after": [
+          "plugin",
+          "semver",
+          "versioning"
+        ]
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin",
+        "before": null,
+        "after": {
+          "url": "https://github.com/abusch/nu_plugin_semver/releases/download/v0.11.17/nu_plugin_semver-aarch64-apple-darwin.tar.xz",
+          "sha256": "bc6517ab68662c72d5a96513a7e3a37eec40eb585ac336f62f30df655c185794",
+          "executable_path": "nu_plugin_semver-aarch64-apple-darwin/nu_plugin_semver"
+        },
+        "before_present": false,
+        "after_present": true
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu",
+        "before": null,
+        "after": {
+          "url": "https://github.com/abusch/nu_plugin_semver/releases/download/v0.11.17/nu_plugin_semver-aarch64-unknown-linux-gnu.tar.xz",
+          "sha256": "36b7d416f28158c646ef0d23495de5928e09323e3157739e2491fa7055091839",
+          "executable_path": "nu_plugin_semver-aarch64-unknown-linux-gnu/nu_plugin_semver"
+        },
+        "before_present": false,
+        "after_present": true
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-apple-darwin",
+        "before": null,
+        "after": {
+          "url": "https://github.com/abusch/nu_plugin_semver/releases/download/v0.11.17/nu_plugin_semver-x86_64-apple-darwin.tar.xz",
+          "sha256": "a8605818e89ca952e38c83f6e5845a88931d5932f71e7f6452f6a83ca3da4402",
+          "executable_path": "nu_plugin_semver-x86_64-apple-darwin/nu_plugin_semver"
+        },
+        "before_present": false,
+        "after_present": true
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu",
+        "before": null,
+        "after": {
+          "url": "https://github.com/abusch/nu_plugin_semver/releases/download/v0.11.17/nu_plugin_semver-x86_64-unknown-linux-musl.tar.xz",
+          "sha256": "56f3a71bf0681e3754cf06863aa8b89af53219af785f57a08b2d9f3a68ec4edd",
+          "executable_path": "nu_plugin_semver-x86_64-unknown-linux-musl/nu_plugin_semver"
+        },
+        "before_present": false,
+        "after_present": true
+      }
+    ],
+    "amtoine/nu-git-manager": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-amtoine-nu-git-manager-0.8.0/nu-git-manager-0.8.0.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-amtoine-nu-git-manager-0.8.0/nu-git-manager-0.8.0.zip"
+      }
+    ],
+    "amtoine/nu-git-manager-sugar": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-amtoine-nu-git-manager-sugar-0.7.0/nu-git-manager-sugar-0.7.0.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-amtoine-nu-git-manager-sugar-0.7.0/nu-git-manager-sugar-0.7.0.zip"
+      }
+    ],
+    "cptpiepmatz/nu_plugin_highlight": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-x86_64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "dead10ck/nu_plugin_dns": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_dns-4.0.10/nu_plugin_dns-4.0.10-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_dns-4.0.10/nu_plugin_dns-4.0.10-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_dns-4.0.10/nu_plugin_dns-4.0.10-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_dns-4.0.10/nu_plugin_dns-4.0.10-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_dns-4.0.10/nu_plugin_dns-4.0.10-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_dns-4.0.10/nu_plugin_dns-4.0.10-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "drbrain/nu_plugin_prometheus": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-x86_64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-x86_64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_emoji": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_file": [
+      {
+        "path": "/versions/1/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_json_path": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_jwalk": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_parquet": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_query_git": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_regex": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-x86_64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_strutils": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fnuttens/nu_plugin_hmac": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "idanarye/nu_plugin_skim": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "lizclipse/nu_plugin_ulid": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "nushell-prophet/dotnu": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-prophet-dotnu-0.0.18/dotnu-0.0.18.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-prophet-dotnu-0.0.18/dotnu-0.0.18.zip"
+      }
+    ],
+    "nushell-prophet/numd": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-prophet-numd-0.4.0/numd-0.4.0.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-prophet-numd-0.4.0/numd-0.4.0.zip"
+      }
+    ],
+    "nushell/cargo-completions": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-cargo-completions-f04cb44/cargo-completions-f04cb44.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-cargo-completions-f04cb44/cargo-completions-f04cb44.zip"
+      }
+    ],
+    "nushell/custom-completions": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-custom-completions-f04cb44/custom-completions-f04cb44.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-custom-completions-f04cb44/custom-completions-f04cb44.zip"
+      }
+    ],
+    "nushell/git-completions": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-git-completions-f04cb44/git-completions-f04cb44.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-git-completions-f04cb44/git-completions-f04cb44.zip"
+      }
+    ],
+    "nushell/make-completions": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-make-completions-f04cb44/make-completions-f04cb44.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-make-completions-f04cb44/make-completions-f04cb44.zip"
+      }
+    ],
+    "nushell/npm-completions": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-npm-completions-f04cb44/npm-completions-f04cb44.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-npm-completions-f04cb44/npm-completions-f04cb44.zip"
+      }
+    ],
+    "nushell/nu-hooks": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-nu-hooks-0.1.0/nu-hooks-0.1.0.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-nu-hooks-0.1.0/nu-hooks-0.1.0.zip"
+      }
+    ],
+    "nushell/winget-completions": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-winget-completions-f04cb44/winget-completions-f04cb44.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-winget-completions-f04cb44/winget-completions-f04cb44.zip"
+      }
+    ],
+    "rhino-linux/nu_plugin_nutext": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "vyadh/nutest": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-vyadh-nutest-v1.1.0/nutest-1.1.0.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-vyadh-nutest-v1.1.0/nutest-1.1.0.zip"
+      }
+    ]
+  },
+  "candidate_diff_from_public": {
+    "FMotalleb/nu_plugin_desktop_notifications": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_desktop_notifications-0.114.1/nu_plugin_desktop_notifications-0.114.1-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "FMotalleb/nu_plugin_image": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-x86_64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-x86_64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_image-0.112.2/nu_plugin_image-0.112.2-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "FMotalleb/nu_plugin_port_extension": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-x86_64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-x86_64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.113.1/nu_plugin_port_extension-0.113.1-x86_64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_port_extension-0.114.1/nu_plugin_port_extension-0.114.1-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "KamilKleina/git-aliases": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-KamilKleina-git-aliases-109cc61/git-aliases-109cc61.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-KamilKleina-git-aliases-109cc61/git-aliases-109cc61.zip"
+      }
+    ],
+    "Kissaki/nu_plugin_bson": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_bson-26.1140.0/nu_plugin_bson-26.1140.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "Sanceilaks/nufetch": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-Sanceilaks-nufetch-15e0645/nufetch-15e0645.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-Sanceilaks-nufetch-15e0645/nufetch-15e0645.zip"
+      }
+    ],
+    "SuaveIV/nu_script_gh_status": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-SuaveIV-nu_script_gh_status-81756dc/nu_script_gh_status-81756dc.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-SuaveIV-nu_script_gh_status-81756dc/nu_script_gh_status-81756dc.zip"
+      }
+    ],
+    "SuaveIV/nu_script_hnews": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-SuaveIV-nu_script_hnews-6cd8aef/nu_script_hnews-6cd8aef.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-SuaveIV-nu_script_hnews-6cd8aef/nu_script_hnews-6cd8aef.zip"
+      }
+    ],
+    "SuaveIV/nu_script_wttr": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-SuaveIV-nu_script_wttr-main/nu_script_wttr-main.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-SuaveIV-nu_script_wttr-main/nu_script_wttr-main.zip"
+      }
+    ],
+    "Trivernis/nu-plugin-dialog": [
+      {
+        "path": "/description",
+        "before": "Nushell plugin for user interaction dialogs. The catalog remains Windows-only pending intake and lifecycle evidence for the supported upstream Linux/macOS .tar.xz assets.",
+        "after": "Nushell plugin for user interaction dialogs."
+      },
+      {
+        "path": "/tags/2",
+        "before": "windows-only",
+        "after": "ui"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin",
+        "before": null,
+        "after": {
+          "url": "https://github.com/Trivernis/nu-plugin-dialog/releases/download/v0.1.0/nu_plugin_dialog-v0.1.0-aarch64-apple-darwin.tar.xz",
+          "sha256": "3f3c2aa9ce3865175c89ccc6341484b10f56b7fee5a5ca6cc81a4daf2171f9c3",
+          "executable_path": "nu_plugin_dialog-v0.1.0-aarch64-apple-darwin/nu_plugin_dialog"
+        },
+        "before_present": false,
+        "after_present": true
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-apple-darwin",
+        "before": null,
+        "after": {
+          "url": "https://github.com/Trivernis/nu-plugin-dialog/releases/download/v0.1.0/nu_plugin_dialog-v0.1.0-x86_64-apple-darwin.tar.xz",
+          "sha256": "b13b81c8c9c30eb1538a2af16e8c2de143f337fe63dd6ba2a0919026dd2d079b",
+          "executable_path": "nu_plugin_dialog-v0.1.0-x86_64-apple-darwin/nu_plugin_dialog"
+        },
+        "before_present": false,
+        "after_present": true
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu",
+        "before": null,
+        "after": {
+          "url": "https://github.com/Trivernis/nu-plugin-dialog/releases/download/v0.1.0/nu_plugin_dialog-v0.1.0-x86_64-unknown-linux-gnu.tar.xz",
+          "sha256": "e84cf56e6edda3313867bfa13721943c00a06fb55f50d2d4f63a29c7cd99ad0a",
+          "executable_path": "nu_plugin_dialog-v0.1.0-x86_64-unknown-linux-gnu/nu_plugin_dialog"
+        },
+        "before_present": false,
+        "after_present": true
+      }
+    ],
+    "Yethal/nu_plugin_hcl": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hcl-0.114.1/nu_plugin_hcl-0.114.1-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "abusch/nu_plugin_semver": [
+      {
+        "path": "/description",
+        "before": "A Nushell plugin to manipulate SemVer versions: parse, compare, sort, bump, and match against version requirements. The catalog remains Windows-only pending intake and lifecycle evidence for the supported upstream Linux/macOS .tar.xz assets.",
+        "after": "A Nushell plugin to manipulate SemVer versions: parse, compare, sort, bump, and match against version requirements."
+      },
+      {
+        "path": "/tags",
+        "before": [
+          "plugin",
+          "semver",
+          "versioning",
+          "windows-only"
+        ],
+        "after": [
+          "plugin",
+          "semver",
+          "versioning"
+        ]
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin",
+        "before": null,
+        "after": {
+          "url": "https://github.com/abusch/nu_plugin_semver/releases/download/v0.11.17/nu_plugin_semver-aarch64-apple-darwin.tar.xz",
+          "sha256": "bc6517ab68662c72d5a96513a7e3a37eec40eb585ac336f62f30df655c185794",
+          "executable_path": "nu_plugin_semver-aarch64-apple-darwin/nu_plugin_semver"
+        },
+        "before_present": false,
+        "after_present": true
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu",
+        "before": null,
+        "after": {
+          "url": "https://github.com/abusch/nu_plugin_semver/releases/download/v0.11.17/nu_plugin_semver-aarch64-unknown-linux-gnu.tar.xz",
+          "sha256": "36b7d416f28158c646ef0d23495de5928e09323e3157739e2491fa7055091839",
+          "executable_path": "nu_plugin_semver-aarch64-unknown-linux-gnu/nu_plugin_semver"
+        },
+        "before_present": false,
+        "after_present": true
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-apple-darwin",
+        "before": null,
+        "after": {
+          "url": "https://github.com/abusch/nu_plugin_semver/releases/download/v0.11.17/nu_plugin_semver-x86_64-apple-darwin.tar.xz",
+          "sha256": "a8605818e89ca952e38c83f6e5845a88931d5932f71e7f6452f6a83ca3da4402",
+          "executable_path": "nu_plugin_semver-x86_64-apple-darwin/nu_plugin_semver"
+        },
+        "before_present": false,
+        "after_present": true
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu",
+        "before": null,
+        "after": {
+          "url": "https://github.com/abusch/nu_plugin_semver/releases/download/v0.11.17/nu_plugin_semver-x86_64-unknown-linux-musl.tar.xz",
+          "sha256": "56f3a71bf0681e3754cf06863aa8b89af53219af785f57a08b2d9f3a68ec4edd",
+          "executable_path": "nu_plugin_semver-x86_64-unknown-linux-musl/nu_plugin_semver"
+        },
+        "before_present": false,
+        "after_present": true
+      }
+    ],
+    "amtoine/nu-git-manager": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-amtoine-nu-git-manager-0.8.0/nu-git-manager-0.8.0.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-amtoine-nu-git-manager-0.8.0/nu-git-manager-0.8.0.zip"
+      }
+    ],
+    "amtoine/nu-git-manager-sugar": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-amtoine-nu-git-manager-sugar-0.7.0/nu-git-manager-sugar-0.7.0.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-amtoine-nu-git-manager-sugar-0.7.0/nu-git-manager-sugar-0.7.0.zip"
+      }
+    ],
+    "cptpiepmatz/nu_plugin_highlight": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.15/nu_plugin_highlight-1.4.15-x86_64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_highlight-1.4.16/nu_plugin_highlight-1.4.16-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "dead10ck/nu_plugin_dns": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_dns-4.0.10/nu_plugin_dns-4.0.10-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_dns-4.0.10/nu_plugin_dns-4.0.10-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_dns-4.0.10/nu_plugin_dns-4.0.10-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_dns-4.0.10/nu_plugin_dns-4.0.10-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_dns-4.0.10/nu_plugin_dns-4.0.10-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_dns-4.0.10/nu_plugin_dns-4.0.10-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "drbrain/nu_plugin_prometheus": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-x86_64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-x86_64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_prometheus-0.12.0/nu_plugin_prometheus-0.12.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_emoji": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_emoji-0.23.0/nu_plugin_emoji-0.23.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_file": [
+      {
+        "path": "/versions/1/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_file-0.26.0/nu_plugin_file-0.26.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_json_path": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_json_path-0.24.0/nu_plugin_json_path-0.24.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_jwalk": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_jwalk-0.26.0/nu_plugin_jwalk-0.26.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_parquet": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_parquet-0.24.0/nu_plugin_parquet-0.24.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_query_git": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_query_git-0.24.0/nu_plugin_query_git-0.24.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_regex": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.22.0/nu_plugin_regex-0.22.0-x86_64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/1/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.23.0/nu_plugin_regex-0.23.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fdncred/nu_plugin_strutils": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_strutils-0.22.0/nu_plugin_strutils-0.22.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "fnuttens/nu_plugin_hmac": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_hmac-0.27.0/nu_plugin_hmac-0.27.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "idanarye/nu_plugin_skim": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_skim-0.29.1/nu_plugin_skim-0.29.1-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "lizclipse/nu_plugin_ulid": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_ulid-0.23.0/nu_plugin_ulid-0.23.0-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "nushell-prophet/dotnu": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-prophet-dotnu-0.0.18/dotnu-0.0.18.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-prophet-dotnu-0.0.18/dotnu-0.0.18.zip"
+      }
+    ],
+    "nushell-prophet/numd": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-prophet-numd-0.4.0/numd-0.4.0.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-prophet-numd-0.4.0/numd-0.4.0.zip"
+      }
+    ],
+    "nushell/cargo-completions": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-cargo-completions-f04cb44/cargo-completions-f04cb44.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-cargo-completions-f04cb44/cargo-completions-f04cb44.zip"
+      }
+    ],
+    "nushell/custom-completions": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-custom-completions-f04cb44/custom-completions-f04cb44.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-custom-completions-f04cb44/custom-completions-f04cb44.zip"
+      }
+    ],
+    "nushell/git-completions": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-git-completions-f04cb44/git-completions-f04cb44.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-git-completions-f04cb44/git-completions-f04cb44.zip"
+      }
+    ],
+    "nushell/make-completions": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-make-completions-f04cb44/make-completions-f04cb44.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-make-completions-f04cb44/make-completions-f04cb44.zip"
+      }
+    ],
+    "nushell/npm-completions": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-npm-completions-f04cb44/npm-completions-f04cb44.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-npm-completions-f04cb44/npm-completions-f04cb44.zip"
+      }
+    ],
+    "nushell/nu-hooks": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-nu-hooks-0.1.0/nu-hooks-0.1.0.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-nu-hooks-0.1.0/nu-hooks-0.1.0.zip"
+      }
+    ],
+    "nushell/winget-completions": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-nushell-winget-completions-f04cb44/winget-completions-f04cb44.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-winget-completions-f04cb44/winget-completions-f04cb44.zip"
+      }
+    ],
+    "rhino-linux/nu_plugin_nutext": [
+      {
+        "path": "/versions/0/artifact/targets/aarch64-apple-darwin/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-aarch64-apple-darwin.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-aarch64-apple-darwin.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/aarch64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-aarch64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-aarch64-unknown-linux-gnu.tar.gz"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-pc-windows-msvc/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-x86_64-pc-windows-msvc.zip",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-x86_64-pc-windows-msvc.zip"
+      },
+      {
+        "path": "/versions/0/artifact/targets/x86_64-unknown-linux-gnu/url",
+        "before": "https://github.com/tonythethompson/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-x86_64-unknown-linux-gnu.tar.gz",
+        "after": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_nutext-0.6.2/nu_plugin_nutext-0.6.2-x86_64-unknown-linux-gnu.tar.gz"
+      }
+    ],
+    "vyadh/nutest": [
+      {
+        "path": "/versions/0/artifact/url",
+        "before": "https://github.com/tonythethompson/numan-registry/releases/download/mirror-vyadh-nutest-v1.1.0/nutest-1.1.0.zip",
+        "after": "https://github.com/numan-cli/numan-registry/releases/download/mirror-vyadh-nutest-v1.1.0/nutest-1.1.0.zip"
+      }
+    ]
+  }
+}
