@@ -25,6 +25,10 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install cryptography jsonschema
+      - name: Merge provisional candidates for staging only
+        run: |
+          python scripts/prepare-staging.py --output "${RUNNER_TEMP}/staging-index.json"
+          python -c "import os, shutil; shutil.copyfile(os.path.join(os.environ['RUNNER_TEMP'], 'staging-index.json'), 'registry/index.json')"
       - name: Generate ephemeral key, sign, and validate staging candidate
         shell: bash
         run: |
@@ -41,6 +45,8 @@ jobs:
           unset STAGING_PRIVATE_KEY
           printf '{"key_id":"staging-ephemeral","public_key_b64":"%s"}' "${STAGING_PUBLIC_KEY}" > "${STAGING_PUB}"
           python scripts/validate.py --index registry/index.json --sig registry/index.json.sig --pub "${STAGING_PUB}" --schema schemas/index-v1.json --skip-artifacts --allow-provisional-lifecycle
+      - name: Record public site publication metadata
+        run: python scripts/write_site_metadata.py --environment staging
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         with:

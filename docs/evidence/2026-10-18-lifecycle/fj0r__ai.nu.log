@@ -1,0 +1,100 @@
+isolated Nu probe: {"version": "0.114.1", "plugin_path": "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\fj0r__ai.nu-root\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\fj0r__ai.nu-root\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\fj0r__ai.nu-root\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: 49fb6abfefc74325d398138ce4d3dc0e9ea68aac5a739e638e0f00cb081e445f
+Numan SHA256: e1d66c387d9f255991e686bd6298005a76e6780db224819c5683b79cae18b18d
+package: fj0r/ai.nu
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      C:\Users\tonyt\AppData\Local\numan\tools\nushell\0.114.1\nu.exe
+root:    D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root
+
+candidate package version: 0.1.0-2e71068
+candidate file SHA256: 878761d998604f23c65391dc4fdd5dc65a1a30d400f0dd7b8d8581e3ce52df03
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root'.
+  Nu executable: C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-shim-nmwl1278\nu.exe
+  Nu version:    0.114.1
+  Plugin registry: D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root registry add lifecycle-candidate http://127.0.0.1:57888/index.json --key 9OeSRWysofhfZfvGk+Pqrktuiz+fQgKcMd9nrlNNEAA=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:57888/index.json
+  Fingerprint: sha256:894c966381260616204b7972182ffc39e8723531c857058deb4d0a6a9912c68d
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:57888/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: c6c5908c).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root search ai.nu
+Found 1 package(s) matching 'ai.nu':
+checked against: Nu 0.114.1 (x86_64-pc-windows-msvc)
+
+  fj0r/ai.nu  v0.1.0-2e71068  [module] [not ABI-locked] [provisional]
+    AI client and CLI wrapper for OpenAI, Gemini, and Ollama in Nushell
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root info fj0r/ai.nu
+Package:    fj0r/ai.nu
+Type:       module
+Status:     verified upstream artifact
+Description: AI client and CLI wrapper for OpenAI, Gemini, and Ollama in Nushell
+Repository: https://github.com/fj0r/ai.nu
+Tags:       module, ai, llm, openai, ollama
+Your Nu:    0.114.1 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.1.0-2e71068  [nu >=0.114.0 <0.115.0]  (compatible)
+    evidence:    provisional — Wave 4 Lane 2 non-binary script archive intake
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root install fj0r/ai.nu@0.1.0-2e71068
+✓ Installed fj0r/ai.nu@0.1.0-2e71068 to D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root\packages\modules\fj0r\ai.nu\0.1.0-2e71068-a64b1813
+! This package has not been lifecycle-tested. It passed integrity checks. (Wave 4 Lane 2 non-binary script archive intake)
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root activate fj0r/ai.nu
+
+Module startup autoload
+  fj0r/ai.nu -> D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root\lifecycle-home\xdg\data\nushell\vendor\autoload/numan.nu
+
+✓ Module fj0r/ai.nu added to autoload — takes effect in future Nu sessions
+==> doctor: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root doctor
+Numan doctor — D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root
+
+Initialization
+  · PATH Nu: 0.114.1
+  · Managed Nu: not installed
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root list
+Installed packages (1):
+
+  fj0r/ai.nu  v0.1.0-2e71068  [module]  installed
+==> deactivate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root deactivate fj0r/ai.nu
+
+Module deactivation
+  fj0r/ai.nu <- D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root\lifecycle-home\xdg\data\nushell\vendor\autoload/numan.nu
+
+✓ Module fj0r/ai.nu removed from autoload — takes effect in future Nu sessions
+==> remove: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root remove --yes fj0r/ai.nu
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed fj0r/ai.nu
+==> gc: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root gc
+No orphaned packages found.
+OK: lifecycle-prove passed.
+kept root at D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\fj0r__ai.nu-root

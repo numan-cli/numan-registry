@@ -1,0 +1,111 @@
+isolated Nu probe: {"version": "0.105.0", "plugin_path": "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\Euphrasiologist__nu_plugin_plot-root\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\Euphrasiologist__nu_plugin_plot-root\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\Euphrasiologist__nu_plugin_plot-root\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: 96f6230801c6cdd66693e3efffd4cca55a6243d7e58f20484275b41c0572cb6a
+Numan SHA256: e1d66c387d9f255991e686bd6298005a76e6780db224819c5683b79cae18b18d
+package: Euphrasiologist/nu_plugin_plot
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nu\0.105.0\nu.exe
+root:    D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root
+
+candidate package version: 0.0.0-snapshot.20260816.5a1ca2a
+candidate file SHA256: 878761d998604f23c65391dc4fdd5dc65a1a30d400f0dd7b8d8581e3ce52df03
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root'.
+  Nu executable: C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-shim-crp1lnbv\nu.exe
+  Nu version:    0.105.0
+  Plugin registry: D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root registry add lifecycle-candidate http://127.0.0.1:57840/index.json --key A1I/lqqTBEWxEqQt1e0t2eKnMTBFfphoApfO5hBH5ps=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:57840/index.json
+  Fingerprint: sha256:cf91880790743677590e5fb6e24a48d62e2498b243866172d95c8b243fdc9eb7
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:57840/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: c6c5908c).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root search nu_plugin_plot
+Found 1 package(s) matching 'nu_plugin_plot':
+checked against: Nu 0.105.0 (x86_64-pc-windows-msvc)
+
+  Euphrasiologist/nu_plugin_plot  v0.0.0-snapshot.20260816.5a1ca2a  [plugin] [provisional]
+    Plot graphs in nushell using numerical lists. CI-built from Euphrasiologist/nu_plugin_plot@5a1ca2a (commit snapshot, no tagged release) and pinned + hash-verified + signed downstream in numan-registry.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root info Euphrasiologist/nu_plugin_plot
+Package:    Euphrasiologist/nu_plugin_plot
+Type:       plugin
+Status:     verified upstream artifact
+Description: Plot graphs in nushell using numerical lists. CI-built from Euphrasiologist/nu_plugin_plot@5a1ca2a (commit snapshot, no tagged release) and pinned + hash-verified + signed downstream in numan-registry.
+Repository: https://github.com/Euphrasiologist/nu_plugin_plot
+Tags:       plugin, plot, terminal, ci-built
+Your Nu:    0.105.0 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.0.0-snapshot.20260816.5a1ca2a  [nu >=0.105.0 <0.106.0]  (compatible)
+    note: built from a commit snapshot, not a tagged release
+    evidence:    provisional — Commit snapshot awaiting lifecycle proof on target Nu minor
+    source git:  https://github.com/Euphrasiologist/nu_plugin_plot
+    source rev:  5a1ca2a5ceba60108a4ca6d45ec18d213abb5227
+    cargo_name:  nu_plugin_plot
+    platform: x86_64-pc-windows-msvc
+    platform: x86_64-unknown-linux-gnu
+    platform: aarch64-unknown-linux-gnu
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root install Euphrasiologist/nu_plugin_plot@0.0.0-snapshot.20260816.5a1ca2a
+✓ Installed Euphrasiologist/nu_plugin_plot@0.0.0-snapshot.20260816.5a1ca2a to D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root\packages\plugins\Euphrasiologist\nu_plugin_plot\0.0.0-snapshot.20260816.5a1ca2a-882f9824
+! This package has not been lifecycle-tested. It passed integrity checks. (Commit snapshot awaiting lifecycle proof on target Nu minor)
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root activate Euphrasiologist/nu_plugin_plot
+
+Plugin registration
+  Euphrasiologist/nu_plugin_plot -> D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Registered Euphrasiologist/nu_plugin_plot — takes effect in future Nu sessions (not the current shell)
+==> doctor: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root doctor
+Numan doctor — D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root
+
+Initialization
+  · PATH Nu: 0.105.0
+  · Managed Nu: not installed
+
+Activation
+  · Plugin 'Euphrasiologist/nu_plugin_plot' has an activation record (Issue #22). Deactivate is available; active remove stays gated (deactivate first). Active update is opt-in via NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly (default off): deactivate→upgrade→activate (https://github.com/numan-cli/numan/issues/22).
+    Fix: Remove: `numan deactivate <pkg>`, then `numan remove <pkg>`. Update: set NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly, then `numan update <pkg>` orchestrates deactivate→upgrade→activate; otherwise active update is gated (default off). See docs/active-plugin-gate.md.
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root list
+Installed packages (1):
+
+  Euphrasiologist/nu_plugin_plot  v0.0.0-snapshot.20260816.5a1ca2a  [plugin]  activated
+==> deactivate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root deactivate Euphrasiologist/nu_plugin_plot
+
+Plugin deactivation
+  Euphrasiologist/nu_plugin_plot (plot) <- D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Unregistered Euphrasiologist/nu_plugin_plot — takes effect in future Nu sessions (not the current shell)
+==> remove: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root remove --yes Euphrasiologist/nu_plugin_plot
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed Euphrasiologist/nu_plugin_plot
+==> gc: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root gc
+No orphaned packages found.
+OK: lifecycle-prove passed.
+kept root at D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\Euphrasiologist__nu_plugin_plot-root

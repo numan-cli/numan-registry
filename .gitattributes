@@ -1,2 +1,5 @@
 *.sh text eol=lf
 *.py text eol=lf
+
+# Captured proof logs must retain the bytes covered by their recorded SHA256.
+docs/evidence/**/*.log -text -whitespace

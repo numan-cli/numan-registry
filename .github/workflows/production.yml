@@ -102,6 +102,8 @@ jobs:
           fi
           python scripts/ci-sign.py --index registry/index.json --sig registry/index.json.sig --key-id "${PRODUCTION_KEY_ID}" --priv-b64 "${NUMAN_REGISTRY_PRIVATE_KEY}"
           python scripts/validate.py --index registry/index.json --sig registry/index.json.sig --pub keys/official.pub --schema schemas/index-v1.json
+      - name: Record public site publication metadata
+        run: python scripts/write_site_metadata.py --environment production
       - uses: peaceiris/actions-gh-pages@329bcc8f12caed2cefe5a5b80781499a6f3b361b # v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
