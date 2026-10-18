@@ -1,100 +1,41 @@
-# Interactive opencode agent: /oc and /opencode comment commands for fixes,
-# follow-ups, and targeted changes, plus an automatic review on PR open.
-name: opencode
-
+---
+name: OpenCode
 on:
-  pull_request:
-    types: [opened]
   issue_comment:
     types: [created]
   pull_request_review_comment:
     types: [created]
+  workflow_dispatch:
+    inputs:
+      prompt:
+        required: true
+        type: string
+        description: Prompt for OpenCode
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.issue.number || github.event.pull_request.number || github.run_id }}
+  group: opencode-bot-${{ github.event.issue.number || github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
   opencode:
-    if: |
-      (github.event_name == 'pull_request' &&
-        github.event.pull_request.head.repo.full_name == github.repository) ||
-      ((github.event_name == 'pull_request_review_comment' || github.event.issue.pull_request != null) &&
-       contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association) &&
-       (contains(github.event.comment.body, '/oc') || contains(github.event.comment.body, '/opencode')))
-    runs-on: ubuntu-latest
-    timeout-minutes: 90
+    if: >-
+      !endsWith(github.actor, '[bot]')
+      && (github.event_name == 'workflow_dispatch'
+          || (github.event.comment && contains('OWNER,MEMBER,COLLABORATOR,CONTRIBUTOR', github.event.comment.author_association)))
     permissions:
-      id-token: write
       contents: write
-      pull-requests: write
       issues: write
-      actions: write
-    steps:
-      - name: Record job start time
-        id: job_start
-        shell: bash
-        run: printf 'epoch=%s\n' "$(date +%s)" >> "$GITHUB_OUTPUT"
-
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      # persist-credentials leaves git without auth for the agent's own pushes;
-      # the action only configures this header inside its salvage path.
-      - name: Configure git for agent pushes
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local http.https://github.com/.extraheader \
-            "AUTHORIZATION: basic $(printf 'x-access-token:%s' "${GH_TOKEN}" | base64 -w 0)"
-
-      # Model probing, verified install, agent run with retry/salvage, and the
-      # leaked-path comment guard are handled by the action. The pull_request
-      # trigger runs the review model chain; /oc comments pick review vs fix
-      # per the comment. `use-github-token` keeps the job token
-      # (contents: write) as the push credential. `job-started-at` anchors the
-      # 85-minute agent budget to job start so the retry and the guard still
-      # run inside the 90-minute job limit. The model probe chains are left at
-      # the action defaults, which match this repo's documented chains
-      # (see .opencode/github-commands.md).
-      - name: Run opencode
-        uses: tonythethompson/opencode-review-threads@v1
-        env:
-          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # The action's cf: probe reads CLOUDFLARE_API_TOKEN while opencode's
-          # cloudflare-workers-ai provider authenticates with
-          # CLOUDFLARE_API_KEY; supply both, tolerating either secret name.
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CLOUDFLARE_API_KEY }}
-          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY || secrets.CLOUDFLARE_API_TOKEN }}
-          CONTEXT7_API_KEY: ${{ secrets.CONTEXT7_API_KEY }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        with:
-          use-github-token: 'true'
-          job-started-at: ${{ steps.job_start.outputs.epoch }}
-          timeout-minutes: '85'
-          models-review: >-
-            cf:@cf/zai-org/glm-5.2,
-            cf:@cf/deepseek-ai/deepseek-v4-pro-0813,
-            cf:@cf/openai/gpt-oss-120b,
-            cf:@cf/moonshotai/kimi-k2.7-code,
-            zen:big-pickle,
-            zen:glm-5-free,
-            zen:nemotron-3-ultra-free,
-            openrouter:openrouter/free
-          models-fix: >-
-            cf:@cf/deepseek-ai/deepseek-v4-flash-0731,
-            cf:@cf/moonshotai/kimi-k2.7-code,
-            cf:@cf/qwen/qwen3.8-27b,
-            cf:@cf/openai/gpt-oss-120b,
-            zen:nemotron-3.5-lightning-free,
-            zen:big-pickle,
-            zen:glm-5-free,
-            openrouter:openrouter/free
+      pull-requests: write
+      id-token: write
+      actions: read
+    uses: tonythethompson/opencode-review-threads/.github/workflows/opencode-bot.yml@v1
+    with:
+      prompt: ${{ inputs.prompt }}
+      models-review: cf:@cf/zai-org/glm-5.2,cf:@cf/deepseek-ai/deepseek-v4-pro-0813,cf:@cf/openai/gpt-oss-120b,cf:@cf/moonshotai/kimi-k2.7-code,zen:big-pickle,zen:glm-5-free,zen:nemotron-3-ultra-free,openrouter:openrouter/free
+      models-fix: cf:@cf/deepseek-ai/deepseek-v4-flash-0731,cf:@cf/moonshotai/kimi-k2.7-code,cf:@cf/qwen/qwen3.8-27b,cf:@cf/openai/gpt-oss-120b,zen:nemotron-3.5-lightning-free,zen:big-pickle,zen:glm-5-free,openrouter:openrouter/free
+    secrets:
+      OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CONTEXT7_API_KEY: ${{ secrets.CONTEXT7_API_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
