@@ -770,6 +770,126 @@
       "spec": "specs/yh17549-nu-dir-bookmark-0.1.0-b1382d5.json"
     },
     {
+      "id": "nushell/docker-completions",
+      "name": "docker-completions",
+      "owner": "nushell",
+      "type": "completion",
+      "version": "0.1.0-44f8f25",
+      "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
+      "note": "install-only; Wave 5 completions",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/docker",
+      "spec": "specs/nushell-docker-completions-0.1.0-44f8f25.json",
+      "outreach": {
+        "upstream_repo": "nushell/nu_scripts",
+        "issue_url": "https://github.com/nushell/nu_scripts/issues/1266",
+        "search_terms": [
+          "docker-completions",
+          "release",
+          "numan"
+        ]
+      }
+    },
+    {
+      "id": "nushell/gh-completions",
+      "name": "gh-completions",
+      "owner": "nushell",
+      "type": "completion",
+      "version": "0.1.0-44f8f25",
+      "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
+      "note": "install-only; Wave 5 completions",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/gh",
+      "spec": "specs/nushell-gh-completions-0.1.0-44f8f25.json",
+      "outreach": {
+        "upstream_repo": "nushell/nu_scripts",
+        "issue_url": "https://github.com/nushell/nu_scripts/issues/1266",
+        "search_terms": [
+          "gh-completions",
+          "release",
+          "numan"
+        ]
+      }
+    },
+    {
+      "id": "nushell/dotnet-completions",
+      "name": "dotnet-completions",
+      "owner": "nushell",
+      "type": "completion",
+      "version": "0.1.0-44f8f25",
+      "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
+      "note": "install-only; Wave 5 completions",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/dotnet",
+      "spec": "specs/nushell-dotnet-completions-0.1.0-44f8f25.json",
+      "outreach": {
+        "upstream_repo": "nushell/nu_scripts",
+        "issue_url": "https://github.com/nushell/nu_scripts/issues/1266",
+        "search_terms": [
+          "dotnet-completions",
+          "release",
+          "numan"
+        ]
+      }
+    },
+    {
+      "id": "nushell/uv-completions",
+      "name": "uv-completions",
+      "owner": "nushell",
+      "type": "completion",
+      "version": "0.1.0-44f8f25",
+      "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
+      "note": "install-only; Wave 5 completions",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/uv",
+      "spec": "specs/nushell-uv-completions-0.1.0-44f8f25.json",
+      "outreach": {
+        "upstream_repo": "nushell/nu_scripts",
+        "issue_url": "https://github.com/nushell/nu_scripts/issues/1266",
+        "search_terms": [
+          "uv-completions",
+          "release",
+          "numan"
+        ]
+      }
+    },
+    {
+      "id": "nushell/pnpm-completions",
+      "name": "pnpm-completions",
+      "owner": "nushell",
+      "type": "completion",
+      "version": "0.1.0-44f8f25",
+      "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
+      "note": "install-only; Wave 5 completions",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/pnpm",
+      "spec": "specs/nushell-pnpm-completions-0.1.0-44f8f25.json",
+      "outreach": {
+        "upstream_repo": "nushell/nu_scripts",
+        "issue_url": "https://github.com/nushell/nu_scripts/issues/1266",
+        "search_terms": [
+          "pnpm-completions",
+          "release",
+          "numan"
+        ]
+      }
+    },
+    {
+      "id": "nushell/ssh-completions",
+      "name": "ssh-completions",
+      "owner": "nushell",
+      "type": "completion",
+      "version": "0.1.0-44f8f25",
+      "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
+      "note": "install-only; Wave 5 completions",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/ssh",
+      "spec": "specs/nushell-ssh-completions-0.1.0-44f8f25.json",
+      "outreach": {
+        "upstream_repo": "nushell/nu_scripts",
+        "issue_url": "https://github.com/nushell/nu_scripts/issues/1266",
+        "search_terms": [
+          "ssh-completions",
+          "release",
+          "numan"
+        ]
+      }
+    },
+    {
       "id": "Yethal/terraform-importer",
       "name": "terraform-importer",
       "owner": "Yethal",
@@ -801,10 +921,15 @@
   ],
   "changelog": [
     {
+      "date": "2026-10-18",
+      "change": "Wave 5 completions: nushell/docker-completions, gh-completions, dotnet-completions, uv-completions, pnpm-completions, ssh-completions @ 0.1.0-44f8f25 (install-only mirrors)."
+    },
+    {
       "date": "2026-08-16",
       "change": "Wave 4 Lane 4 intake: abusch/nu_plugin_semver@0.11.17, Trivernis/nu-plugin-dialog@0.1.0, fennewald/nu_plugin_net@1.9.0 (multi-OS .tar.xz upstream assets)."
     },
     {
+      "date": "2026-08-16",
       "change": "ADR 0001 Lane 3 Maintained Fork Stewardship evaluations: FMotalleb/nu_plugin_clipboard (rejected, superseded by Nu core clip), yybit/nu_plugin_compress (approved for numan-maintained fork), devyn/nu_plugin_dbus (conditionally approved for Linux-only numan-maintained fork)."
     },
     {

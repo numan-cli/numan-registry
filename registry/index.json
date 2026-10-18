@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-08-16T15:22:29Z",
+  "updated_at": "2026-10-18T17:33:03Z",
   "registry_revision": "seed-2026-07-02",
   "packages": [
     {
@@ -2519,7 +2519,9 @@
           "nu_version": ">=0.114.0 <0.115.0",
           "evidence_tier": "provisional",
           "deferral_reason": "Requires active Google Cloud Platform credentials (ADC/service account) for live query execution",
-          "verified_with": ["0.114.1"],
+          "verified_with": [
+            "0.114.1"
+          ],
           "source": {
             "git": "https://github.com/galuszkak/nu_plugin_bigquery",
             "rev": "5fff4d8d3e6e6e348a1bd999f55b0fb24bdd489e",
@@ -2877,6 +2879,168 @@
                 "executable_path": "nu_plugin_net-x86_64-apple-darwin/nu_plugin_net"
               }
             }
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "docker-completions"
+      },
+      "description": "Docker custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/docker @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/docker",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "docker",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "nu_version": "*",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-docker-completions-44f8f25/docker-completions-44f8f25.zip",
+            "sha256": "6eb0940f364e997684ad9edba962d196e886f6be6dd38114639e41290ce0a5be",
+            "archive_root": "docker-completions-44f8f25"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "gh-completions"
+      },
+      "description": "GitHub CLI (gh) custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/gh @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/gh",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "gh",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "nu_version": "*",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-gh-completions-44f8f25/gh-completions-44f8f25.zip",
+            "sha256": "747e49beec05a668ea99069ff78e38511675fef85d16b9b821f31e33ad0b8906",
+            "archive_root": "gh-completions-44f8f25"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "dotnet-completions"
+      },
+      "description": ".NET (dotnet) custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/dotnet @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/dotnet",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "dotnet",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "nu_version": "*",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-dotnet-completions-44f8f25/dotnet-completions-44f8f25.zip",
+            "sha256": "8234dc9cbb042f16d28a71f1f8277c88117263a590f43da137b80dda629e1867",
+            "archive_root": "dotnet-completions-44f8f25"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "uv-completions"
+      },
+      "description": "uv custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/uv @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/uv",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "uv",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "nu_version": "*",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-uv-completions-44f8f25/uv-completions-44f8f25.zip",
+            "sha256": "90183fcd95fe278d2f19b493ecea6fec7e627bb8464bdae2bfc14a9e5ab5cfb7",
+            "archive_root": "uv-completions-44f8f25"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "pnpm-completions"
+      },
+      "description": "pnpm custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/pnpm @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/pnpm",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "pnpm",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "nu_version": "*",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-pnpm-completions-44f8f25/pnpm-completions-44f8f25.zip",
+            "sha256": "fa8a237e9b7d5d399828a36d684f3123124d9ff357b6980069ce4e0b38d01101",
+            "archive_root": "pnpm-completions-44f8f25"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell",
+        "name": "ssh-completions"
+      },
+      "description": "SSH custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/ssh @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/ssh",
+      "type": "completion",
+      "tags": [
+        "completion",
+        "ssh",
+        "mirror",
+        "install-only"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-44f8f25",
+          "nu_version": "*",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-ssh-completions-44f8f25/ssh-completions-44f8f25.zip",
+            "sha256": "2a41deda669113e609923a8ffb255a308a2513356a4b12f78c2ea230b093bdec",
+            "archive_root": "ssh-completions-44f8f25"
           }
         }
       ]
