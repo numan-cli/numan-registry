@@ -198,14 +198,14 @@ When a maintainer says yes, PR should include:
 | nushell/nu_scripts (winget-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
 | KamilKleina/git-aliases |  |  |  |  | mirror only |
 | fj0r/ai.nu |  |  |  |  | mirror only |
-| fj0r/docker.nu |  |  |  |  | mirror only |
-| fj0r/kubernetes.nu |  |  |  |  | mirror only |
+| fj0r/docker.nu |  |  |  |  |  |
+| fj0r/kubernetes.nu |  |  |  |  |  |
 | fj0r/git.nu |  |  |  |  | mirror only |
 | lassoColombo/conventional-commits |  |  |  |  | mirror only |
-| nushell-prophet/nu-history-tools |  |  |  |  | mirror only |
+| nushell-prophet/nu-history-tools |  |  |  |  |  |
 | ArmoredPony/nu-digital-rain |  |  |  |  | mirror only |
-| yh17549/nu-dir-bookmark |  |  |  |  | mirror only |
-| Yethal/terraform-importer |  |  |  |  | mirror only |
+| yh17549/nu-dir-bookmark |  |  |  |  |  |
+| Yethal/terraform-importer |  |  |  |  |  |
 
 ---
 

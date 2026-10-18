@@ -28,6 +28,17 @@ class LifecycleProveTests(unittest.TestCase):
     def setUpClass(cls):
         cls.mod = load_mod()
 
+    def setUp(self):
+        # Unit lifecycle tests use fake executables. Real preflight helpers are tested separately.
+        for name, value in (
+            ("isolated_environment", {"PATH": os.environ.get("PATH", "")}),
+            ("probe_isolated_nu", {"version": "0.114.1"}),
+            ("sha256_file", "a" * 64),
+        ):
+            patcher = mock.patch.object(self.mod, name, return_value=value.copy() if isinstance(value, dict) else value)
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
     def test_package_search_query(self):
         self.assertEqual(
             self.mod.package_search_query("owner/nu_plugin_x"),

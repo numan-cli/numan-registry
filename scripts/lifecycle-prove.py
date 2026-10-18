@@ -23,14 +23,23 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import base64
 import filecmp
+import hashlib
+import importlib.util
+import json
 import os
 import shutil
 import subprocess
 import sys
 import tempfile
+import threading
+from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+
+from nu_version_constraint import matches_nu_constraint
 
 
 @dataclass(frozen=True)
@@ -133,14 +142,14 @@ def package_search_query(package_id: str) -> str:
     return package_id
 
 
-def build_steps(package_id: str) -> list[Step]:
+def build_steps(package_id: str, package_version: str | None = None) -> list[Step]:
     query = package_search_query(package_id)
     return [
         Step("init", ["init"]),
         Step("registry sync", ["registry", "sync"]),
         Step("search", ["search", query]),
         Step("info", ["info", package_id]),
-        Step("install", ["install", package_id]),
+        Step("install", ["install", package_id + (f"@{package_version}" if package_version else "")]),
         Step("activate", ["activate", package_id]),
         Step("doctor", ["doctor"]),
         Step("list", ["list"]),
@@ -178,7 +187,97 @@ def run_step(
         text=True,
         capture_output=False,
         check=False,
+        timeout=300,
     )
+
+
+def isolated_environment(home: Path) -> dict[str, str]:
+    """Give child processes private Nu config/data paths and no inherited secrets."""
+    allowed = {"PATH", "SYSTEMROOT", "WINDIR", "SYSTEMDRIVE", "COMSPEC", "PATHEXT"}
+    env = {name: value for name, value in os.environ.items() if name.upper() in allowed}
+    locations = {
+        "HOME": home,
+        "USERPROFILE": home,
+        "APPDATA": home / "appdata/roaming",
+        "LOCALAPPDATA": home / "appdata/local",
+        "XDG_CONFIG_HOME": home / "xdg/config",
+        "XDG_DATA_HOME": home / "xdg/data",
+        "XDG_CACHE_HOME": home / "xdg/cache",
+        "XDG_DATA_DIRS": home / "xdg/vendor",
+        "TEMP": home / "temp",
+        "TMP": home / "temp",
+    }
+    for name, path in locations.items():
+        path.mkdir(parents=True, exist_ok=True)
+        env[name] = str(path.resolve())
+    for path in (home / "xdg/config/nushell", home / "xdg/data/nushell/vendor/autoload"):
+        path.mkdir(parents=True, exist_ok=True)
+    env["NO_COLOR"] = "1"
+    return env
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def probe_isolated_nu(nu: Path, home: Path, env: dict[str, str]) -> dict:
+    """Refuse activation when real Nu reports a mutable path outside the test home."""
+    script = "{version: (version | get version), plugin_path: $nu.plugin-path, data_dir: $nu.data-dir, vendor: $nu.vendor-autoload-dirs} | to json"
+    result = subprocess.run([str(nu), "--no-config-file", "-c", script], env=env, capture_output=True, text=True, timeout=30, check=True)
+    probe = json.loads(result.stdout)
+    boundary = home.resolve()
+    for name in ("plugin_path", "data_dir"):
+        path = Path(probe[name]).resolve()
+        if not path.is_relative_to(boundary):
+            raise ValueError(f"Nu {name} escaped isolated home: {path}")
+    # Older Nu versions can lack the user vendor target. Plugins only need the
+    # isolated plugin registry; module activation checks its vendor target separately.
+    return probe
+
+
+@contextmanager
+def candidate_registry(index_path: Path):
+    """Serve exact candidate bytes with an in-memory ephemeral Ed25519 key."""
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
+    spec = importlib.util.spec_from_file_location("lifecycle_ci_sign", Path(__file__).with_name("ci-sign.py"))
+    signer = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(signer)
+    index_bytes = index_path.read_bytes()
+    index = json.loads(index_bytes)
+    key = Ed25519PrivateKey.generate()
+    public = base64.b64encode(key.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)).decode()
+    signature = key.sign(signer.canonical_json(index).encode("utf-8"))
+    envelope = json.dumps({"key_id": "lifecycle-candidate", "algorithm": "ed25519", "signature": base64.b64encode(signature).decode()}).encode()
+    content = {"/index.json": index_bytes, "/index.json.sig": envelope}
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            body = content.get(self.path)
+            self.send_response(200 if body is not None else 404)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body or b"")))
+            self.end_headers()
+            if body is not None:
+                self.wfile.write(body)
+
+        def log_message(self, *_args):
+            pass
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        yield f"http://127.0.0.1:{server.server_port}/index.json", public
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=5)
 
 
 def render_nu_shim(nu: Path, *, platform: str | None = None) -> bytes:
@@ -238,6 +337,8 @@ def prove(
     nu: Path,
     root: Path,
     keep_root: bool,
+    candidate_index: Path | None = None,
+    package_version: str | None = None,
 ) -> int:
     # Prefer the requested Nu for `numan init` probing without mutating the
     # caller's shell permanently: create a temporary shim that invokes the
@@ -259,15 +360,18 @@ def prove(
     The temporary Nu shim is removed after execution. The root directory is
     removed unless ``keep_root`` is true.
     """
-    env = os.environ.copy()
-    env["NUMAN_ROOT"] = str(root)
-
     # Create a temporary directory for the nu shim
     shim_dir = Path(tempfile.mkdtemp(prefix="numan-lifecycle-prove-shim-"))
     is_windows = sys.platform == "win32"
     shim_path = shim_dir / "nu"
 
     try:
+        env = isolated_environment(root / "lifecycle-home")
+        env["NUMAN_ROOT"] = str(root.resolve())
+        probe = probe_isolated_nu(nu, root / "lifecycle-home", env)
+        print("isolated Nu probe: " + json.dumps(probe), flush=True)
+        print("Nu SHA256: " + sha256_file(nu), flush=True)
+        print("Numan SHA256: " + sha256_file(numan), flush=True)
         if not is_windows:
             shim_path.write_bytes(render_nu_shim(nu))
             shim_path.chmod(0o755)
@@ -291,17 +395,45 @@ def prove(
         print(f"root:    {root}")
         print(flush=True)
 
-        for step in build_steps(package_id):
-            result = run_step(step, numan=numan, root=root, env=env)
-            if result.returncode != 0:
-                print(
-                    f"FAILED at step {step.name!r} "
-                    f"(exit {result.returncode})",
-                    file=sys.stderr,
-                )
-                return result.returncode if result.returncode != 0 else 1
+        with ExitStack() as stack:
+            steps = build_steps(package_id, package_version)
+            if candidate_index is not None:
+                index = json.loads(candidate_index.read_text(encoding="utf-8"))
+                package = next((p for p in index["packages"] if p["id"]["owner"] + "/" + p["id"]["name"] == package_id), None)
+                if package is None:
+                    raise ValueError(f"package absent from candidate: {package_id}")
+                version = next((v for v in package["versions"] if v["version"] == package_version), None) if package_version else package["versions"][-1]
+                if version is None:
+                    raise ValueError(f"version absent from candidate: {package_version}")
+                if not matches_nu_constraint(probe["version"], version["nu_version"]):
+                    raise ValueError(f"Nu {probe['version']} does not satisfy {version['nu_version']}")
+                if package["type"] == "module":
+                    vendor = Path(probe["data_dir"]) / "vendor/autoload"
+                    if vendor.resolve() not in [Path(value).resolve() for value in probe["vendor"]]:
+                        raise ValueError("Nu does not report the isolated user vendor-autoload target required for modules")
+                url, public = stack.enter_context(candidate_registry(candidate_index))
+                # This is a brand-new test root. Configure its default before init creates state.
+                (root / "config.toml").write_text('[general]\ndefault_registry = "lifecycle-candidate"\n', encoding="utf-8")
+                steps = build_steps(package_id, version["version"])
+                steps[1:1] = [Step("remove official test-root registry", ["registry", "remove", "official"]), Step("add signed candidate registry", ["registry", "add", "lifecycle-candidate", url, "--key", public])]
+                print(f"candidate package version: {version['version']}", flush=True)
+                print("candidate file SHA256: " + hashlib.sha256(candidate_index.read_bytes()).hexdigest(), flush=True)
+            for step in steps:
+                result = run_step(step, numan=numan, root=root, env=env)
+                if result.returncode != 0:
+                    print(f"FAILED at step {step.name!r} (exit {result.returncode})", file=sys.stderr)
+                    return result.returncode
+                if step.name == "install" and candidate_index is not None:
+                    lockfile = json.loads((root / "lockfile").read_text(encoding="utf-8"))
+                    if lockfile["packages"][package_id]["version"] != version["version"]:
+                        raise ValueError("installed version differs from requested candidate")
         print("OK: lifecycle-prove passed.")
         return 0
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError) as exc:
+        print(f"FAILED lifecycle preflight/run: {exc}", file=sys.stderr)
+        if isinstance(exc, subprocess.CalledProcessError) and exc.stderr:
+            print(exc.stderr, file=sys.stderr)
+        return 2
     finally:
         # Clean up shim directory
         shutil.rmtree(shim_dir, ignore_errors=True)
@@ -347,6 +479,8 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Do not delete the temp root after the run",
     )
+    parser.add_argument("--candidate-index", type=Path, help="Prove this local candidate through a loopback registry signed with an ephemeral key; never uses production keys")
+    parser.add_argument("--package-version", help="Install and prove this exact catalog version")
     args = parser.parse_args(argv)
 
     try:
@@ -391,6 +525,8 @@ def main(argv: list[str] | None = None) -> int:
         nu=nu,
         root=root,
         keep_root=keep_root,
+        candidate_index=args.candidate_index.resolve() if args.candidate_index else None,
+        package_version=args.package_version,
     )
 
 

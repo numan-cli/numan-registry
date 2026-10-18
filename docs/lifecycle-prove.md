@@ -19,6 +19,57 @@ python3 scripts/lifecycle-prove.py \
 
 Omit `--numan` / `--nu` to use whatever is on `PATH`.
 
+For an unpublished local candidate, use a loopback registry with an ephemeral
+Ed25519 key. This exercises signature verification without production secrets,
+an unsigned bypass, or publishing to a shared registry:
+
+```bash
+python scripts/lifecycle-prove.py \
+  --package owner/name --package-version 1.2.3 \
+  --candidate-index registry/index.json \
+  --numan /path/to/numan --nu /path/to/nu
+```
+
+The candidate file is served unchanged; its signature and private key exist
+only in memory. The disposable root selects `lifecycle-candidate` as its default
+registry and removes the seeded official registry from that test root. Install
+is pinned to the selected version and the resulting lockfile version is checked
+before activation. The source-tree signature is never modified. A successful
+local candidate run is package lifecycle evidence, not production trust or a
+production deployment.
+
+Child processes receive a private home, config, data, cache and temp directory
+under the test root. Inherited credentials, `NUPM_HOME` and unsigned-verification
+bypasses are not forwarded. A real-Nu preflight refuses plugin registry or data
+paths outside that home. Modules also require an isolated vendor-autoload target;
+plugins can be proved on older Nu versions without that module target. Each step
+has a five-minute timeout. Logs print executable hashes and the candidate file
+hash. Older Nu binaries missing the path APIs required by current Numan cannot
+earn lifecycle proof by substituting synthetic probe output.
+
+The October 18, 2026 results, exact tested versions and logs are in
+[`evidence/2026-10-18-lifecycle/summary.json`](evidence/2026-10-18-lifecycle/summary.json).
+Nine versions passed; six failed with specific reasons. All published target
+artifact digests for the nine passed versions were re-downloaded and verified;
+runtime evidence is Windows x86_64 only.
+
+The six failures remain in `registry/provisional.json`, outside the production
+index. Staging combines both catalogs using `scripts/prepare-staging.py`; its
+ephemeral signature does not grant production trust. To reproduce a quarantined
+candidate locally:
+
+```bash
+python scripts/prepare-staging.py --output /tmp/staging-index.json
+python scripts/lifecycle-prove.py --package owner/name \
+  --candidate-index /tmp/staging-index.json --numan /path/to/numan --nu /path/to/nu
+```
+
+After a candidate earns real lifecycle evidence, move that exact version into
+`registry/index.json`, record `verified_with`, remove its deferral, and remove it
+from the provisional catalog. The staging merge rejects an attempt to overwrite
+a version already in production. Keep package identity, immutable source, and
+artifact hashes intact; changed payloads require a new version and intake.
+
 The script creates a temporary `--root`, runs:
 
 `init → registry sync → search → info → install → activate → doctor → list → deactivate → remove → gc`

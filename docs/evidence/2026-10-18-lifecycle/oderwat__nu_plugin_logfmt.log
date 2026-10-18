@@ -1,0 +1,115 @@
+isolated Nu probe: {"version": "0.101.0", "plugin_path": "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\oderwat__nu_plugin_logfmt-0101-root\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\oderwat__nu_plugin_logfmt-0101-root\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\oderwat__nu_plugin_logfmt-0101-root\\lifecycle-home\\AppData\\Roaming\\nushell\\vendor\\autoload"]}
+Nu SHA256: 98311a74187649435decd5fa15e31e361499973b9588901b084321fd71a423c7
+Numan SHA256: e1d66c387d9f255991e686bd6298005a76e6780db224819c5683b79cae18b18d
+package: oderwat/nu_plugin_logfmt
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nu\0.101.0\nu.exe
+root:    D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root
+
+candidate package version: 0.0.0-snapshot.20260816.892c4f9
+candidate file SHA256: b3a45bbbe6d2c7c15588e61f54e88f4826a7e71fbb4d65aa697f617455facf32
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root'.
+  Nu executable: C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-shim-6tawe44h\nu.exe
+  Nu version:    0.101.0
+  Plugin registry: D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: (none — module activation unavailable)
+
+Warning: No Numan-safe vendor-autoload directory found.
+Module activation requires <data-dir>/vendor/autoload to appear in $nu.vendor-autoload-dirs.
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root registry add lifecycle-candidate http://127.0.0.1:59000/index.json --key codDjsQ1cjDga896dm6TNlrdOdcDEkOycUMwYEle3dE=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:59000/index.json
+  Fingerprint: sha256:814f2bc8189881b59fd729852fd0a68bbd2fad3532c5033b5b26191965e35896
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:59000/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: f9909010).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root search nu_plugin_logfmt
+Found 1 package(s) matching 'nu_plugin_logfmt':
+checked against: Nu 0.101.0 (x86_64-pc-windows-msvc)
+
+  oderwat/nu_plugin_logfmt  v0.0.0-snapshot.20260816.892c4f9  [plugin] [provisional]
+    A simple from / to logfmt plugin for nushell. CI-built from oderwat/nu_plugin_logfmt@892c4f9 (commit snapshot, no tagged release) and pinned + hash-verified + signed downstream in numan-registry.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root info oderwat/nu_plugin_logfmt
+Package:    oderwat/nu_plugin_logfmt
+Type:       plugin
+Status:     verified upstream artifact
+Description: A simple from / to logfmt plugin for nushell. CI-built from oderwat/nu_plugin_logfmt@892c4f9 (commit snapshot, no tagged release) and pinned + hash-verified + signed downstream in numan-registry.
+Repository: https://github.com/oderwat/nu_plugin_logfmt
+Tags:       plugin, logfmt, logging, ci-built
+Your Nu:    0.101.0 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.0.0-snapshot.20260816.892c4f9  [nu >=0.101.0 <0.102.0]  (compatible)
+    note: built from a commit snapshot, not a tagged release
+    evidence:    provisional — Snapshot build of Go plugin; awaiting live Nu test harness
+    source git:  https://github.com/oderwat/nu_plugin_logfmt
+    source rev:  892c4f98a24c55d289febabf423a8cee9a8e5e1e
+    cargo_name:  nu_plugin_logfmt
+    platform: x86_64-pc-windows-msvc
+    platform: aarch64-apple-darwin
+    platform: x86_64-unknown-linux-gnu
+    platform: aarch64-unknown-linux-gnu
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root install oderwat/nu_plugin_logfmt@0.0.0-snapshot.20260816.892c4f9
+✓ Installed oderwat/nu_plugin_logfmt@0.0.0-snapshot.20260816.892c4f9 to D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root\packages\plugins\oderwat\nu_plugin_logfmt\0.0.0-snapshot.20260816.892c4f9-d36baa17
+! This package has not been lifecycle-tested. It passed integrity checks. (Snapshot build of Go plugin; awaiting live Nu test harness)
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root activate oderwat/nu_plugin_logfmt
+
+Plugin registration
+  oderwat/nu_plugin_logfmt -> D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Registered oderwat/nu_plugin_logfmt — takes effect in future Nu sessions (not the current shell)
+==> doctor: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root doctor
+Numan doctor — D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root
+
+Initialization
+  · PATH Nu: 0.101.0
+  · Managed Nu: not installed
+
+Activation
+  · Plugin 'oderwat/nu_plugin_logfmt' has an activation record (Issue #22). Deactivate is available; active remove stays gated (deactivate first). Active update is opt-in via NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly (default off): deactivate→upgrade→activate (https://github.com/numan-cli/numan/issues/22).
+    Fix: Remove: `numan deactivate <pkg>`, then `numan remove <pkg>`. Update: set NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly, then `numan update <pkg>` orchestrates deactivate→upgrade→activate; otherwise active update is gated (default off). See docs/active-plugin-gate.md.
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root list
+Installed packages (1):
+
+  oderwat/nu_plugin_logfmt  v0.0.0-snapshot.20260816.892c4f9  [plugin]  activated
+==> deactivate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root deactivate oderwat/nu_plugin_logfmt
+
+Plugin deactivation
+  oderwat/nu_plugin_logfmt (logfmt) <- D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Unregistered oderwat/nu_plugin_logfmt — takes effect in future Nu sessions (not the current shell)
+==> remove: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root remove --yes oderwat/nu_plugin_logfmt
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed oderwat/nu_plugin_logfmt
+==> gc: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root gc
+No orphaned packages found.
+OK: lifecycle-prove passed.
+kept root at D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\oderwat__nu_plugin_logfmt-0101-root

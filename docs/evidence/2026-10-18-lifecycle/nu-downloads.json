@@ -1,0 +1,45 @@
+{
+  "0.100.0": {
+    "version": "0.100.0",
+    "url": "https://github.com/nushell/nushell/releases/download/0.100.0/nu-0.100.0-x86_64-pc-windows-msvc.zip",
+    "sha256": "8a9a24c2917f4f70b7884df647a446e642d604d0b64ef6b78baba7e10973c47d",
+    "checksum_url": "https://github.com/nushell/nushell/releases/download/0.100.0/SHA256SUMS",
+    "nu_sha256": "ab6ac383461b992643a210509f1c86e5fcd38b0dab3f92cb877c04972f05fb8f"
+  },
+  "0.101.0": {
+    "version": "0.101.0",
+    "url": "https://github.com/nushell/nushell/releases/download/0.101.0/nu-0.101.0-x86_64-pc-windows-msvc.zip",
+    "sha256": "e2eb868d6fe97d4e2b43049f34047df43774b3f7be729cc7b84ddb0f0521b9ab",
+    "checksum_url": "https://github.com/nushell/nushell/releases/download/0.101.0/SHA256SUMS",
+    "nu_sha256": "98311a74187649435decd5fa15e31e361499973b9588901b084321fd71a423c7"
+  },
+  "0.104.0": {
+    "version": "0.104.0",
+    "url": "https://github.com/nushell/nushell/releases/download/0.104.0/nu-0.104.0-x86_64-pc-windows-msvc.zip",
+    "sha256": "bbbbe04f7115cd22bd3be23755e248bee2902964fc51c5a1ad5436539217b104",
+    "checksum_url": "https://github.com/nushell/nushell/releases/download/0.104.0/SHA256SUMS",
+    "nu_sha256": "b6a07a4cb186ea5fab1c3fed88f824056112f7f248d0839bce985b24de9e3325"
+  },
+  "0.105.0": {
+    "version": "0.105.0",
+    "url": "https://github.com/nushell/nushell/releases/download/0.105.0/nu-0.105.0-x86_64-pc-windows-msvc.zip",
+    "sha256": "7b477699bb4ccbe0d4109f481730307b35394192ed9792209d39fd5ebd7bc357",
+    "checksum_url": "https://github.com/nushell/nushell/releases/download/0.105.0/SHA256SUMS",
+    "nu_sha256": "96f6230801c6cdd66693e3efffd4cca55a6243d7e58f20484275b41c0572cb6a"
+  },
+  "0.109.0": {
+    "version": "0.109.0",
+    "url": "https://github.com/nushell/nushell/releases/download/0.109.0/nu-0.109.0-x86_64-pc-windows-msvc.zip",
+    "sha256": "ed16a4c037ab607c4a81fd3a435e189f1bb872d3aab20e32a1c68f6bdffe442b",
+    "checksum_url": "https://github.com/nushell/nushell/releases/download/0.109.0/SHA256SUMS",
+    "nu_sha256": "ea32368ad6a7bdf96c678ae3561901d74a810bb028c772aa8870aebead508342"
+  },
+  "0.90.1": {
+    "version": "0.90.1",
+    "installer_url": "https://github.com/nushell/nushell/releases/download/0.90.1/nu-0.90.1-x86_64-pc-windows-msvc.msi",
+    "checksum_reference": "https://github.com/microsoft/winget-pkgs/blob/master/manifests/n/Nushell/Nushell/0.90.1/Nushell.Nushell.installer.yaml",
+    "verification": "MSI SHA256 verified against WinGet manifest; extracted nu.exe using 7z and the read-only MSI File table; no MSI installation performed.",
+    "installer_sha256": "e7b7a84b1c52af6d31a659be38e0301ca34f20312c3df60db984a9e7d8be82e5",
+    "nu_executable_sha256": "2e994aafcee0bc783da2a313aa0d27cb4f5385e4f80ff30d9a35cdcc046c8ef2"
+  }
+}

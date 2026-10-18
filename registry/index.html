@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Numan Official Registry</title>
-  <meta name="description" content="Signed catalog CDN for the Numan Nushell package manager. Clients sync index.json; this page is human-facing only.">
+  <meta name="description" content="Find Nushell plugins, modules, scripts and completions. Check platform and Nu compatibility, inspect package evidence, and get Numan install commands.">
   <style>
     :root {
       --ink: #14231c;
@@ -16,7 +16,6 @@
       --glow: rgba(31, 122, 76, 0.14);
       --head: #d7e6d9;
       --match: rgba(31, 122, 76, 0.1);
-      --dim: 0.42;
       --head-h: 2.05rem;
       --sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       --serif: Georgia, "Times New Roman", Times, serif;
@@ -37,9 +36,9 @@
     }
 
     main {
-      max-width: 58rem;
+      max-width: 72rem;
       margin: 0 auto;
-      padding: clamp(3rem, 8vw, 6rem) 1.5rem 4rem;
+      padding: clamp(2rem, 5vw, 3rem) 1.5rem 4rem;
     }
 
     .brand {
@@ -343,26 +342,24 @@
       background: var(--match);
     }
 
-    table.packages tr.pkg-row.is-dim {
-      opacity: var(--dim);
-    }
-
-    table.packages td.pkg button {
+    table.packages td.pkg a {
       all: unset;
       cursor: pointer;
       font: inherit;
       font-weight: 500;
-      color: var(--ink);
+      color: var(--leaf-deep);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
       border-bottom: 1px dotted transparent;
     }
 
-    table.packages td.pkg button:hover,
-    table.packages td.pkg button:focus-visible {
+    table.packages td.pkg a:hover,
+    table.packages td.pkg a:focus-visible {
       color: var(--leaf-deep);
       border-bottom-color: var(--leaf);
     }
 
-    table.packages td.pkg button:focus-visible {
+    table.packages td.pkg a:focus-visible {
       outline: 2px solid var(--leaf);
       outline-offset: 2px;
     }
@@ -425,6 +422,67 @@
       clip: rect(0, 0, 0, 0);
       white-space: nowrap;
       border: 0;
+    }
+
+    [hidden] { display: none !important; }
+    a { color: var(--leaf-deep); }
+    button, input, select { font: inherit; }
+    button, select { cursor: pointer; }
+    button:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visible {
+      outline: 2px solid var(--leaf); outline-offset: 3px;
+    }
+    .guide, .package-detail, .empty-state {
+      border: 1px solid var(--line); border-radius: .45rem;
+      padding: 1.25rem; margin-bottom: 1.25rem; background: rgba(255,255,255,.45);
+    }
+    .guide summary { font: 600 1rem var(--sans); cursor: pointer; }
+    .guide p, .package-detail p { margin: .75rem 0; }
+    .guide pre, .command {
+      font: .88rem var(--mono); background: #e8f0e7;
+      padding: .75rem; border-radius: .3rem; overflow-x: auto;
+    }
+    .filter-field { display: flex; flex: 1 1 12rem; flex-direction: column; gap: .25rem; font: .82rem var(--sans); }
+    .filters { justify-content: flex-start; align-items: end; }
+    .filters input, .filters select { max-width: none; min-width: 0; }
+    .filters .catalog-search, .filters .nu-filter { flex: none; width: 100%; }
+    .filters select, .plain-button {
+      color: var(--ink); background: #f3f7f2; border: 1px solid #8b9f91;
+      border-radius: .35rem; padding: .5rem .65rem; font: .88rem var(--sans);
+    }
+    .filter-toggle { font: .88rem var(--sans); }
+    .helper, .pkg-description, .target-summary, .compatibility, .tags {
+      font: .85rem/1.5 var(--sans); color: var(--muted);
+    }
+    .pkg-description {
+      margin-top: .35rem; max-width: 34rem; display: -webkit-box;
+      -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .target-summary, .compatibility { display: block; margin-top: .3rem; white-space: normal; }
+    .compatibility[data-compatible="false"], .validation { color: #852d22; }
+    .compatibility[data-compatible="true"] { color: var(--leaf-deep); }
+    .validation { font: .9rem var(--sans); margin-bottom: .8rem; }
+    input[aria-invalid="true"] { border-color: #852d22; }
+    .package-detail { scroll-margin-top: 1rem; overflow-wrap: anywhere; }
+    .package-detail h2 { font-size: 1.2rem; }
+    .detail-heading, .detail-actions { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
+    .detail-heading { justify-content: space-between; margin-bottom: .75rem; }
+    .detail-heading h2 { margin: 0; }
+    .package-detail dl { display: grid; grid-template-columns: 10rem 1fr; gap: .65rem; font: .9rem/1.5 var(--sans); }
+    .package-detail dt { font-weight: 600; }
+    .package-detail dd { margin: 0; }
+    .package-detail ul { margin: 0; padding-left: 1.25rem; }
+    .command { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+    .command code { white-space: pre; }
+    .empty-state p { margin: 0 0 .75rem; }
+    .catalog-controls { display: block; }
+    .type-tabs { margin-bottom: .85rem; }
+    @media (max-width: 640px) {
+      main { padding: 2rem 1rem; }
+      .filter-field { width: 100%; }
+      .package-detail dl { grid-template-columns: 1fr; gap: .35rem; }
+      .package-detail dd { margin-bottom: .75rem; }
+      table.packages td.pkg a { overflow-wrap: anywhere; }
+      .command { align-items: start; flex-direction: column; }
     }
 
     @media (max-width: 640px) {
@@ -499,19 +557,38 @@
 <body>
   <main>
     <p class="brand">Numan</p>
-    <h1>Official package registry CDN</h1>
+    <h1>Find your next Nushell package</h1>
     <p class="intro">
-      This site is the signed catalog endpoint for
+      Plugins, modules, scripts and completions for
       <a href="https://github.com/numan-cli/numan">Numan</a>.
-      Browse the packages below; clients sync <code>index.json</code> and verify its signature.
+      Check compatibility, inspect package details, and copy install commands.
     </p>
     <div class="actions">
       <!-- Relative ./index.json and ./index.json.sig are intentional: Numan clients and this page share the Pages root. Do not change these hrefs or the client machine URLs. -->
       <a class="button primary" href="#catalog">Browse packages</a>
+      <a class="button secondary" href="https://github.com/numan-cli/numan#quick-start">Install Numan</a>
       <a class="button secondary" href="./index.json">Raw index.json</a>
       <a class="button secondary" href="./index.json.sig">Signature</a>
       <a class="button secondary" href="https://github.com/numan-cli/numan-registry/blob/main/docs/catalog-compat.md">Catalog × Nu matrix</a>
     </div>
+
+    <details class="guide" id="getting-started">
+      <summary>First time here? Set up Numan and install a package</summary>
+      <p>Install Numan from <a href="https://github.com/numan-cli/numan/releases">GitHub Releases</a>
+        or follow the <a href="https://github.com/numan-cli/numan#quick-start">platform installation guide</a>.
+        Put Nushell on PATH, then run:</p>
+      <pre><code>numan init
+numan registry sync
+nu --version</code></pre>
+      <p>Enter your Nu version below. Open a package for its install commands and upstream usage documentation.
+        Installation only downloads, verifies and locks the package. Use the activation command when offered;
+        open a new Nu session to use module autoloads. Some modules, scripts and completion packages are install-only:
+        Numan does not activate or execute them.</p>
+      <p>After installing, run <code>numan list</code> to inspect installed packages and
+        <code>numan doctor --scan</code> for read-only diagnostics.</p>
+    </details>
+
+    <p class="helper" id="publication-status" role="status">Reading catalog update time…</p>
 
     <section class="catalog" id="catalog" aria-labelledby="catalog-heading">
       <h2 id="catalog-heading">Packages</h2>
@@ -519,7 +596,7 @@
       <div class="catalog-controls" id="catalog-controls" hidden>
         <div class="type-tabs" id="type-tabs" role="group" aria-label="Package type"></div>
         <div class="filters">
-          <label class="visually-hidden" for="catalog-search">Filter packages</label>
+          <label class="filter-field" for="catalog-search">Search packages
           <input
             class="catalog-search"
             id="catalog-search"
@@ -528,17 +605,35 @@
             autocomplete="off"
             spellcheck="false"
           >
-          <label class="visually-hidden" for="nu-filter">Highlight Nu version</label>
+          </label>
+          <label class="filter-field" for="nu-filter">Your Nu version
           <input
             class="nu-filter"
             id="nu-filter"
             type="text"
             inputmode="text"
-            placeholder="Highlight Nu (e.g. 0.114.1)"
+            placeholder="e.g. 0.114.1"
+            aria-describedby="nu-help nu-error"
             autocomplete="off"
             spellcheck="false"
           >
+          </label>
+          <div class="filter-field">
+            <label for="target-filter">Platform / architecture</label>
+            <select id="target-filter"><option value="">All targets</option></select>
+          </div>
+          <label class="filter-toggle"><input type="checkbox" id="compatible-only"> Matching Nu only</label>
+          <button class="plain-button" type="button" id="reset-filters">Reset filters</button>
         </div>
+      </div>
+      <p class="helper" id="nu-help">Run <code>nu --version</code> for your version.
+        Matching uses the declared Nu range; lifecycle-tested versions are listed separately in package details.
+        Platform filtering uses published binary targets. Untargeted archives still need upstream requirements checked.</p>
+      <p class="validation" id="nu-error" role="status" hidden></p>
+      <section class="package-detail" id="package-detail" aria-labelledby="detail-title" tabindex="-1" hidden></section>
+      <div class="empty-state" id="empty-state" hidden>
+        <p>No packages match these filters. Try a broader search or reset the filters.</p>
+        <button class="plain-button" type="button" id="empty-reset">Reset filters</button>
       </div>
       <noscript>
         <p>Enable JavaScript to browse the catalog here, or open <a href="./index.json">index.json</a>.</p>
@@ -550,7 +645,7 @@
               <th scope="col">Package</th>
               <th scope="col">Type</th>
               <th scope="col">Latest</th>
-              <th scope="col">Nu</th>
+              <th scope="col">Nu / platform</th>
             </tr>
           </thead>
           <tbody id="package-rows"></tbody>
@@ -558,393 +653,27 @@
       </div>
     </section>
 
+    <details class="guide">
+      <summary>Catalog publication details</summary>
+      <p class="helper" id="publication-build" role="status">Reading publication build metadata…</p>
+      <p class="helper">Catalog update time is not deployment time. The source catalog and production endpoint can differ.
+        <a href="https://github.com/numan-cli/numan-registry/actions/workflows/production.yml">Check production publication history</a>.
+        This page displays the catalog served by the current endpoint.</p>
+    </details>
+
     <div class="meta">
       Sync with <code>numan registry sync</code> against the built-in
       <code>official</code> trust root.
       Source and intake live in
       <a href="https://github.com/numan-cli/numan-registry">numan-cli/numan-registry</a>.
+      <a href="https://github.com/numan-cli/numan-registry/blob/main/docs/intake-candidates.md">Package requests and intake</a> ·
+      <a href="https://github.com/numan-cli/numan-registry/blob/main/registry/provisional.json">Provisional candidates (outside production)</a> ·
+      <a href="https://github.com/numan-cli/numan-registry/issues/new">Report a catalog problem</a> ·
+      <a href="https://github.com/numan-cli/numan-registry/actions/workflows/production.yml">Production publication history</a>.
+      The browser displays catalog metadata; Numan verifies the signed index and artifact hashes during sync and install.
     </div>
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script>
-    (function () {
-      var TYPE_ORDER = ["plugin", "module", "script", "completion"];
-      var TYPE_LABELS = {
-        plugin: "Plugins",
-        module: "Modules",
-        script: "Scripts",
-        completion: "Completions"
-      };
-
-      var statusEl = document.getElementById("catalog-status");
-      var controlsEl = document.getElementById("catalog-controls");
-      var tabsEl = document.getElementById("type-tabs");
-      var tableEl = document.getElementById("package-table");
-      var rowsEl = document.getElementById("package-rows");
-      var searchEl = document.getElementById("catalog-search");
-      var nuEl = document.getElementById("nu-filter");
-      var toastEl = document.getElementById("toast");
-
-      var catalogRows = [];
-      var updatedLabel = "";
-      var activeType = "all";
-      var collapsed = {};
-      var toastTimer = null;
-
-      function setStatus(text, state) {
-        statusEl.textContent = text;
-        statusEl.setAttribute("data-state", state || "");
-      }
-
-      function escapeHtml(value) {
-        return String(value)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;");
-      }
-
-      function parseSemverParts(version) {
-        var core = String(version || "").trim().split("+")[0].split("-")[0];
-        return core.split(".").map(function (part) {
-          var n = parseInt(part, 10);
-          return isNaN(n) ? 0 : n;
-        });
-      }
-
-      function compareSemver(a, b) {
-        var pa = parseSemverParts(a);
-        var pb = parseSemverParts(b);
-        var len = Math.max(pa.length, pb.length);
-        for (var i = 0; i < len; i++) {
-          var da = pa[i] || 0;
-          var db = pb[i] || 0;
-          if (da !== db) return da < db ? -1 : 1;
-        }
-        return 0;
-      }
-
-      function pickLatestVersion(versions) {
-        if (!versions || !versions.length) return null;
-        // Index append order is authoritative (add-package.py); last entry wins,
-        // including same-core suffixes such as 0.1.0-<commit>.
-        return versions[versions.length - 1];
-      }
-
-      function formatUpdatedAt(iso) {
-        if (!iso) return "";
-        var d = new Date(iso);
-        if (isNaN(d.getTime())) return iso;
-        return d.toISOString().slice(0, 10);
-      }
-
-      function typeLabel(type) {
-        return TYPE_LABELS[type] || (type ? type.charAt(0).toUpperCase() + type.slice(1) + "s" : "Other");
-      }
-
-      function countByType(rows) {
-        var counts = {};
-        for (var i = 0; i < rows.length; i++) {
-          var t = rows[i].type || "other";
-          counts[t] = (counts[t] || 0) + 1;
-        }
-        var parts = [];
-        for (var j = 0; j < TYPE_ORDER.length; j++) {
-          var key = TYPE_ORDER[j];
-          if (counts[key]) parts.push(counts[key] + " " + key);
-        }
-        Object.keys(counts).sort().forEach(function (key) {
-          if (TYPE_ORDER.indexOf(key) === -1) parts.push(counts[key] + " " + key);
-        });
-        return parts;
-      }
-
-      function isValidNuVersion(version) {
-        return /^\d+\.\d+\.\d+([.-].*)?$/.test(String(version || "").trim());
-      }
-
-      function constraintMatches(constraint, version) {
-        if (!constraint || !version) return false;
-        var normalizedConstraint = String(constraint).trim();
-        if (normalizedConstraint === "*") return true;
-        var tokens = normalizedConstraint.split(/\s+/);
-        for (var i = 0; i < tokens.length; i++) {
-          var token = tokens[i];
-          // Minor wildcards: =0.113.x / 0.113.x / 0.113.* (Numan grammar).
-          var wild = token.match(/^=?(\d+)\.(\d+)\.(?:x|X|\*)$/);
-          if (wild) {
-            var parts = parseSemverParts(version);
-            if (parts[0] !== parseInt(wild[1], 10) || parts[1] !== parseInt(wild[2], 10)) {
-              return false;
-            }
-            continue;
-          }
-          var m = token.match(/^(>=|<=|>|<|=)?(.+)$/);
-          if (!m) return false;
-          var op = m[1] || "=";
-          var rhs = m[2];
-          var cmp = compareSemver(version, rhs);
-          if (op === ">=" && cmp < 0) return false;
-          if (op === "<=" && cmp > 0) return false;
-          if (op === ">" && cmp <= 0) return false;
-          if (op === "<" && cmp >= 0) return false;
-          if (op === "=" && cmp !== 0) return false;
-        }
-        return tokens.length > 0;
-      }
-
-      function showToast(message) {
-        toastEl.textContent = message;
-        toastEl.classList.add("show");
-        if (toastTimer) clearTimeout(toastTimer);
-        toastTimer = setTimeout(function () {
-          toastEl.classList.remove("show");
-        }, 1400);
-      }
-
-      function copyText(text) {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          return navigator.clipboard.writeText(text);
-        }
-        return new Promise(function (resolve, reject) {
-          var area = document.createElement("textarea");
-          area.value = text;
-          area.setAttribute("readonly", "");
-          area.style.position = "fixed";
-          area.style.left = "-9999px";
-          document.body.appendChild(area);
-          area.select();
-          try {
-            if (!document.execCommand("copy")) throw new Error("copy failed");
-            resolve();
-          } catch (err) {
-            reject(err);
-          } finally {
-            document.body.removeChild(area);
-          }
-        });
-      }
-
-      function buildTabs() {
-        var typesPresent = {};
-        catalogRows.forEach(function (row) {
-          typesPresent[row.type] = true;
-        });
-        var tabs = [{ id: "all", label: "All" }];
-        TYPE_ORDER.forEach(function (type) {
-          if (typesPresent[type]) {
-            tabs.push({ id: type, label: typeLabel(type) });
-          }
-        });
-        Object.keys(typesPresent).sort().forEach(function (type) {
-          if (TYPE_ORDER.indexOf(type) === -1) {
-            tabs.push({ id: type, label: typeLabel(type) });
-          }
-        });
-        tabsEl.innerHTML = tabs.map(function (tab) {
-          return (
-            "<button type=\"button\" data-type=\"" +
-            escapeHtml(tab.id) +
-            "\" aria-pressed=\"" +
-            (activeType === tab.id ? "true" : "false") +
-            "\">" +
-            escapeHtml(tab.label) +
-            "</button>"
-          );
-        }).join("");
-      }
-
-      function filteredRows() {
-        var q = (searchEl.value || "").trim().toLowerCase();
-        return catalogRows.filter(function (row) {
-          if (activeType !== "all" && row.type !== activeType) return false;
-          if (!q) return true;
-          return row.search.indexOf(q) !== -1;
-        });
-      }
-
-      function renderRows(rows) {
-        if (!rows.length) {
-          rowsEl.innerHTML = "";
-          tableEl.hidden = true;
-          return;
-        }
-
-        var nuQuery = (nuEl.value || "").trim();
-        var nuActive = isValidNuVersion(nuQuery);
-        var html = [];
-        var lastType = null;
-
-        for (var i = 0; i < rows.length; i++) {
-          var row = rows[i];
-          if (row.type !== lastType) {
-            var isCollapsed = !!collapsed[row.type];
-            html.push(
-              "<tr class=\"group\" data-type=\"" + escapeHtml(row.type) +
-              "\" data-collapsed=\"" + (isCollapsed ? "true" : "false") + "\">" +
-              "<td colspan=\"4\">" +
-              "<button type=\"button\" aria-expanded=\"" + (isCollapsed ? "false" : "true") + "\">" +
-              "<span class=\"chevron\" aria-hidden=\"true\">▾</span>" +
-              escapeHtml(typeLabel(row.type)) +
-              "</button></td></tr>"
-            );
-            lastType = row.type;
-          }
-          if (collapsed[row.type]) continue;
-
-          var match = nuActive && constraintMatches(row.nu, nuQuery);
-          var classes = ["pkg-row"];
-          if (nuActive) classes.push(match ? "is-match" : "is-dim");
-
-          html.push(
-            "<tr class=\"" + classes.join(" ") + "\">" +
-              "<td class=\"pkg\">" +
-                "<button type=\"button\" data-copy=\"" + escapeHtml(row.id) +
-                "\" title=\"Copy package id\">" +
-                escapeHtml(row.id) +
-                "</button>" +
-              "</td>" +
-              "<td class=\"type\">" + escapeHtml(row.type) + "</td>" +
-              "<td class=\"ver\">" + escapeHtml(row.version) + "</td>" +
-              "<td class=\"nu\">" + escapeHtml(row.nu) + "</td>" +
-            "</tr>"
-          );
-        }
-
-        rowsEl.innerHTML = html.join("");
-        tableEl.hidden = false;
-      }
-
-      function updateStatus(visible) {
-        var total = catalogRows.length;
-        var bits = [total + " package" + (total === 1 ? "" : "s")];
-        var typeParts = countByType(catalogRows);
-        if (typeParts.length) bits.push(typeParts.join(" · "));
-        if (updatedLabel) bits.push("updated " + updatedLabel);
-        if (visible.length !== total || activeType !== "all" || (searchEl.value || "").trim()) {
-          var renderedCount = visible.filter(function (row) {
-            return !collapsed[row.type];
-          }).length;
-          bits.push("showing " + renderedCount);
-        }
-        var nuQuery = (nuEl.value || "").trim();
-        if (isValidNuVersion(nuQuery)) {
-          var matches = visible.filter(function (row) {
-            return constraintMatches(row.nu, nuQuery);
-          }).length;
-          bits.push(matches + " match Nu " + nuQuery);
-        }
-        setStatus(bits.join(" · "), "ready");
-      }
-
-      function refresh() {
-        var visible = filteredRows();
-        renderRows(visible);
-        updateStatus(visible);
-        Array.prototype.forEach.call(tabsEl.querySelectorAll("button"), function (btn) {
-          btn.setAttribute("aria-pressed", btn.getAttribute("data-type") === activeType ? "true" : "false");
-        });
-      }
-
-      var controller = window.AbortController ? new AbortController() : null;
-      var timeoutId = null;
-      if (controller) {
-        timeoutId = setTimeout(function () {
-          controller.abort();
-        }, 15000);
-      }
-
-      fetch("./index.json", {
-        credentials: "same-origin",
-        signal: controller ? controller.signal : undefined
-      })
-        .then(function (res) {
-          if (!res.ok) throw new Error("HTTP " + res.status);
-          return res.json();
-        })
-        .then(function (index) {
-          if (index.schema_version !== 1) {
-            throw new Error("Unsupported schema_version: " + index.schema_version);
-          }
-          if (!Array.isArray(index.packages)) {
-            throw new Error("Malformed catalog: packages is not an array");
-          }
-          var packages = index.packages;
-          catalogRows = packages.map(function (pkg) {
-            var owner = (pkg.id && pkg.id.owner) || "?";
-            var name = (pkg.id && pkg.id.name) || "?";
-            var latest = pickLatestVersion(pkg.versions);
-            var version = latest ? latest.version : "n/a";
-            var nu = latest && latest.nu_version ? latest.nu_version : "n/a";
-            var type = pkg.type || "other";
-            var id = owner + "/" + name;
-            var description = pkg.description || "";
-            var tags = Array.isArray(pkg.tags) ? pkg.tags.join(" ") : "";
-            return {
-              id: id,
-              type: type,
-              version: version,
-              nu: nu,
-              search: [id, type, version, nu, description, tags].join(" ").toLowerCase()
-            };
-          });
-
-          catalogRows.sort(function (a, b) {
-            var aTypeIndex = TYPE_ORDER.indexOf(a.type);
-            var bTypeIndex = TYPE_ORDER.indexOf(b.type);
-            var tr = (aTypeIndex === -1 ? TYPE_ORDER.length : aTypeIndex) -
-              (bTypeIndex === -1 ? TYPE_ORDER.length : bTypeIndex);
-            if (tr !== 0) return tr;
-            if (a.id === b.id) return 0;
-            return a.id < b.id ? -1 : 1;
-          });
-
-          updatedLabel = formatUpdatedAt(index.updated_at);
-          controlsEl.hidden = false;
-          buildTabs();
-          refresh();
-        })
-        .catch(function (err) {
-          if (window.console && console.error) {
-            console.error("Catalog load failed:", err);
-          }
-          setStatus("Could not load the catalog. Open raw index.json instead.", "error");
-          tableEl.hidden = true;
-          controlsEl.hidden = true;
-        })
-        .then(function () {
-          if (timeoutId !== null) clearTimeout(timeoutId);
-        });
-
-      searchEl.addEventListener("input", refresh);
-      nuEl.addEventListener("input", refresh);
-
-      tabsEl.addEventListener("click", function (event) {
-        var btn = event.target.closest("button[data-type]");
-        if (!btn) return;
-        activeType = btn.getAttribute("data-type") || "all";
-        refresh();
-      });
-
-      rowsEl.addEventListener("click", function (event) {
-        var groupBtn = event.target.closest("tr.group button");
-        if (groupBtn) {
-          var groupRow = groupBtn.closest("tr.group");
-          var type = groupRow && groupRow.getAttribute("data-type");
-          if (!type) return;
-          collapsed[type] = !collapsed[type];
-          refresh();
-          return;
-        }
-
-        var copyBtn = event.target.closest("button[data-copy]");
-        if (!copyBtn) return;
-        var text = copyBtn.getAttribute("data-copy") || "";
-        copyText(text)
-          .then(function () { showToast("Copied " + text); })
-          .catch(function () { showToast("Could not copy"); });
-      });
-    })();
-  </script>
+  <script src="./catalog.js" defer></script>
 </body>
 </html>
