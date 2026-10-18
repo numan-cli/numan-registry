@@ -1,0 +1,52 @@
+.........Repo consistency check failed:
+  README Currently active does not match manifest.json active[] (readme=0 entries, manifest=1 entries)
+    missing from README: - `acme/plug` @ `v1.0.0` \u2192 `nu_plugin_plug` 1.0.0
+..................................FAIL: Command '['gh']' timed out after 30 seconds
+.........error: missing file: C:\Users\tonyt\AppData\Local\Temp\tmppfdcivjz\missing.json
+.JSON format check failed: C:\Users\tonyt\AppData\Local\Temp\tmp6oa402e4\dirty.json
+Run: python3 scripts/format_json.py
+........FAIL: 'missing' not in manifest.json active[]
+.FAIL: packaged asset not found: C:\Users\tonyt\AppData\Local\Temp\tmphsoyul7k\assets\missing.tar.gz
+.FAIL: provisional intake requires a non-blank deferral reason (--deferral-reason)
+.wrote C:\Users\tonyt\AppData\Local\Temp\tmpg8546jh9\spec.json with 1 target(s): x86_64-unknown-linux-gnu
+.wrote C:\Users\tonyt\AppData\Local\Temp\tmp3oe3cwzz\spec.json with 1 target(s): x86_64-unknown-linux-gnu
+....FAIL: invalid sha256 for linux: nothex
+.FAIL: malformed PACKAGED row: PACKAGED	linux	only-three-fields
+.FAIL: no PACKAGED rows in C:\Users\tonyt\AppData\Local\Temp\tmp20aiu82h\packaged.tsv
+.WARN: partial spec � missing target(s): windows
+..........FAIL: duplicate PACKAGED target: linux
+..............s...........  archived https://github.com/owner/repo@v1.2.3 -> a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0
+  wrote C:\Users\tonyt\AppData\Local\Temp\tmp5yyjisdj\dist\owner-cool-module-1.2.3.tar.gz (163 bytes) sha256=f64c7ae152db6460e5dc202c9e516027ffcddb667394951afbe5c3bdad27ee84
+  wrote C:\Users\tonyt\AppData\Local\Temp\tmp5yyjisdj\spec.json and recorded re-intake in C:\Users\tonyt\AppData\Local\Temp\tmp5yyjisdj\manifest-archives.json
+.FAIL: entry file not found in checkout: missing.nu
+.  archived https://github.com/owner/repo@v1.2.3 -> a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0
+  wrote C:\Users\tonyt\AppData\Local\Temp\tmpplzm56gs\dist\owner-cool-module-1.2.3.tar.gz (163 bytes) sha256=f64c7ae152db6460e5dc202c9e516027ffcddb667394951afbe5c3bdad27ee84
+  wrote C:\Users\tonyt\AppData\Local\Temp\tmpplzm56gs\spec.json and recorded re-intake in C:\Users\tonyt\AppData\Local\Temp\tmpplzm56gs\manifest-archives.json
+.FAIL: archive already exists, refusing to overwrite: C:\Users\tonyt\AppData\Local\Temp\tmp2e2814a8\dist\owner-cool-module-1.2.3.tar.gz
+.FAIL: --name must match ^[A-Za-z0-9][A-Za-z0-9._-]*$: '../escape'
+.FAIL: either --git-url or --repo is required
+.  archived https://github.com/owner/repo@v1.2.3 -> a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0
+  wrote C:\Users\tonyt\AppData\Local\Temp\tmpc7gpatog\dist\owner-cool-module-1.2.3.tar.gz (163 bytes) sha256=f64c7ae152db6460e5dc202c9e516027ffcddb667394951afbe5c3bdad27ee84
+  wrote C:\Users\tonyt\AppData\Local\Temp\tmpc7gpatog\spec.json and recorded re-intake in C:\Users\tonyt\AppData\Local\Temp\tmpc7gpatog\manifest-archives.json
+................................................FAIL: binary not found: C:\Users\tonyt\AppData\Local\Temp\tmpmt0_b94l\missing
+.FAIL: output already exists, refusing to overwrite: C:\Users\tonyt\AppData\Local\Temp\tmpgd5jii41\dist\plugin-1.0.0-x86_64-unknown-linux-gnu.tar.gz
+.  wrote C:\Users\tonyt\AppData\Local\Temp\tmpynsz1ksp\nested\dist\plugin-1.0.0-x86_64-unknown-linux-gnu.tar.gz (108 bytes) sha256=b218a09edbe36ed4c1beb03d396a1d978cb2a5bbb29a33f688eaa7ac22781266
+.  wrote C:\Users\tonyt\AppData\Local\Temp\tmpz9cjstbc\dist\plugin-1.0.0-x86_64-pc-windows-msvc.zip (124 bytes) sha256=bc77d37482c236cde0314c289b47f0a989cd2349335181a817e35cddf12bb0d4
+.....FAIL: disk full
+...release is not the claimed draft; refusing cleanup
+.release tag ownership changed; refusing cleanup
+.......FAIL: GITHUB_OUTPUT is not set
+.....................................FAIL: Command '['git']' timed out after 30 seconds
+........................
+----------------------------------------------------------------------
+Ran 242 tests in 0.662s
+
+OK (skipped=1)
+OK: repo consistency checks passed
+OK: checked 3 JSON file(s)
+OK: formatted 1 JSON file(s)
+PACKAGED	x86_64-pc-windows-msvc	plugin-1.0.0-x86_64-pc-windows-msvc.zip	bc77d37482c236cde0314c289b47f0a989cd2349335181a817e35cddf12bb0d4	plugin.exe
+OK: validated 1 active plugin(s)
+OK: owner/repo@v1 -> aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+OK: owner/repo (commit-snapshot) -> aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+OK: owner/repo (commit-snapshot) -> aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa

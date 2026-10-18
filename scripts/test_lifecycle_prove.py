@@ -28,6 +28,28 @@ class LifecycleProveTests(unittest.TestCase):
     def setUpClass(cls):
         cls.mod = load_mod()
 
+    def setUp(self):
+        # Unit lifecycle tests use fake executables. Real preflight helpers are tested separately.
+        for name, value in (
+            ("isolated_environment", {"PATH": os.environ.get("PATH", "")}),
+            ("probe_isolated_nu", {"version": "0.114.1"}),
+            ("sha256_file", "a" * 64),
+        ):
+            patcher = mock.patch.object(self.mod, name, return_value=value.copy() if isinstance(value, dict) else value)
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
+    def test_sha256_file_computes_correct_hex_digest(self):
+        """sha256_file is tested directly on an unpatched module instance."""
+        import hashlib
+        # Load an independent copy of the module to bypass the class-wide sha256_file mock.
+        real_mod = load_mod()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "sample.bin"
+            path.write_bytes(b"hello world")
+            expected = hashlib.sha256(b"hello world").hexdigest()
+            self.assertEqual(real_mod.sha256_file(path), expected)
+
     def test_package_search_query(self):
         self.assertEqual(
             self.mod.package_search_query("owner/nu_plugin_x"),

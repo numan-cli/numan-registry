@@ -72,7 +72,7 @@
       "owner": "tesujimath",
       "type": "module",
       "version": "0.19.0",
-      "platforms": "all platforms (`.zip` archive — platform-agnostic Nu module)",
+      "platforms": "all platforms (`.zip` archive \u2014 platform-agnostic Nu module)",
       "repo": "https://github.com/tesujimath/bash-env-nushell",
       "spec": "specs/tesujimath-bash-env-nushell-0.19.0.json",
       "pr": 16
@@ -163,7 +163,7 @@
       "owner": "drbrain",
       "type": "plugin",
       "version": "0.12.0",
-      "platforms": "linux x64, macOS arm64/x64, Windows x64 (no linux aarch64 — openssl cross)",
+      "platforms": "linux x64, macOS arm64/x64, Windows x64 (no linux aarch64 \u2014 openssl cross)",
       "note": "ci-built via numan-plugins; Nu 0.114",
       "repo": "https://github.com/drbrain/nu_plugin_prometheus",
       "spec": "specs/spec-nu_plugin_prometheus.json"
@@ -298,7 +298,7 @@
       "platforms": "linux x64/aarch64, Windows x64 (macOS excluded due to legacy libproc)",
       "repo": "https://github.com/Euphrasiologist/nu_plugin_plot",
       "spec": "specs/Euphrasiologist-nu_plugin_plot-0.0.0-snapshot.20260816.5a1ca2a.json",
-      "note": "ci-built commit-snapshot; Wave 4 Lane 1"
+      "note": "ci-built commit-snapshot; Wave 4 Lane 1; Windows x86_64 lifecycle-prove passed 2026-10-18 with Nu 0.105.0"
     },
     {
       "id": "Euphrasiologist/nu_plugin_bio",
@@ -309,7 +309,7 @@
       "platforms": "linux x64/aarch64, macOS aarch64, Windows x64",
       "repo": "https://github.com/Euphrasiologist/nu_plugin_bio",
       "spec": "specs/Euphrasiologist-nu_plugin_bio-0.0.0-snapshot.20260816.49ab341.json",
-      "note": "ci-built commit-snapshot; Wave 4 Lane 1"
+      "note": "ci-built commit-snapshot; Wave 4 Lane 1; Windows x86_64 lifecycle-prove passed 2026-10-18 with Nu 0.104.0"
     },
     {
       "id": "WindSoilder/nu_plugin_mongo",
@@ -320,7 +320,7 @@
       "platforms": "linux x64/aarch64, macOS aarch64, Windows x64",
       "repo": "https://github.com/WindSoilder/nu_plugin_mongo",
       "spec": "specs/WindSoilder-nu_plugin_mongo-0.0.0-snapshot.20260816.47854d9.json",
-      "note": "ci-built commit-snapshot; Wave 4 Lane 1"
+      "note": "ci-built commit-snapshot; Wave 4 Lane 1; Windows x86_64 lifecycle-prove passed 2026-10-18 with Nu 0.114.1"
     },
     {
       "id": "hulthe/nu_plugin_msgpack",
@@ -331,7 +331,7 @@
       "platforms": "linux x64/aarch64, Windows x64 (macOS excluded due to legacy libproc)",
       "repo": "https://github.com/hulthe/nu_plugin_msgpack",
       "spec": "specs/hulthe-nu_plugin_msgpack-0.0.0-snapshot.20260816.38eb492.json",
-      "note": "ci-built commit-snapshot; Wave 4 Lane 1"
+      "note": "ci-built commit-snapshot; Wave 4 Lane 1; Quarantined in registry/provisional.json; lifecycle-prove failed 2026-10-18: Nu 0.90.1 lacks $nu.data-dir required by current Numan initialization; lifecycle preflight failed before mutation."
     },
     {
       "id": "kik4444/nu_plugin_mime",
@@ -342,7 +342,7 @@
       "platforms": "linux x64/aarch64, macOS aarch64, Windows x64",
       "repo": "https://github.com/kik4444/nu_plugin_mime",
       "spec": "specs/kik4444-nu_plugin_mime-0.0.0-snapshot.20260816.8e5872a.json",
-      "note": "ci-built commit-snapshot; Wave 4 Lane 1"
+      "note": "ci-built commit-snapshot; Wave 4 Lane 1; Windows x86_64 lifecycle-prove passed 2026-10-18 with Nu 0.114.1"
     },
     {
       "id": "yybit/nu_plugin_x509",
@@ -353,7 +353,7 @@
       "platforms": "linux x64/aarch64, macOS aarch64, Windows x64",
       "repo": "https://github.com/yybit/nu_plugin_x509",
       "spec": "specs/yybit-nu_plugin_x509-0.0.0-snapshot.20260816.15518dd.json",
-      "note": "ci-built commit-snapshot; Wave 4 Lane 1"
+      "note": "ci-built commit-snapshot; Wave 4 Lane 1; Windows x86_64 lifecycle-prove passed 2026-10-18 with Nu 0.109.0"
     },
     {
       "id": "oderwat/nu_plugin_logfmt",
@@ -364,7 +364,7 @@
       "platforms": "linux x64/aarch64, macOS aarch64, Windows x64",
       "repo": "https://github.com/oderwat/nu_plugin_logfmt",
       "spec": "specs/oderwat-nu_plugin_logfmt-0.0.0-snapshot.20260816.892c4f9.json",
-      "note": "ci-built commit-snapshot (Go); Wave 4 Lane 1"
+      "note": "ci-built commit-snapshot (Go); Wave 4 Lane 1; Windows x86_64 lifecycle-prove passed 2026-10-18 with Nu 0.101.0"
     },
     {
       "id": "abusch/nu_plugin_semver",
@@ -688,7 +688,7 @@
       "type": "module",
       "version": "0.1.0-2e71068",
       "source": "commit 2e71068e1cbda5d1645e7df2da1f8df8bb6a643d",
-      "note": "archive intake; Wave 4 Lane 2",
+      "note": "archive intake; Wave 4 Lane 2; Windows x86_64 lifecycle-prove passed 2026-10-18 with Nu 0.114.1",
       "repo": "https://github.com/fj0r/ai.nu",
       "spec": "specs/fj0r-ai.nu-0.1.0-2e71068.json"
     },
@@ -699,7 +699,7 @@
       "type": "module",
       "version": "0.1.0-7e2d26a",
       "source": "commit 7e2d26a27e3d162fca6181f72a44f47ce3952f41",
-      "note": "archive intake; Wave 4 Lane 2",
+      "note": "archive intake; Wave 4 Lane 2; Quarantined in registry/provisional.json; lifecycle-prove failed 2026-10-18: Activation failed on Nu 0.114.1: missing upstream module lg (docker/oci.nu).",
       "repo": "https://github.com/fj0r/docker.nu",
       "spec": "specs/fj0r-docker.nu-0.1.0-7e2d26a.json"
     },
@@ -710,7 +710,7 @@
       "type": "module",
       "version": "0.1.0-0e09475",
       "source": "commit 0e094757c91dbab079f2fe729227bb309dfcb82b",
-      "note": "archive intake; Wave 4 Lane 2",
+      "note": "archive intake; Wave 4 Lane 2; Quarantined in registry/provisional.json; lifecycle-prove failed 2026-10-18: Activation failed on Nu 0.114.1: missing upstream module argx (kubernetes/complete.nu).",
       "repo": "https://github.com/fj0r/kubernetes.nu",
       "spec": "specs/fj0r-kubernetes.nu-0.1.0-0e09475.json"
     },
@@ -721,7 +721,7 @@
       "type": "module",
       "version": "0.1.0-2241050",
       "source": "commit 2241050f28e202ee2ba2705e49b817e089d71c4c",
-      "note": "archive intake; Wave 4 Lane 2",
+      "note": "archive intake; Wave 4 Lane 2; Windows x86_64 lifecycle-prove passed 2026-10-18 with Nu 0.114.1",
       "repo": "https://github.com/fj0r/git.nu",
       "spec": "specs/fj0r-git.nu-0.1.0-2241050.json"
     },
@@ -732,7 +732,7 @@
       "type": "module",
       "version": "0.1.0-44dc459",
       "source": "commit 44dc459f53b6475da857a8691e75aa5d7f51ce47",
-      "note": "archive intake; Wave 4 Lane 2",
+      "note": "archive intake; Wave 4 Lane 2; Windows x86_64 lifecycle-prove passed 2026-10-18 with Nu 0.114.1",
       "repo": "https://github.com/lassoColombo/conventional-commits",
       "spec": "specs/lassoColombo-conventional-commits-0.1.0-44dc459.json"
     },
@@ -743,7 +743,7 @@
       "type": "module",
       "version": "0.1.0-59a97f1",
       "source": "commit 59a97f142cc54d24afbcd726abdbd9caab769776",
-      "note": "archive intake; Wave 4 Lane 2",
+      "note": "archive intake; Wave 4 Lane 2; Quarantined in registry/provisional.json; lifecycle-prove failed 2026-10-18: Activation failed on Nu 0.114.1: utils/bar.nu passes a number to get where a cell-path is required.",
       "repo": "https://github.com/nushell-prophet/nu-history-tools",
       "spec": "specs/nushell-prophet-nu-history-tools-0.1.0-59a97f1.json"
     },
@@ -765,7 +765,7 @@
       "type": "module",
       "version": "0.1.0-b1382d5",
       "source": "commit b1382d568004f5788c0318585c9ef8f7dae7e18f",
-      "note": "archive intake; Wave 4 Lane 2",
+      "note": "archive intake; Wave 4 Lane 2; Quarantined in registry/provisional.json; lifecycle-prove failed 2026-10-18: Activation failed on Nu 0.114.1: bookmark_for_dir.nu has top-level let statements and cannot be imported as a module.",
       "repo": "https://github.com/yh17549/nu-dir-bookmark",
       "spec": "specs/yh17549-nu-dir-bookmark-0.1.0-b1382d5.json"
     },
@@ -776,7 +776,7 @@
       "type": "module",
       "version": "0.1.0-47c3cb2",
       "source": "commit 47c3cb2ccb454d6acad5ce691b766a0f62f381d9",
-      "note": "archive intake; Wave 4 Lane 2",
+      "note": "archive intake; Wave 4 Lane 2; Quarantined in registry/provisional.json; lifecycle-prove failed 2026-10-18: Activation failed on Nu 0.114.1: terraform-importer.nu has a top-level let resources_map statement and cannot be imported as a module.",
       "repo": "https://github.com/Yethal/terraform-importer",
       "spec": "specs/Yethal-terraform-importer-0.1.0-47c3cb2.json"
     }
@@ -801,6 +801,10 @@
   ],
   "changelog": [
     {
+      "date": "2026-10-18",
+      "change": "Recorded nine passing Windows lifecycle proofs; corrected logfmt Nu ABI to 0.101.x; quarantined six failed candidates in registry/provisional.json. Production source has 56 packages, staging combines all 62. No production deployment performed."
+    },
+    {
       "date": "2026-08-16",
       "change": "Wave 4 Lane 4 intake: abusch/nu_plugin_semver@0.11.17, Trivernis/nu-plugin-dialog@0.1.0, fennewald/nu_plugin_net@1.9.0 (multi-OS .tar.xz upstream assets)."
     },
@@ -808,7 +812,7 @@
       "change": "ADR 0001 Lane 3 Maintained Fork Stewardship evaluations: FMotalleb/nu_plugin_clipboard (rejected, superseded by Nu core clip), yybit/nu_plugin_compress (approved for numan-maintained fork), devyn/nu_plugin_dbus (conditionally approved for Linux-only numan-maintained fork)."
     },
     {
-      "date": "2026-08-16",     
+      "date": "2026-08-16",
       "change": "Wave 4 Lane 3 intake: galuszkak/nu_plugin_bigquery@0.3.0 under P6 provisional evidence tier (GCP credentials required for live query execution)."
     },
     {
@@ -849,7 +853,7 @@
     },
     {
       "date": "2026-07-31",
-      "change": "Intake drbrain/nu_plugin_prometheus@0.12.0 (ci-built via numan-plugins; 4 targets, linux aarch64 excluded — openssl cross)"
+      "change": "Intake drbrain/nu_plugin_prometheus@0.12.0 (ci-built via numan-plugins; 4 targets, linux aarch64 excluded \u2014 openssl cross)"
     },
     {
       "date": "2026-07-30",

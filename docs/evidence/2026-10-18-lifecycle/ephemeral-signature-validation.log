@@ -1,0 +1,11 @@
+OK: schema validation passed
+OK: canonical index sha256 = a28e4d830c7591cbf03620ece18eda8a64731f69e969616f521becef4316ffab
+OK: Ed25519 signature verified with key_id 'lifecycle-candidate'
+
+Validation passed
+OK: schema validation passed
+OK: provisional lifecycle evidence is allowed for staging
+OK: canonical index sha256 = 20a997180ab965e086d3745fc9eb6363b6c164e248ff74e908a90f04179934ea
+OK: Ed25519 signature verified with key_id 'lifecycle-candidate'
+
+Validation passed

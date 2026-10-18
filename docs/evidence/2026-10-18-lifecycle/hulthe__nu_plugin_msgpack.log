@@ -1,0 +1,17 @@
+FAILED lifecycle preflight/run: Command '['D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\nu\\0.90.1\\nu.exe', '--no-config-file', '-c', '{version: (version | get version), plugin_path: $nu.plugin-path, data_dir: $nu.data-dir, vendor: $nu.vendor-autoload-dirs} | to json']' returned non-zero exit status 1.
+kept root at D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\hulthe__nu_plugin_msgpack-root
+Error: nu::shell::column_not_found
+
+  × Cannot find column
+   ╭─[source:1:1]
+ 1 │ nu --no-config-file -c "{version: (version | get version), plugin_path: $nu.plugin-path, data_dir: $nu.data-dir, vendor: $nu.vendor-autoload-dirs} | to json"
+   ·                        ───────────────────────────────────────────────────────────────────┬──────────────────────────────────────────────────────────────────
+   ·                                                                                           ╰── value originates here
+   ╰────
+   ╭─[source:1:1]
+ 1 │ {version: (version | get version), plugin_path: $nu.plugin-path, data_dir: $nu.data-dir, vendor: $nu.vendor-autoload-dirs} | to json
+   ·                                                                                ────┬───
+   ·                                                                                    ╰── cannot find column 'data-dir'
+   ╰────
+
+

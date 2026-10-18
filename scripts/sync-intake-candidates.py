@@ -431,7 +431,7 @@ def render_intake_doc(
         ]
     )
     for row in state.get("changelog", []):
-        lines.append(f"| {row['date']} | {row['change']} |")
+        lines.append(f"| {row.get('date', 'Not recorded')} | {row['change']} |")
 
     lines.append("")
     return "\n".join(lines)

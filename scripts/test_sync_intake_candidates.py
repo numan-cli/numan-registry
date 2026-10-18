@@ -348,6 +348,11 @@ class SyncIntakeCandidatesTests(unittest.TestCase):
         self.assertIn("some free text blocker | n/a", rendered)
         self.assertIn("2024-01-01 | added acme/ready1", rendered)
 
+    def test_undated_historical_changelog_does_not_block_regeneration(self):
+        state = {"changelog": [{"change": "Historical decision with no recorded date"}]}
+        rendered = self.sync.render_intake_doc(state, {}, {"packages": []}, {})
+        self.assertIn("| Not recorded | Historical decision with no recorded date |", rendered)
+
     def test_render_intake_doc_empty_registry_line(self):
         rendered = self.sync.render_intake_doc({}, {}, {"packages": []}, {})
         self.assertIn(
