@@ -119,7 +119,7 @@
     var built = new Date(metadata.built_at);
     if (["production", "staging"].indexOf(metadata.environment) === -1 || !/^[0-9a-f]{40}$/.test(metadata.source_revision) || isNaN(built.getTime())) return "";
     return escapeHtml(metadata.environment === "staging" ? "Staging publication build · not production trust" : "Production publication build") + " · " + escapeHtml(built.toISOString()) +
-      ' · source <a href="https://github.com/numan-cli/numan-registry/commit/' + metadata.source_revision + '">' + metadata.source_revision.slice(0, 12) + "</a>. Build time precedes deployment; this unsigned metadata is informational.";
+      ' · source <a href="' + escapeHtml(metadata.source_revision) + '">' + escapeHtml(metadata.source_revision.slice(0, 12)) + "</a>. Build time precedes deployment; this unsigned metadata is informational.";
   }
 
   function evidenceSummary(version, supported) {
