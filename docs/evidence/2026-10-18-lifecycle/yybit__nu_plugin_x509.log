@@ -1,0 +1,112 @@
+isolated Nu probe: {"version": "0.109.0", "plugin_path": "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\yybit__nu_plugin_x509-root\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\yybit__nu_plugin_x509-root\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\yybit__nu_plugin_x509-root\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: ea32368ad6a7bdf96c678ae3561901d74a810bb028c772aa8870aebead508342
+Numan SHA256: e1d66c387d9f255991e686bd6298005a76e6780db224819c5683b79cae18b18d
+package: yybit/nu_plugin_x509
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\nu\0.109.0\nu.exe
+root:    D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root
+
+candidate package version: 0.0.0-snapshot.20260816.15518dd
+candidate file SHA256: 878761d998604f23c65391dc4fdd5dc65a1a30d400f0dd7b8d8581e3ce52df03
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root'.
+  Nu executable: C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-shim-0hqmf2nl\nu.exe
+  Nu version:    0.109.0
+  Plugin registry: D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root registry add lifecycle-candidate http://127.0.0.1:57883/index.json --key jg0W3Iq/X3ujaXWG3HqO6Zp/pKIfaM4cooT4nwya9Ig=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:57883/index.json
+  Fingerprint: sha256:c6cd926dd74a1b7da45e321f07940492d24a9175661fbd27b28afa137ea975dc
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:57883/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: c6c5908c).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root search nu_plugin_x509
+Found 1 package(s) matching 'nu_plugin_x509':
+checked against: Nu 0.109.0 (x86_64-pc-windows-msvc)
+
+  yybit/nu_plugin_x509  v0.0.0-snapshot.20260816.15518dd  [plugin] [provisional]
+    A nushell plugin for working with x509 certificates. CI-built from yybit/nu_plugin_x509@15518dd (commit snapshot, no tagged release) and pinned + hash-verified + signed downstream in numan-registry.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root info yybit/nu_plugin_x509
+Package:    yybit/nu_plugin_x509
+Type:       plugin
+Status:     verified upstream artifact
+Description: A nushell plugin for working with x509 certificates. CI-built from yybit/nu_plugin_x509@15518dd (commit snapshot, no tagged release) and pinned + hash-verified + signed downstream in numan-registry.
+Repository: https://github.com/yybit/nu_plugin_x509
+Tags:       plugin, x509, crypto, certificates, ci-built
+Your Nu:    0.109.0 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.0.0-snapshot.20260816.15518dd  [nu >=0.109.0 <0.110.0]  (compatible)
+    note: built from a commit snapshot, not a tagged release
+    evidence:    provisional — Commit snapshot awaiting lifecycle proof on target Nu minor
+    source git:  https://github.com/yybit/nu_plugin_x509
+    source rev:  15518ddd1f466f18a444ea506d6bb91d0c7906d5
+    cargo_name:  nu_plugin_x509
+    platform: x86_64-pc-windows-msvc
+    platform: aarch64-unknown-linux-gnu
+    platform: x86_64-unknown-linux-gnu
+    platform: aarch64-apple-darwin
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root install yybit/nu_plugin_x509@0.0.0-snapshot.20260816.15518dd
+✓ Installed yybit/nu_plugin_x509@0.0.0-snapshot.20260816.15518dd to D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root\packages\plugins\yybit\nu_plugin_x509\0.0.0-snapshot.20260816.15518dd-fdc9ad41
+! This package has not been lifecycle-tested. It passed integrity checks. (Commit snapshot awaiting lifecycle proof on target Nu minor)
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root activate yybit/nu_plugin_x509
+
+Plugin registration
+  yybit/nu_plugin_x509 -> D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Registered yybit/nu_plugin_x509 — takes effect in future Nu sessions (not the current shell)
+==> doctor: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root doctor
+Numan doctor — D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root
+
+Initialization
+  · PATH Nu: 0.109.0
+  · Managed Nu: not installed
+
+Activation
+  · Plugin 'yybit/nu_plugin_x509' has an activation record (Issue #22). Deactivate is available; active remove stays gated (deactivate first). Active update is opt-in via NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly (default off): deactivate→upgrade→activate (https://github.com/numan-cli/numan/issues/22).
+    Fix: Remove: `numan deactivate <pkg>`, then `numan remove <pkg>`. Update: set NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly, then `numan update <pkg>` orchestrates deactivate→upgrade→activate; otherwise active update is gated (default off). See docs/active-plugin-gate.md.
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root list
+Installed packages (1):
+
+  yybit/nu_plugin_x509  v0.0.0-snapshot.20260816.15518dd  [plugin]  activated
+==> deactivate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root deactivate yybit/nu_plugin_x509
+
+Plugin deactivation
+  yybit/nu_plugin_x509 (x509) <- D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Unregistered yybit/nu_plugin_x509 — takes effect in future Nu sessions (not the current shell)
+==> remove: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root remove --yes yybit/nu_plugin_x509
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed yybit/nu_plugin_x509
+==> gc: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root gc
+No orphaned packages found.
+OK: lifecycle-prove passed.
+kept root at D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\yybit__nu_plugin_x509-root

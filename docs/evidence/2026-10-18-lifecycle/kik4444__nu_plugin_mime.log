@@ -1,0 +1,112 @@
+isolated Nu probe: {"version": "0.114.1", "plugin_path": "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\kik4444__nu_plugin_mime-root\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\kik4444__nu_plugin_mime-root\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Dev\\numan_workspace\\lifecycle-evidence-2026-10-18\\kik4444__nu_plugin_mime-root\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: 49fb6abfefc74325d398138ce4d3dc0e9ea68aac5a739e638e0f00cb081e445f
+Numan SHA256: e1d66c387d9f255991e686bd6298005a76e6780db224819c5683b79cae18b18d
+package: kik4444/nu_plugin_mime
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      C:\Users\tonyt\AppData\Local\numan\tools\nushell\0.114.1\nu.exe
+root:    D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root
+
+candidate package version: 0.0.0-snapshot.20260816.8e5872a
+candidate file SHA256: 878761d998604f23c65391dc4fdd5dc65a1a30d400f0dd7b8d8581e3ce52df03
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root'.
+  Nu executable: C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-shim-w2x6c_8c\nu.exe
+  Nu version:    0.114.1
+  Plugin registry: D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root registry add lifecycle-candidate http://127.0.0.1:57783/index.json --key NgmIczpNd2a7OM91wsgADKt+PrVvQL/39IZpQ6NejNc=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:57783/index.json
+  Fingerprint: sha256:778fc9ba5aea2af1314719ed996d52be76373ddc9fb61ac1f31280e70302d18c
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:57783/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: c6c5908c).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root search nu_plugin_mime
+Found 1 package(s) matching 'nu_plugin_mime':
+checked against: Nu 0.114.1 (x86_64-pc-windows-msvc)
+
+  kik4444/nu_plugin_mime  v0.0.0-snapshot.20260816.8e5872a  [plugin] [provisional]
+    A simple plugin for working with mime types without performing disk access. CI-built from kik4444/nu_plugin_mime@8e5872a (commit snapshot, no tagged release) and pinned + hash-verified + signed downstream in numan-registry.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root info kik4444/nu_plugin_mime
+Package:    kik4444/nu_plugin_mime
+Type:       plugin
+Status:     verified upstream artifact
+Description: A simple plugin for working with mime types without performing disk access. CI-built from kik4444/nu_plugin_mime@8e5872a (commit snapshot, no tagged release) and pinned + hash-verified + signed downstream in numan-registry.
+Repository: https://github.com/kik4444/nu_plugin_mime
+Tags:       plugin, mime, media, ci-built
+Your Nu:    0.114.1 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.0.0-snapshot.20260816.8e5872a  [nu >=0.114.0 <0.115.0]  (compatible)
+    note: built from a commit snapshot, not a tagged release
+    evidence:    provisional — Commit snapshot awaiting lifecycle proof on target Nu minor
+    source git:  https://github.com/kik4444/nu_plugin_mime
+    source rev:  8e5872a5c94573d0ede3127b5ab8628b8d7f4a4c
+    cargo_name:  nu_plugin_mime
+    platform: x86_64-pc-windows-msvc
+    platform: x86_64-unknown-linux-gnu
+    platform: aarch64-apple-darwin
+    platform: aarch64-unknown-linux-gnu
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root install kik4444/nu_plugin_mime@0.0.0-snapshot.20260816.8e5872a
+✓ Installed kik4444/nu_plugin_mime@0.0.0-snapshot.20260816.8e5872a to D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root\packages\plugins\kik4444\nu_plugin_mime\0.0.0-snapshot.20260816.8e5872a-4150851f
+! This package has not been lifecycle-tested. It passed integrity checks. (Commit snapshot awaiting lifecycle proof on target Nu minor)
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root activate kik4444/nu_plugin_mime
+
+Plugin registration
+  kik4444/nu_plugin_mime -> D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Registered kik4444/nu_plugin_mime — takes effect in future Nu sessions (not the current shell)
+==> doctor: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root doctor
+Numan doctor — D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root
+
+Initialization
+  · PATH Nu: 0.114.1
+  · Managed Nu: not installed
+
+Activation
+  · Plugin 'kik4444/nu_plugin_mime' has an activation record (Issue #22). Deactivate is available; active remove stays gated (deactivate first). Active update is opt-in via NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly (default off): deactivate→upgrade→activate (https://github.com/numan-cli/numan/issues/22).
+    Fix: Remove: `numan deactivate <pkg>`, then `numan remove <pkg>`. Update: set NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly, then `numan update <pkg>` orchestrates deactivate→upgrade→activate; otherwise active update is gated (default off). See docs/active-plugin-gate.md.
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root list
+Installed packages (1):
+
+  kik4444/nu_plugin_mime  v0.0.0-snapshot.20260816.8e5872a  [plugin]  activated
+==> deactivate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root deactivate kik4444/nu_plugin_mime
+
+Plugin deactivation
+  kik4444/nu_plugin_mime (mime) <- D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Unregistered kik4444/nu_plugin_mime — takes effect in future Nu sessions (not the current shell)
+==> remove: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root remove --yes kik4444/nu_plugin_mime
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed kik4444/nu_plugin_mime
+==> gc: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root gc
+No orphaned packages found.
+OK: lifecycle-prove passed.
+kept root at D:\Dev\numan_workspace\lifecycle-evidence-2026-10-18\kik4444__nu_plugin_mime-root
