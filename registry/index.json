@@ -2900,6 +2900,8 @@
       "versions": [
         {
           "version": "0.1.0-44f8f25",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
           "nu_version": "*",
           "verified_with": [
             "0.113.1"
