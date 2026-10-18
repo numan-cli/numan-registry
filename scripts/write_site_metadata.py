@@ -28,7 +28,10 @@ def main() -> None:
     parser.add_argument("--environment", choices=("production", "staging"), required=True)
     parser.add_argument("--output", type=Path, default=Path("registry/publication.json"))
     args = parser.parse_args()
-    metadata = build_metadata(args.environment, os.environ.get("GITHUB_SHA", ""))
+    revision = os.environ.get("GITHUB_SHA", "")
+    if not revision:
+        raise SystemExit("error: GITHUB_SHA environment variable is not set")
+    metadata = build_metadata(args.environment, revision)
     args.output.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
 
 
