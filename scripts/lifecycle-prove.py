@@ -436,7 +436,7 @@ def prove(
                         raise ValueError("installed version differs from requested candidate")
         print("OK: lifecycle-prove passed.")
         return 0
-    except (OSError, ValueError, KeyError, subprocess.SubprocessError) as exc:
+    except (OSError, ValueError, KeyError, IndexError, subprocess.SubprocessError) as exc:
         print(f"FAILED lifecycle preflight/run: {exc}", file=sys.stderr)
         if isinstance(exc, subprocess.CalledProcessError) and exc.stderr:
             print(exc.stderr, file=sys.stderr)
