@@ -330,6 +330,23 @@ def prepare_nu_search_dir(
     return shim_dir
 
 
+def candidate_version(candidate_index, package_id, package_version, probe):
+    index = json.loads(candidate_index.read_text(encoding="utf-8"))
+    package = next((p for p in index["packages"] if p["id"]["owner"] + "/" + p["id"]["name"] == package_id), None)
+    if package is None:
+        raise ValueError(f"package absent from candidate: {package_id}")
+    version = next((v for v in package["versions"] if v["version"] == package_version), None) if package_version else package["versions"][-1]
+    if version is None:
+        raise ValueError(f"version absent from candidate: {package_version}")
+    if not matches_nu_constraint(probe["version"], version["nu_version"]):
+        raise ValueError(f"Nu {probe['version']} does not satisfy {version['nu_version']}")
+    if package["type"] == "module":
+        vendor = Path(probe["data_dir"]) / "vendor/autoload"
+        if vendor.resolve() not in [Path(value).resolve() for value in probe["vendor"]]:
+            raise ValueError("Nu does not report the isolated user vendor-autoload target required for modules")
+    return version
+
+
 def prove(
     package_id: str,
     *,
@@ -398,19 +415,7 @@ def prove(
         with ExitStack() as stack:
             steps = build_steps(package_id, package_version)
             if candidate_index is not None:
-                index = json.loads(candidate_index.read_text(encoding="utf-8"))
-                package = next((p for p in index["packages"] if p["id"]["owner"] + "/" + p["id"]["name"] == package_id), None)
-                if package is None:
-                    raise ValueError(f"package absent from candidate: {package_id}")
-                version = next((v for v in package["versions"] if v["version"] == package_version), None) if package_version else package["versions"][-1]
-                if version is None:
-                    raise ValueError(f"version absent from candidate: {package_version}")
-                if not matches_nu_constraint(probe["version"], version["nu_version"]):
-                    raise ValueError(f"Nu {probe['version']} does not satisfy {version['nu_version']}")
-                if package["type"] == "module":
-                    vendor = Path(probe["data_dir"]) / "vendor/autoload"
-                    if vendor.resolve() not in [Path(value).resolve() for value in probe["vendor"]]:
-                        raise ValueError("Nu does not report the isolated user vendor-autoload target required for modules")
+                version = candidate_version(candidate_index, package_id, package_version, probe)
                 url, public = stack.enter_context(candidate_registry(candidate_index))
                 # This is a brand-new test root. Configure its default before init creates state.
                 (root / "config.toml").write_text('[general]\ndefault_registry = "lifecycle-candidate"\n', encoding="utf-8")

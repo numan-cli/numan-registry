@@ -122,23 +122,31 @@
       ' · source <a href="https://github.com/numan-cli/numan-registry/commit/' + metadata.source_revision + '">' + metadata.source_revision.slice(0, 12) + "</a>. Build time precedes deployment; this unsigned metadata is informational.";
   }
 
+  function evidenceSummary(version, supported) {
+    return version.evidence_tier === "provisional" ? "Provisional: " + (version.deferral_reason || "Lifecycle proof deferred") :
+      (version.verified_with || []).length ? "Exact tested Nu versions are listed above. This is not an all-platform test guarantee." :
+      supported ? "Lifecycle proof is missing. Production admission has not been established for this version." : "Install-only; no activation lifecycle proof is recorded.";
+  }
+
+  function artifactHtml(version) {
+    var artifact = version.artifact || {};
+    var targets = binaryTargets(version);
+    var assets = targets.length ? targets.map(function (target) { return { target: target, asset: artifact.targets[target] }; }) : [{ target: "Archive", asset: artifact }];
+    return assets.map(function (item) {
+      var url = safeUrl(item.asset.url);
+      return "<li>" + (url ? '<a href="' + escapeHtml(url) + '">' + escapeHtml(TARGETS[item.target] || item.target) + " artifact</a>" : escapeHtml(item.target) + ": no downloadable artifact") +
+        (item.asset.sha256 ? "<br>SHA256: <code>" + escapeHtml(item.asset.sha256) + "</code>" : "") + "</li>";
+    }).join("");
+  }
+
   function detailHtml(pkg, version, filters) {
     var id = pkg.id.owner + "/" + pkg.id.name;
     var repo = safeUrl(pkg.repo);
     var source = version.source || {};
     var tested = (version.verified_with || []).join(", ") || "No exact lifecycle-tested Nu versions recorded";
     var supported = canActivate(pkg, version);
-    var evidence = version.evidence_tier === "provisional" ? "Provisional: " + (version.deferral_reason || "Lifecycle proof deferred") :
-      (version.verified_with || []).length ? "Exact tested Nu versions are listed above. This is not an all-platform test guarantee." :
-      supported ? "Lifecycle proof is missing. Production admission has not been established for this version." : "Install-only; no activation lifecycle proof is recorded.";
-    var artifact = version.artifact || {};
-    var targets = binaryTargets(version);
-    var assets = targets.length ? targets.map(function (target) { return { target: target, asset: artifact.targets[target] }; }) : [{ target: "Archive", asset: artifact }];
-    var assetHtml = assets.map(function (item) {
-      var url = safeUrl(item.asset.url);
-      return "<li>" + (url ? '<a href="' + escapeHtml(url) + '">' + escapeHtml(TARGETS[item.target] || item.target) + " artifact</a>" : escapeHtml(item.target) + ": no downloadable artifact") +
-        (item.asset.sha256 ? "<br>SHA256: <code>" + escapeHtml(item.asset.sha256) + "</code>" : "") + "</li>";
-    }).join("");
+    var evidence = evidenceSummary(version, supported);
+    var assetHtml = artifactHtml(version);
     var html = '<div class="detail-heading"><h2 id="detail-title">' + escapeHtml(id) + '</h2><button class="plain-button" type="button" id="close-detail">Close details</button></div>' +
       "<p>" + escapeHtml(pkg.description) + '</p><p class="tags">' + escapeHtml((pkg.tags || []).join(" · ")) + '</p><div class="detail-actions">' +
       (repo ? '<a href="' + escapeHtml(repo) + '">Upstream documentation</a>' : "") +

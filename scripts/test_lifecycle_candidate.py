@@ -10,7 +10,9 @@ import tempfile
 import unittest
 from unittest import mock
 import urllib.error
-import urllib.request
+import http.client
+import urllib.parse
+from contextlib import contextmanager
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 
@@ -21,6 +23,22 @@ def load_module():
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+@contextmanager
+def loopback_response(url):
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.scheme != "http" or parsed.hostname != "127.0.0.1":
+        raise ValueError("test requests must use loopback HTTP")
+    connection = http.client.HTTPConnection(parsed.hostname, parsed.port, timeout=10)
+    try:
+        connection.request("GET", parsed.path)
+        response = connection.getresponse()
+        if response.status >= 400:
+            raise urllib.error.HTTPError(url, response.status, response.reason, response.headers, None)
+        yield response
+    finally:
+        connection.close()
 
 
 class CandidateLifecycleTests(unittest.TestCase):
@@ -60,15 +78,16 @@ class CandidateLifecycleTests(unittest.TestCase):
             original = b'{ "packages": [], "schema_version": 1, "updated_at": "2026-10-18T00:00:00Z" }\n'
             path.write_bytes(original)
             with self.mod.candidate_registry(path) as (url, public):
-                with urllib.request.urlopen(url) as response:
+                with loopback_response(url) as response:
                     self.assertEqual(response.read(), original)
-                with urllib.request.urlopen(url + ".sig") as response:
+                with loopback_response(url + ".sig") as response:
                     envelope = json.load(response)
                 self.assertEqual(envelope["key_id"], "lifecycle-candidate")
                 canonical = json.dumps(json.loads(original), sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
                 Ed25519PublicKey.from_public_bytes(base64.b64decode(public)).verify(base64.b64decode(envelope["signature"]), canonical)
                 with self.assertRaises(urllib.error.HTTPError):
-                    urllib.request.urlopen(url.replace("index.json", "private.key"))
+                    with loopback_response(url.replace("index.json", "private.key")):
+                        self.fail("private key path must not be served")
             self.assertEqual(path.read_bytes(), original)
             self.assertEqual([p.name for p in Path(tmp).iterdir()], ["index.json"])
 
