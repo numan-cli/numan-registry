@@ -1037,8 +1037,8 @@
       "change": "Intake fdncred/nu_plugin_emoji@0.23.0, fdncred/nu_plugin_json_path@0.24.0, fdncred/nu_plugin_parquet@0.24.0 (ci-built via numan-plugins; Nu 0.114; 4 targets each)"
     },
     {
+      "date": "2026-07-31",
       "change": "Intake drbrain/nu_plugin_prometheus@0.12.0 (ci-built via numan-plugins; 4 targets, linux aarch64 excluded \u2014 openssl cross)"
-      "change": "Intake drbrain/nu_plugin_prometheus@0.12.0 (ci-built via numan-plugins; 4 targets, linux aarch64 excluded \u00e2\u20ac\u201d openssl cross)"
     },
     {
       "date": "2026-07-30",
