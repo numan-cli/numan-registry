@@ -1,6 +1,7 @@
 {
   "run_date": "2026-10-18",
   "registry_source_commit": "b43307bc3a1f7663f6f9faef042ed218a5c1a434",
+  "candidate_index_note": "The lifecycle run used candidate indexes built from the pre-PR base commit. The SHA-256 of each candidate index file is recorded per-result under candidate_file_sha256. Two distinct candidate index files were used: the main batch (878761d998604f23c65391dc4fdd5dc65a1a30d400f0dd7b8d8581e3ce52df03) and a separate index for oderwat/nu_plugin_logfmt with the corrected nu_version range (b3a45bbbe6d2c7c15588e61f54e88f4826a7e71fbb4d65aa697f617455facf32). Results are reproducible from these hashes independently of which registry commit is under review.",
   "passed": 9,
   "failed": 6,
   "results": [

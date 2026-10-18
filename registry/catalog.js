@@ -344,6 +344,6 @@
     status.dataset.state = "error";
     el("publication-status").textContent = "Catalog metadata unavailable. Check production publication history below.";
     el("catalog-controls").hidden = true;
-    el("package-table").hidden = true;
+  }).finally(function () { if (timeout !== null) clearTimeout(timeout); });
   }).finally(function () { clearTimeout(timeout); });
 })();
