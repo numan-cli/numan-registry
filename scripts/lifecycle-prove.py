@@ -193,7 +193,7 @@ def run_step(
 
 def isolated_environment(home: Path) -> dict[str, str]:
     """Give child processes private Nu config/data paths and no inherited secrets."""
-    allowed = {"PATH", "SYSTEMROOT", "WINDIR", "SYSTEMDRIVE", "COMSPEC", "PATHEXT"}
+    allowed = {"PATH", "SYSTEMROOT", "WINDIR", "SYSTEMDRIVE", "COMSPEC", "PATHEXT", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR"}
     env = {name: value for name, value in os.environ.items() if name.upper() in allowed}
     locations = {
         "HOME": home,
