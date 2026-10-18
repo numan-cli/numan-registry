@@ -2903,12 +2903,9 @@
           "evidence_tier": "provisional",
           "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
           "nu_version": "*",
-          "verified_with": [
-            "0.113.1"
-          ],
           "artifact": {
             "kind": "archive",
-            "url": "",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-docker-completions-44f8f25/docker-completions-44f8f25.zip",
             "sha256": "6eb0940f364e997684ad9edba962d196e886f6be6dd38114639e41290ce0a5be",
             "archive_root": "docker-completions-44f8f25"
           }
