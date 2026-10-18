@@ -3075,6 +3075,8 @@
         {
           "version": "0.1.0-44f8f25",
           "nu_version": "*",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
           "artifact": {
             "kind": "archive",
             "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-bat-completions-44f8f25/bat-completions-44f8f25.zip",
