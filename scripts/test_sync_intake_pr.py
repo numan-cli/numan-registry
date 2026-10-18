@@ -190,6 +190,12 @@ class BareRemoteCase(unittest.TestCase):
         self.assertFalse(
             any(c[:2] == ["git", "push"] for c in self._calls[before:])
         )
+        self.assertFalse(
+            any(
+                c[:3] in (["gh", "pr", "create"], ["gh", "pr", "merge"])
+                for c in self._calls[before:]
+            )
+        )
 
     def test_second_change_updates_same_branch_and_pr(self):
         sync_intake_pr.sync_pr(self.repo, repo="acme/registry")
@@ -271,7 +277,7 @@ class BareRemoteCase(unittest.TestCase):
             if c[0] == "git":
                 self.assertIn(c[1], allowed)
             else:
-                self.assertEqual(c[:2], ["gh", "pr"])
+                self.assertEqual(c[:3], ["gh", "pr", "list"])
         self.assertFalse(
             any("scripts/sync-intake-candidates.py" in c for c in self._calls)
         )
