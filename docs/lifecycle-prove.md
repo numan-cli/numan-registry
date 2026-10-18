@@ -65,7 +65,7 @@ python scripts/lifecycle-prove.py --package owner/name \
 ```
 
 After a candidate earns real lifecycle evidence, move that exact version into
-`registry/index.json`, record `verified_with`, remove its deferral, and remove it
+`registry/index.json`, record `verified_with`, set `evidence_tier` to `proven`, remove its deferral, and remove it
 from the provisional catalog. The staging merge rejects an attempt to overwrite
 a version already in production. Keep package identity, immutable source, and
 artifact hashes intact; changed payloads require a new version and intake.
