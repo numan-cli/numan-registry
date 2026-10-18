@@ -2903,12 +2903,9 @@
           "evidence_tier": "provisional",
           "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
           "nu_version": "*",
-          "artifact": {
-            "kind": "archive",
-            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-docker-completions-44f8f25/docker-completions-44f8f25.zip",
             "sha256": "6eb0940f364e997684ad9edba962d196e886f6be6dd38114639e41290ce0a5be",
             "archive_root": "docker-completions-44f8f25"
-          }
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-docker-completions-44f8f25/docker-completions-44f8f25.zip",
         }
       ]
     },
@@ -2930,6 +2927,8 @@
         {
           "version": "0.1.0-44f8f25",
           "nu_version": "*",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
           "artifact": {
             "kind": "archive",
             "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-gh-completions-44f8f25/gh-completions-44f8f25.zip",
@@ -2957,6 +2956,8 @@
         {
           "version": "0.1.0-44f8f25",
           "nu_version": "*",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
           "artifact": {
             "kind": "archive",
             "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-dotnet-completions-44f8f25/dotnet-completions-44f8f25.zip",
@@ -2984,6 +2985,8 @@
         {
           "version": "0.1.0-44f8f25",
           "nu_version": "*",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
           "artifact": {
             "kind": "archive",
             "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-uv-completions-44f8f25/uv-completions-44f8f25.zip",
@@ -3011,6 +3014,8 @@
         {
           "version": "0.1.0-44f8f25",
           "nu_version": "*",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
           "artifact": {
             "kind": "archive",
             "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-pnpm-completions-44f8f25/pnpm-completions-44f8f25.zip",
@@ -3038,6 +3043,8 @@
         {
           "version": "0.1.0-44f8f25",
           "nu_version": "*",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Install-only mirror; lifecycle-prove against real Nu not run",
           "artifact": {
             "kind": "archive",
             "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-ssh-completions-44f8f25/ssh-completions-44f8f25.zip",
