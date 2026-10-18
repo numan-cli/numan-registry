@@ -483,7 +483,7 @@
         "owner": "nushell",
         "name": "custom-completions"
       },
-      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, \u00e2\u20ac\u00a6). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Install-only: completion activation is deferred in Numan.",
+      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, \u2026). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Install-only: completion activation is deferred in Numan.",
       "repo": "https://github.com/nushell/nu_scripts",
       "type": "completion",
       "tags": [
