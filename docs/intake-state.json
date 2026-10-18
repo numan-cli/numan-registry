@@ -72,7 +72,7 @@
       "owner": "tesujimath",
       "type": "module",
       "version": "0.19.0",
-      "platforms": "all platforms (`.zip` archive — platform-agnostic Nu module)",
+      "platforms": "all platforms (`.zip` archive \u00e2\u20ac\u201d platform-agnostic Nu module)",
       "repo": "https://github.com/tesujimath/bash-env-nushell",
       "spec": "specs/tesujimath-bash-env-nushell-0.19.0.json",
       "pr": 16
@@ -163,7 +163,7 @@
       "owner": "drbrain",
       "type": "plugin",
       "version": "0.12.0",
-      "platforms": "linux x64, macOS arm64/x64, Windows x64 (no linux aarch64 — openssl cross)",
+      "platforms": "linux x64, macOS arm64/x64, Windows x64 (no linux aarch64 \u00e2\u20ac\u201d openssl cross)",
       "note": "ci-built via numan-plugins; Nu 0.114",
       "repo": "https://github.com/drbrain/nu_plugin_prometheus",
       "spec": "specs/spec-nu_plugin_prometheus.json"
@@ -899,6 +899,66 @@
       "note": "archive intake; Wave 4 Lane 2",
       "repo": "https://github.com/Yethal/terraform-importer",
       "spec": "specs/Yethal-terraform-importer-0.1.0-47c3cb2.json"
+    },
+    {
+      "id": "nushell/bat-completions",
+      "name": "bat-completions",
+      "owner": "nushell",
+      "type": "completion",
+      "version": "0.1.0-44f8f25",
+      "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
+      "note": "install-only; Wave 6 completions",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/bat",
+      "spec": "specs/nushell-bat-completions-0.1.0-44f8f25.json",
+      "outreach": {
+        "upstream_repo": "nushell/nu_scripts",
+        "issue_url": "https://github.com/nushell/nu_scripts/issues/1266",
+        "search_terms": [
+          "bat-completions",
+          "release",
+          "numan"
+        ]
+      }
+    },
+    {
+      "id": "nushell/aws-completions",
+      "name": "aws-completions",
+      "owner": "nushell",
+      "type": "completion",
+      "version": "0.1.0-44f8f25",
+      "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
+      "note": "install-only; Wave 6 completions",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/aws",
+      "spec": "specs/nushell-aws-completions-0.1.0-44f8f25.json",
+      "outreach": {
+        "upstream_repo": "nushell/nu_scripts",
+        "issue_url": "https://github.com/nushell/nu_scripts/issues/1266",
+        "search_terms": [
+          "aws-completions",
+          "release",
+          "numan"
+        ]
+      }
+    },
+    {
+      "id": "nushell/rg-completions",
+      "name": "rg-completions",
+      "owner": "nushell",
+      "type": "completion",
+      "version": "0.1.0-44f8f25",
+      "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
+      "note": "install-only; Wave 6 completions",
+      "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/rg",
+      "spec": "specs/nushell-rg-completions-0.1.0-44f8f25.json",
+      "outreach": {
+        "upstream_repo": "nushell/nu_scripts",
+        "issue_url": "https://github.com/nushell/nu_scripts/issues/1266",
+        "search_terms": [
+          "rg-completions",
+          "release",
+          "numan"
+        ]
+      }
     }
   ],
   "blocked": [
@@ -922,6 +982,10 @@
   "changelog": [
     {
       "date": "2026-10-18",
+      "change": "Wave 6 completions: nushell/bat-completions, aws-completions, rg-completions @ 0.1.0-44f8f25 (install-only mirrors)."
+    },
+    {
+      "date": "2026-10-18",
       "change": "Wave 5 completions: nushell/docker-completions, gh-completions, dotnet-completions, uv-completions, pnpm-completions, ssh-completions @ 0.1.0-44f8f25 (install-only mirrors)."
     },
     {
@@ -933,7 +997,7 @@
       "change": "ADR 0001 Lane 3 Maintained Fork Stewardship evaluations: FMotalleb/nu_plugin_clipboard (rejected, superseded by Nu core clip), yybit/nu_plugin_compress (approved for numan-maintained fork), devyn/nu_plugin_dbus (conditionally approved for Linux-only numan-maintained fork)."
     },
     {
-      "date": "2026-08-16",     
+      "date": "2026-08-16",
       "change": "Wave 4 Lane 3 intake: galuszkak/nu_plugin_bigquery@0.3.0 under P6 provisional evidence tier (GCP credentials required for live query execution)."
     },
     {
@@ -974,7 +1038,7 @@
     },
     {
       "date": "2026-07-31",
-      "change": "Intake drbrain/nu_plugin_prometheus@0.12.0 (ci-built via numan-plugins; 4 targets, linux aarch64 excluded — openssl cross)"
+      "change": "Intake drbrain/nu_plugin_prometheus@0.12.0 (ci-built via numan-plugins; 4 targets, linux aarch64 excluded \u00e2\u20ac\u201d openssl cross)"
     },
     {
       "date": "2026-07-30",

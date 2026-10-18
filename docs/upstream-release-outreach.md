@@ -212,6 +212,9 @@ When a maintainer says yes, PR should include:
 | nushell/nu_scripts (pnpm-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
 | nushell/nu_scripts (ssh-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
 | Yethal/terraform-importer |  |  |  |  | mirror only |
+| nushell/nu_scripts (bat-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
+| nushell/nu_scripts (aws-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
+| nushell/nu_scripts (rg-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
 
 ---
 

@@ -2,15 +2,15 @@
 
 _Auto-generated from `registry/index.json`. Do not hand-edit._
 
-Generated: `2026-10-18T17:33:03Z` · Index `updated_at`: `2026-10-18T17:33:03Z` · `registry_revision`: `seed-2026-07-02`
+Generated: `2026-10-18T18:04:25Z` · Index `updated_at`: `2026-10-18T18:04:25Z` · `registry_revision`: `seed-2026-07-02`
 
 This is the **master list** of packages in the committed `registry/index.json` (in-tree; the public CDN updates after production signing/publish) and the Nu constraint on each package's **latest** version. For demand-ranked *plugin candidates* not yet in the registry, see [`numan-plugins/docs/backlog.json`](https://github.com/numan-cli/numan-plugins/blob/main/docs/backlog.json). For intake workflow status, see [`intake-candidates.md`](intake-candidates.md).
 
 ## Summary
 
-- **68** packages total
-- By type: `completion` 12, `module` 15, `plugin` 35, `script` 6
-- Latest version Nu band: `0.114` 31, `0.113` 3, `0.112` 1, `other` 13, `*` 20
+- **71** packages total
+- By type: `completion` 15, `module` 15, `plugin` 35, `script` 6
+- Latest version Nu band: `0.114` 31, `0.113` 3, `0.112` 1, `other` 13, `*` 23
 
 Nu band is a coarse label from the constraint **lower bound** (`>=0.114` / `>0.113` → `0.114` / `0.113`, etc.; else `*` or `other`). Exact constraints are in the table and in the signed index.
 
@@ -58,6 +58,8 @@ Nu band is a coarse label from the constraint **lower bound** (`>=0.114` / `>0.1
 | `nushell-prophet/nu-history-tools` | module | 0.1.0-59a97f1 | `>=0.114.0 <0.115.0` | 0.114 | — | mirror | 1 |
 | `nushell-prophet/numd` | module | 0.4.0 | `*` | * | — | mirror | 1 |
 | `nushell-works/nu_plugin_nw_ulid` | plugin | 0.2.0 | `>=0.111.0 <0.112.0` | other | mac,linux,win | upstream | 1 |
+| `nushell/aws-completions` | completion | 0.1.0-44f8f25 | `*` | * | — | mirror | 1 |
+| `nushell/bat-completions` | completion | 0.1.0-44f8f25 | `*` | * | — | mirror | 1 |
 | `nushell/cargo-completions` | completion | 0.1.0-f04cb44 | `*` | * | — | mirror | 1 |
 | `nushell/custom-completions` | completion | 0.1.0-f04cb44 | `*` | * | — | mirror | 1 |
 | `nushell/docker-completions` | completion | 0.1.0-44f8f25 | `*` | * | — | mirror | 1 |
@@ -68,6 +70,7 @@ Nu band is a coarse label from the constraint **lower bound** (`>=0.114` / `>0.1
 | `nushell/npm-completions` | completion | 0.1.0-f04cb44 | `*` | * | — | mirror | 1 |
 | `nushell/nu-hooks` | module | 0.1.0 | `*` | * | — | mirror | 1 |
 | `nushell/pnpm-completions` | completion | 0.1.0-44f8f25 | `*` | * | — | mirror | 1 |
+| `nushell/rg-completions` | completion | 0.1.0-44f8f25 | `*` | * | — | mirror | 1 |
 | `nushell/ssh-completions` | completion | 0.1.0-44f8f25 | `*` | * | — | mirror | 1 |
 | `nushell/uv-completions` | completion | 0.1.0-44f8f25 | `*` | * | — | mirror | 1 |
 | `nushell/winget-completions` | completion | 0.1.0-f04cb44 | `*` | * | — | mirror | 1 |
