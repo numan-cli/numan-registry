@@ -246,6 +246,8 @@ def candidate_registry(index_path: Path):
     from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
     spec = importlib.util.spec_from_file_location("lifecycle_ci_sign", Path(__file__).with_name("ci-sign.py"))
+    if spec is None or spec.loader is None:
+        raise FileNotFoundError("ci-sign.py not found alongside lifecycle-prove.py")
     signer = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(signer)
     index_bytes = index_path.read_bytes()
