@@ -5,6 +5,7 @@ Data-only repository containing the signed Numan registry index and Python CI to
 ## CI & Validation Commands
 
 ```bash
+python3 -m pip install cryptography jsonschema PyYAML==6.0.3  # CI script dependencies
 python3 scripts/scan_for_secrets.py       # Secret scanner for private key material
 python3 scripts/preflight.py              # Key/workflow consistency checks
 python3 scripts/check_workflows.py        # Strict workflow YAML parse + duplicate-key check

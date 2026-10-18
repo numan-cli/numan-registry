@@ -503,9 +503,26 @@ class MockedSyncPrTests(unittest.TestCase):
             self.assertIn("::error::boom", content)
             self.assertIn("Recovery: rerun", content)
 
-    def test_env_preserves_explicit_identity(self):
+    def test_env_forces_bot_identity_over_ambient(self):
         with patch.dict(os.environ, {"GIT_AUTHOR_NAME": "custom"}):
-            self.assertEqual(sync_intake_pr._env()["GIT_AUTHOR_NAME"], "custom")
+            self.assertEqual(
+                sync_intake_pr._env()["GIT_AUTHOR_NAME"], "github-actions[bot]"
+            )
+
+    def test_sha256_pr_head_oid_accepted(self):
+        existing = {"url": "https://example.test/pr/1", "headRefOid": "f" * 64}
+        with patch.object(
+            sync_intake_pr, "_ref_exists", return_value=True
+        ), patch.object(sync_intake_pr, "_git_out", return_value="f" * 64):
+            sync_intake_pr._verify_pr_head(Path("/repo"), existing)
+
+    def test_short_pr_head_oid_rejected(self):
+        existing = {"url": "https://example.test/pr/1", "headRefOid": "f" * 39}
+        with patch.object(
+            sync_intake_pr, "_ref_exists", return_value=True
+        ), patch.object(sync_intake_pr, "_git_out", return_value="f" * 39):
+            with self.assertRaises(sync_intake_pr.SyncError):
+                sync_intake_pr._verify_pr_head(Path("/repo"), existing)
 
 
 if __name__ == "__main__":

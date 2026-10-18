@@ -49,7 +49,7 @@ class SyncError(RuntimeError):
 
 
 def _env() -> dict[str, str]:
-    return {**GIT_ENV_DEFAULTS, **os.environ}
+    return {**os.environ, **GIT_ENV_DEFAULTS}
 
 
 def _run(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess:
@@ -145,25 +145,19 @@ def _switch_branch(cwd: Path, base_branch: str) -> None:
             )
 
 
-def sync_pr(
-    repo_root: Path,
-    repo: str = "numan-cli/numan-registry",
-    base_branch: str = "main",
-) -> str | None:
+def _check_inputs_and_fetch(repo_root: Path) -> None:
     dirty = _git_out(repo_root, ["status", "--porcelain"])
     if dirty:
         raise SyncError(
             f"checkout at {repo_root} is dirty:\n{dirty}\n"
             "Recovery: commit or stash unrelated changes, then rerun."
         )
-
     missing = [p for p in REQUIRED_INPUTS if not (repo_root / p).exists()]
     if missing:
         raise SyncError(
             f"missing required input files: {', '.join(missing)}\n"
             "Recovery: restore the files on the checkout and rerun."
         )
-
     _must(
         ["git", "fetch", "origin"],
         repo_root,
@@ -171,6 +165,8 @@ def sync_pr(
         "check network and credentials, then rerun",
     )
 
+
+def _discover_pr(repo_root: Path, repo: str, base_branch: str) -> dict | None:
     listed = _gh(
         [
             "pr", "list",
@@ -208,25 +204,27 @@ def sync_pr(
             f"found {len(open_prs)} open PRs for head {BRANCH}; expected at most one.\n"
             "Recovery: close the duplicates, keeping one, then rerun."
         )
-    existing = open_prs[0] if open_prs else None
+    return open_prs[0] if open_prs else None
 
-    if existing:
-        oid = existing.get("headRefOid") or ""
-        remote_oid = (
-            _git_out(repo_root, ["rev-parse", f"refs/remotes/origin/{BRANCH}"])
-            if _ref_exists(repo_root, f"refs/remotes/origin/{BRANCH}")
-            else None
+
+def _verify_pr_head(repo_root: Path, existing: dict) -> None:
+    oid = existing.get("headRefOid") or ""
+    remote_oid = (
+        _git_out(repo_root, ["rev-parse", f"refs/remotes/origin/{BRANCH}"])
+        if _ref_exists(repo_root, f"refs/remotes/origin/{BRANCH}")
+        else None
+    )
+    if not re.fullmatch(r"[0-9a-f]{40,64}", oid) or remote_oid != oid:
+        raise SyncError(
+            f"open PR {existing['url']} head oid {oid or '<missing>'} does not "
+            f"match origin/{BRANCH} ({remote_oid or '<missing>'}).\n"
+            "Recovery: reconcile the PR head with the remote sync branch, "
+            "then rerun."
         )
-        if not re.fullmatch(r"[0-9a-f]{40}", oid) or remote_oid != oid:
-            raise SyncError(
-                f"open PR {existing['url']} head oid {oid or '<missing>'} does not "
-                f"match origin/{BRANCH} ({remote_oid or '<missing>'}).\n"
-                "Recovery: reconcile the PR head with the remote sync branch, "
-                "then rerun."
-            )
 
+
+def _merge_base(repo_root: Path, base_branch: str) -> None:
     _switch_branch(repo_root, base_branch)
-
     merged = _run(["git", "merge", "--no-edit", f"origin/{base_branch}"], repo_root)
     if merged.returncode != 0:
         _run(["git", "merge", "--abort"], repo_root)
@@ -235,16 +233,16 @@ def sync_pr(
             f"{merged.stdout}{merged.stderr}\n"
             f"Recovery: resolve the conflict on {BRANCH} locally, push it, then rerun."
         )
-
     _assert_scope(repo_root, base_branch)
 
+
+def _refresh_docs(repo_root: Path, base_branch: str) -> None:
     _must(
         [sys.executable, "scripts/sync-intake-candidates.py"],
         repo_root,
         "sync-intake-candidates.py",
         "fix the sync failure and rerun",
     )
-
     _must(
         ["git", "add", "--", *GENERATED_PATHS],
         repo_root,
@@ -264,14 +262,14 @@ def sync_pr(
             f"git diff --cached failed: {staged.stderr.strip()}\n"
             "Recovery: inspect git state and rerun."
         )
-
     _assert_scope(repo_root, base_branch)
 
+
+def _push_sync_branch(repo_root: Path, base_branch: str) -> str | None:
     head_tree = _git_out(repo_root, ["rev-parse", "HEAD^{tree}"])
     base_tree = _git_out(repo_root, ["rev-parse", f"origin/{base_branch}^{{tree}}"])
     if head_tree == base_tree:
-        return existing["url"] if existing else None
-
+        return None
     head = _git_out(repo_root, ["rev-parse", "HEAD"])
     remote_head = (
         _git_out(repo_root, ["rev-parse", f"refs/remotes/origin/{BRANCH}"])
@@ -286,49 +284,71 @@ def sync_pr(
             f"remote {BRANCH} moved or push rejected; reconcile origin/{BRANCH} "
             "locally and rerun (never force-push)",
         )
+    return head
 
+
+def _ensure_pr(
+    repo_root: Path, repo: str, base_branch: str, existing: dict | None
+) -> tuple[str, bool]:
     if existing:
-        pr_url = existing["url"]
-        auto_merge_set = bool(existing.get("autoMergeRequest"))
-    else:
-        created = _gh(
-            [
-                "pr", "create",
-                "--repo", repo,
-                "--title", PR_TITLE,
-                "--body", PR_BODY,
-                "--head", BRANCH,
-                "--base", base_branch,
-            ],
-            repo_root,
+        return existing["url"], bool(existing.get("autoMergeRequest"))
+    created = _gh(
+        [
+            "pr", "create",
+            "--repo", repo,
+            "--title", PR_TITLE,
+            "--body", PR_BODY,
+            "--head", BRANCH,
+            "--base", base_branch,
+        ],
+        repo_root,
+    )
+    if created.returncode != 0:
+        raise SyncError(
+            f"gh pr create failed: {created.stderr.strip()}\n"
+            f"Recovery: rerun — pushed branch {BRANCH} is reused and the PR "
+            "is created on retry."
         )
-        if created.returncode != 0:
-            raise SyncError(
-                f"gh pr create failed: {created.stderr.strip()}\n"
-                f"Recovery: rerun — pushed branch {BRANCH} is reused and the PR "
-                "is created on retry."
-            )
-        pr_url = created.stdout.strip()
-        auto_merge_set = False
+    return created.stdout.strip(), False
 
-    if not auto_merge_set:
-        # Enable auto-merge
-        auto = _gh(
-            [
-                "pr", "merge", pr_url,
-                "--repo", repo,
-                "--auto",
-                "--squash",
-                "--match-head-commit", head,
-            ],
-            repo_root,
+
+def _enable_auto_merge(repo_root: Path, repo: str, pr_url: str, head: str) -> None:
+    # Enable auto-merge
+    auto = _gh(
+        [
+            "pr", "merge", pr_url,
+            "--repo", repo,
+            "--auto",
+            "--squash",
+            "--match-head-commit", head,
+        ],
+        repo_root,
+    )
+    if auto.returncode != 0:
+        raise SyncError(
+            f"gh pr merge --auto failed for {pr_url}: {auto.stderr.strip()}\n"
+            f"Recovery: enable auto-merge manually on {pr_url} or rerun; "
+            "the branch and PR are reused."
         )
-        if auto.returncode != 0:
-            raise SyncError(
-                f"gh pr merge --auto failed for {pr_url}: {auto.stderr.strip()}\n"
-                f"Recovery: enable auto-merge manually on {pr_url} or rerun; "
-                "the branch and PR are reused."
-            )
+
+
+def sync_pr(
+    repo_root: Path,
+    repo: str = "numan-cli/numan-registry",
+    base_branch: str = "main",
+) -> str | None:
+    _check_inputs_and_fetch(repo_root)
+    existing = _discover_pr(repo_root, repo, base_branch)
+    if existing:
+        _verify_pr_head(repo_root, existing)
+    _merge_base(repo_root, base_branch)
+    _refresh_docs(repo_root, base_branch)
+    head = _push_sync_branch(repo_root, base_branch)
+    if head is None:
+        return existing["url"] if existing else None
+    pr_url, auto_merge_set = _ensure_pr(repo_root, repo, base_branch, existing)
+    if not auto_merge_set:
+        _enable_auto_merge(repo_root, repo, pr_url, head)
     return pr_url
 
 

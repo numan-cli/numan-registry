@@ -711,7 +711,7 @@ class DeterministicRenderTests(unittest.TestCase):
         state = {"ready": [], "mirror": [], "blocked": [], "changelog": []}
         renders = []
         for year in (2020, 2030):
-            with patch.object(self.sync, "datetime") as mock_dt:
+            with patch.object(self.sync, "datetime", create=True) as mock_dt:
                 mock_dt.now.return_value = datetime(year, 1, 1, tzinfo=timezone.utc)
                 renders.append(
                     self.sync.render_intake_doc(state, {}, {"packages": []}, {})
@@ -735,7 +735,7 @@ class DeterministicRenderTests(unittest.TestCase):
                     self.sync, "OUT_PATH", out_path
                 ), patch.object(self.sync, "INDEX_PATH", index_path), patch.object(
                     self.sync, "OUTREACH_DOC", outreach_doc
-                ), patch.object(self.sync, "datetime") as mock_dt:
+                ), patch.object(self.sync, "datetime", create=True) as mock_dt:
                     mock_dt.now.return_value = datetime(year, 6, 15, tzinfo=timezone.utc)
                     changed = self.sync.sync()
                 snapshot = out_path.read_bytes()

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -9,8 +10,27 @@ from pathlib import Path
 import yaml
 
 
-class UniqueKeyLoader(yaml.BaseLoader):
+class UniqueKeyLoader(yaml.SafeLoader):
     pass
+
+
+# GitHub Actions treats on/off/yes/no as plain strings; restrict implicit
+# boolean resolution to true/false so `on:` stays a literal string key while
+# other scalars still get resolver-aware duplicate-key checks.
+UniqueKeyLoader.yaml_implicit_resolvers = {}
+for _ch, _resolvers in yaml.SafeLoader.yaml_implicit_resolvers.items():
+    _filtered = [
+        (tag, regexp)
+        for tag, regexp in _resolvers
+        if tag != "tag:yaml.org,2002:bool"
+    ]
+    if _filtered:
+        UniqueKeyLoader.yaml_implicit_resolvers[_ch] = _filtered
+UniqueKeyLoader.add_implicit_resolver(
+    "tag:yaml.org,2002:bool",
+    re.compile(r"^(?:true|True|TRUE|false|False|FALSE)$"),
+    list("tTfF"),
+)
 
 
 def _construct_mapping(loader, node, deep=False):
@@ -64,8 +84,9 @@ def workflow_files(root: Path) -> list[Path]:
     ]
 
 
-def validate_workflows(root: Path) -> list[str]:
-    files = workflow_files(root)
+def validate_workflows(root: Path, files: list[Path] | None = None) -> list[str]:
+    if files is None:
+        files = workflow_files(root)
     if not files:
         return [f"{root}: no tracked workflow files under .github/workflows"]
     errors = []
@@ -80,12 +101,13 @@ def validate_workflows(root: Path) -> list[str]:
 
 def main() -> int:
     root = Path(__file__).resolve().parent.parent
-    errors = validate_workflows(root)
+    files = workflow_files(root)
+    errors = validate_workflows(root, files=files)
     for err in errors:
         print(err, file=sys.stderr)
     if errors:
         return 1
-    print(f"validated {len(workflow_files(root))} workflow files")
+    print(f"validated {len(files)} workflow files")
     return 0
 
 
