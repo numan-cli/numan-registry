@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-10-18T16:24:17Z",
+  "registry_revision": "seed-2026-07-02",
+  "packages": [
+    {
+      "id": {
+        "owner": "hulthe",
+        "name": "nu_plugin_msgpack"
+      },
+      "description": "Commands to convert nushell data to and from MsgPack. CI-built from hulthe/nu_plugin_msgpack@38eb492 (commit snapshot, no tagged release) and pinned + hash-verified + signed downstream in numan-registry.",
+      "repo": "https://github.com/hulthe/nu_plugin_msgpack",
+      "type": "plugin",
+      "tags": [
+        "plugin",
+        "msgpack",
+        "serialization",
+        "ci-built"
+      ],
+      "versions": [
+        {
+          "version": "0.0.0-snapshot.20260816.38eb492",
+          "nu_version": ">=0.90.0 <0.91.0",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Nu 0.90.1 lacks $nu.data-dir required by current Numan initialization; lifecycle preflight failed before mutation.",
+          "provenance": "commit-snapshot",
+          "source": {
+            "git": "https://github.com/hulthe/nu_plugin_msgpack",
+            "rev": "38eb4924ca1500ef52274eacbf1b59a9e7d4493c",
+            "cargo_name": "nu_plugin_msgpack"
+          },
+          "artifact": {
+            "kind": "binary",
+            "targets": {
+              "aarch64-unknown-linux-gnu": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_msgpack-0.0.0-snapshot.20260816.38eb492/nu_plugin_msgpack-0.0.0-snapshot.20260816.38eb492-aarch64-unknown-linux-gnu.tar.gz",
+                "sha256": "16b136560b56eed8dfbe546f84a8f533b77e6180e70c883626a90fb3802fdac3",
+                "executable_path": "nu_plugin_msgpack"
+              },
+              "x86_64-pc-windows-msvc": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_msgpack-0.0.0-snapshot.20260816.38eb492/nu_plugin_msgpack-0.0.0-snapshot.20260816.38eb492-x86_64-pc-windows-msvc.zip",
+                "sha256": "ca3252c161df6efbca6d644e6dc4409d9d87c9bd7f6941f0bd334df9fb0c8d71",
+                "executable_path": "nu_plugin_msgpack.exe"
+              },
+              "x86_64-unknown-linux-gnu": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_msgpack-0.0.0-snapshot.20260816.38eb492/nu_plugin_msgpack-0.0.0-snapshot.20260816.38eb492-x86_64-unknown-linux-gnu.tar.gz",
+                "sha256": "d04d1cd218ddcb2df30a609d7c37095fccbd05133ece53abd49bfbbad956f60b",
+                "executable_path": "nu_plugin_msgpack"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "fj0r",
+        "name": "docker.nu"
+      },
+      "description": "Docker and container management helper functions and utilities for Nushell",
+      "repo": "https://github.com/fj0r/docker.nu",
+      "type": "module",
+      "tags": [
+        "module",
+        "docker",
+        "containers"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-7e2d26a",
+          "nu_version": ">=0.114.0 <0.115.0",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Activation failed on Nu 0.114.1: missing upstream module lg (docker/oci.nu).",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-fj0r-docker.nu-0.1.0-7e2d26a/fj0r-docker.nu-0.1.0-7e2d26a.tar.gz",
+            "sha256": "285c648cc9618f288b69e456970bc3b3b016ba3fc0d4a6c154de16dfbe1d109e",
+            "entry": "docker/mod.nu"
+          },
+          "activation": {
+            "kind": "nu-module",
+            "import": "all"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "fj0r",
+        "name": "kubernetes.nu"
+      },
+      "description": "Kubernetes and kubectl helper functions, context management, and tools for Nushell",
+      "repo": "https://github.com/fj0r/kubernetes.nu",
+      "type": "module",
+      "tags": [
+        "module",
+        "kubernetes",
+        "k8s",
+        "kubectl"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-0e09475",
+          "nu_version": ">=0.114.0 <0.115.0",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Activation failed on Nu 0.114.1: missing upstream module argx (kubernetes/complete.nu).",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-fj0r-kubernetes.nu-0.1.0-0e09475/fj0r-kubernetes.nu-0.1.0-0e09475.tar.gz",
+            "sha256": "77908dd5866897060531047f3a9bb1798aaead26b067dcba89b248f80682dff3",
+            "entry": "kubernetes/mod.nu"
+          },
+          "activation": {
+            "kind": "nu-module",
+            "import": "all"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "nushell-prophet",
+        "name": "nu-history-tools"
+      },
+      "description": "Tools and analytics for working with Nushell command history",
+      "repo": "https://github.com/nushell-prophet/nu-history-tools",
+      "type": "module",
+      "tags": [
+        "module",
+        "history",
+        "analytics"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-59a97f1",
+          "nu_version": ">=0.114.0 <0.115.0",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Activation failed on Nu 0.114.1: utils/bar.nu passes a number to get where a cell-path is required.",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-nushell-prophet-nu-history-tools-0.1.0-59a97f1/nushell-prophet-nu-history-tools-0.1.0-59a97f1.tar.gz",
+            "sha256": "eea62b666c9b59bbd8bcfa6eac500d86dafbb64af734f2d606409848c5949c1d",
+            "entry": "nu-history-tools/mod.nu"
+          },
+          "activation": {
+            "kind": "nu-module",
+            "import": "all"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "yh17549",
+        "name": "nu-dir-bookmark"
+      },
+      "description": "Directory bookmarking and navigation helpers for Nushell",
+      "repo": "https://github.com/yh17549/nu-dir-bookmark",
+      "type": "module",
+      "tags": [
+        "module",
+        "bookmark",
+        "navigation"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-b1382d5",
+          "nu_version": ">=0.114.0 <0.115.0",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Activation failed on Nu 0.114.1: bookmark_for_dir.nu has top-level let statements and cannot be imported as a module.",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-yh17549-nu-dir-bookmark-0.1.0-b1382d5/yh17549-nu-dir-bookmark-0.1.0-b1382d5.tar.gz",
+            "sha256": "975c47eedb21aff35e150e5817afac1ec5f76db2ab58687241e733d592d71996",
+            "entry": "bookmark_for_dir.nu"
+          },
+          "activation": {
+            "kind": "nu-module"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "Yethal",
+        "name": "terraform-importer"
+      },
+      "description": "Terraform resource import and HCL generator module for Nushell",
+      "repo": "https://github.com/Yethal/terraform-importer",
+      "type": "module",
+      "tags": [
+        "module",
+        "terraform",
+        "iac"
+      ],
+      "versions": [
+        {
+          "version": "0.1.0-47c3cb2",
+          "nu_version": ">=0.114.0 <0.115.0",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Activation failed on Nu 0.114.1: terraform-importer.nu has a top-level let resources_map statement and cannot be imported as a module.",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-Yethal-terraform-importer-0.1.0-47c3cb2/Yethal-terraform-importer-0.1.0-47c3cb2.tar.gz",
+            "sha256": "604d549359d6cf2127066b4a596fdd319e73c7cbb3e0ea264eba3de041578dfb",
+            "entry": "terraform-importer.nu"
+          },
+          "activation": {
+            "kind": "nu-module"
+          }
+        }
+      ]
+    }
+  ]
+}
