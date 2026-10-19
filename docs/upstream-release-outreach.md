@@ -204,14 +204,14 @@ When a maintainer says yes, PR should include:
 | lassoColombo/conventional-commits |  |  |  |  | mirror only |
 | nushell-prophet/nu-history-tools |  |  |  |  |  |
 | ArmoredPony/nu-digital-rain |  |  |  |  | mirror only |
-| yh17549/nu-dir-bookmark |  |  |  |  | mirror only |
+| yh17549/nu-dir-bookmark |  |  |  |  |  |
 | nushell/nu_scripts (docker-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
 | nushell/nu_scripts (gh-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
 | nushell/nu_scripts (dotnet-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
 | nushell/nu_scripts (uv-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
 | nushell/nu_scripts (pnpm-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
 | nushell/nu_scripts (ssh-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
-| Yethal/terraform-importer |  |  |  |  | mirror only |
+| Yethal/terraform-importer |  |  |  |  |  |
 | nushell/nu_scripts (bat-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
 | nushell/nu_scripts (aws-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
 | nushell/nu_scripts (rg-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | yes (2026-08-08) |  | mirror only |
