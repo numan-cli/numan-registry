@@ -1,0 +1,587 @@
+{
+ "schema_version": 1,
+ "record_type": "catalog-review-batch-reconciliation",
+ "captured_at": "2026-10-19T00:44:39.581763+00:00",
+ "production_baseline": {
+  "index": "docs/evidence/2026-10-18-production-baseline/index.json",
+  "source_commit": "16530cf1bdda15bc6953876ecf4d767aa64df99a",
+  "package_count": 44,
+  "canonical_index_sha256": "674c49f971ed1bd4f2dee329e1ba07a648dd12b659176171dfe0009c644eed5c",
+  "key_id": "official-2026-07-01"
+ },
+ "candidate": {
+  "source_commit": "be65d58cccf4b10a3662d1435f2f5b4f5e02304f",
+  "package_count": 65
+ },
+ "summary": {
+  "added": 21,
+  "removed": 0,
+  "changed": 39,
+  "added_provisional": 9,
+  "changed_url_migration_only": 37
+ },
+ "added_packages": {
+  "ArmoredPony/nu-digital-rain": {
+   "type": "script",
+   "versions": [
+    "0.1.0-6602c6a"
+   ],
+   "evidence_tiers": [
+    "provisional"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-registry"
+   ],
+   "deferral_reasons": [
+    "Wave 4 Lane 2 non-binary script archive intake"
+   ],
+   "provisional": true
+  },
+  "Euphrasiologist/nu_plugin_bio": {
+   "type": "plugin",
+   "versions": [
+    "0.0.0-snapshot.20260816.49ab341"
+   ],
+   "evidence_tiers": [
+    "proven"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-plugins"
+   ],
+   "deferral_reasons": [],
+   "provisional": false
+  },
+  "Euphrasiologist/nu_plugin_plot": {
+   "type": "plugin",
+   "versions": [
+    "0.0.0-snapshot.20260816.5a1ca2a"
+   ],
+   "evidence_tiers": [
+    "proven"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-plugins"
+   ],
+   "deferral_reasons": [],
+   "provisional": false
+  },
+  "WindSoilder/nu_plugin_mongo": {
+   "type": "plugin",
+   "versions": [
+    "0.0.0-snapshot.20260816.47854d9"
+   ],
+   "evidence_tiers": [
+    "proven"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-plugins"
+   ],
+   "deferral_reasons": [],
+   "provisional": false
+  },
+  "fennewald/nu_plugin_net": {
+   "type": "plugin",
+   "versions": [
+    "1.9.0"
+   ],
+   "evidence_tiers": [
+    "proven"
+   ],
+   "artifact_hosts": [
+    "fennewald/nu_plugin_net"
+   ],
+   "deferral_reasons": [],
+   "provisional": false
+  },
+  "fj0r/ai.nu": {
+   "type": "module",
+   "versions": [
+    "0.1.0-2e71068"
+   ],
+   "evidence_tiers": [
+    "proven"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-registry"
+   ],
+   "deferral_reasons": [],
+   "provisional": false
+  },
+  "fj0r/git.nu": {
+   "type": "module",
+   "versions": [
+    "0.1.0-2241050"
+   ],
+   "evidence_tiers": [
+    "proven"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-registry"
+   ],
+   "deferral_reasons": [],
+   "provisional": false
+  },
+  "galuszkak/nu_plugin_bigquery": {
+   "type": "plugin",
+   "versions": [
+    "0.3.0"
+   ],
+   "evidence_tiers": [
+    "provisional"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-plugins"
+   ],
+   "deferral_reasons": [
+    "Requires active Google Cloud Platform credentials (ADC/service account) for live query execution"
+   ],
+   "provisional": true
+  },
+  "kik4444/nu_plugin_mime": {
+   "type": "plugin",
+   "versions": [
+    "0.0.0-snapshot.20260816.8e5872a"
+   ],
+   "evidence_tiers": [
+    "proven"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-plugins"
+   ],
+   "deferral_reasons": [],
+   "provisional": false
+  },
+  "lassoColombo/conventional-commits": {
+   "type": "module",
+   "versions": [
+    "0.1.0-44dc459"
+   ],
+   "evidence_tiers": [
+    "proven"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-registry"
+   ],
+   "deferral_reasons": [],
+   "provisional": false
+  },
+  "nushell/aws-completions": {
+   "type": "completion",
+   "versions": [
+    "0.1.0-44f8f25"
+   ],
+   "evidence_tiers": [
+    "proven"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-registry"
+   ],
+   "deferral_reasons": [],
+   "provisional": false
+  },
+  "nushell/bat-completions": {
+   "type": "completion",
+   "versions": [
+    "0.1.0-44f8f25"
+   ],
+   "evidence_tiers": [
+    "provisional"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-registry"
+   ],
+   "deferral_reasons": [
+    "Install-only mirror; lifecycle-prove against real Nu not run"
+   ],
+   "provisional": true
+  },
+  "nushell/docker-completions": {
+   "type": "completion",
+   "versions": [
+    "0.1.0-44f8f25"
+   ],
+   "evidence_tiers": [
+    "provisional"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-registry"
+   ],
+   "deferral_reasons": [
+    "Install-only mirror; lifecycle-prove against real Nu not run"
+   ],
+   "provisional": true
+  },
+  "nushell/dotnet-completions": {
+   "type": "completion",
+   "versions": [
+    "0.1.0-44f8f25"
+   ],
+   "evidence_tiers": [
+    "provisional"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-registry"
+   ],
+   "deferral_reasons": [
+    "Install-only mirror; lifecycle-prove against real Nu not run"
+   ],
+   "provisional": true
+  },
+  "nushell/gh-completions": {
+   "type": "completion",
+   "versions": [
+    "0.1.0-44f8f25"
+   ],
+   "evidence_tiers": [
+    "provisional"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-registry"
+   ],
+   "deferral_reasons": [
+    "Install-only mirror; lifecycle-prove against real Nu not run"
+   ],
+   "provisional": true
+  },
+  "nushell/pnpm-completions": {
+   "type": "completion",
+   "versions": [
+    "0.1.0-44f8f25"
+   ],
+   "evidence_tiers": [
+    "provisional"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-registry"
+   ],
+   "deferral_reasons": [
+    "Install-only mirror; lifecycle-prove against real Nu not run"
+   ],
+   "provisional": true
+  },
+  "nushell/rg-completions": {
+   "type": "completion",
+   "versions": [
+    "0.1.0-44f8f25"
+   ],
+   "evidence_tiers": [
+    "proven"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-registry"
+   ],
+   "deferral_reasons": [],
+   "provisional": false
+  },
+  "nushell/ssh-completions": {
+   "type": "completion",
+   "versions": [
+    "0.1.0-44f8f25"
+   ],
+   "evidence_tiers": [
+    "provisional"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-registry"
+   ],
+   "deferral_reasons": [
+    "Install-only mirror; lifecycle-prove against real Nu not run"
+   ],
+   "provisional": true
+  },
+  "nushell/uv-completions": {
+   "type": "completion",
+   "versions": [
+    "0.1.0-44f8f25"
+   ],
+   "evidence_tiers": [
+    "provisional"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-registry"
+   ],
+   "deferral_reasons": [
+    "Install-only mirror; lifecycle-prove against real Nu not run"
+   ],
+   "provisional": true
+  },
+  "oderwat/nu_plugin_logfmt": {
+   "type": "plugin",
+   "versions": [
+    "0.0.0-snapshot.20260816.892c4f9"
+   ],
+   "evidence_tiers": [
+    "proven"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-plugins"
+   ],
+   "deferral_reasons": [],
+   "provisional": false
+  },
+  "yybit/nu_plugin_x509": {
+   "type": "plugin",
+   "versions": [
+    "0.0.0-snapshot.20260816.15518dd"
+   ],
+   "evidence_tiers": [
+    "proven"
+   ],
+   "artifact_hosts": [
+    "numan-cli/numan-plugins"
+   ],
+   "deferral_reasons": [],
+   "provisional": false
+  }
+ },
+ "removed_packages": [],
+ "changed_packages": {
+  "FMotalleb/nu_plugin_desktop_notifications": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "FMotalleb/nu_plugin_image": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "FMotalleb/nu_plugin_port_extension": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "KamilKleina/git-aliases": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "Kissaki/nu_plugin_bson": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "Sanceilaks/nufetch": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "SuaveIV/nu_script_gh_status": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "SuaveIV/nu_script_hnews": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "SuaveIV/nu_script_wttr": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "Trivernis/nu-plugin-dialog": {
+   "categories": [
+    "meta_description",
+    "meta_tags",
+    "target_added"
+   ],
+   "details": [
+    "meta description changed",
+    "meta tags changed",
+    "0.1.0: +targets ['aarch64-apple-darwin', 'x86_64-apple-darwin', 'x86_64-unknown-linux-gnu']"
+   ]
+  },
+  "Yethal/nu_plugin_hcl": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "abusch/nu_plugin_semver": {
+   "categories": [
+    "meta_description",
+    "meta_tags",
+    "target_added"
+   ],
+   "details": [
+    "meta description changed",
+    "meta tags changed",
+    "0.11.17: +targets ['aarch64-apple-darwin', 'aarch64-unknown-linux-gnu', 'x86_64-apple-darwin', 'x86_64-unknown-linux-gnu']"
+   ]
+  },
+  "amtoine/nu-git-manager": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "amtoine/nu-git-manager-sugar": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "cptpiepmatz/nu_plugin_highlight": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "dead10ck/nu_plugin_dns": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "drbrain/nu_plugin_prometheus": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "fdncred/nu_plugin_emoji": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "fdncred/nu_plugin_file": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "fdncred/nu_plugin_json_path": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "fdncred/nu_plugin_jwalk": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "fdncred/nu_plugin_parquet": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "fdncred/nu_plugin_query_git": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "fdncred/nu_plugin_regex": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "fdncred/nu_plugin_strutils": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "fnuttens/nu_plugin_hmac": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "idanarye/nu_plugin_skim": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "lizclipse/nu_plugin_ulid": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "nushell-prophet/dotnu": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "nushell-prophet/numd": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "nushell/cargo-completions": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "nushell/custom-completions": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "nushell/git-completions": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "nushell/make-completions": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "nushell/npm-completions": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "nushell/nu-hooks": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "nushell/winget-completions": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "rhino-linux/nu_plugin_nutext": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  },
+  "vyadh/nutest": {
+   "categories": [
+    "url_migration"
+   ],
+   "details": []
+  }
+ },
+ "evidence_tier_note": "index-v1 schema: only proven and provisional are valid evidence tiers; an absent field resolves to proven."
+}
