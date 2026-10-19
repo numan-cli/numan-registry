@@ -11,6 +11,7 @@
     "ci-built"
   ],
   "version": "0.1.9",
+  "verified_with": ["0.116.1"],
   "nu_version": ">=0.116.0 <0.117.0",
   "source": {
     "git": "https://github.com/JosephTLyons/nu_plugin_units",
