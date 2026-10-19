@@ -95,11 +95,15 @@ candidate. Listed here only for visibility; no decision needed.
 2. Both target-expanded packages (B), after new-target digest
    spot-checks and resolution of the semver musl caveat.
 3. Each section-C package marked **keep** below.
-4. Materialize the candidate: build a filtered index from `main` minus
-   the approved exclusions, validate it, and record its canonical
-   sha256 in this directory before dispatch. The protected workflow
-   signs `registry/index.json` verbatim, so exclusion must happen in
-   this builder step; nothing in `production.yml` applies the filter.
+4. Materialize the candidate: run `scripts/materialize_candidate.py`
+   on `main`'s index with `--exclude` for every rejected addition. It
+   drops all `evidence_tier: provisional` versions, removes empty
+   packages, writes canonical bytes matching what `ci-sign.py` signs,
+   and records the canonical sha256 in its report. Validate the output
+   and archive the report in this directory before dispatch. The
+   protected workflow signs `registry/index.json` verbatim, so
+   exclusion must happen in this builder step; nothing in
+   `production.yml` applies the filter.
 5. Hard filter: any version with `evidence_tier: provisional` is
    excluded regardless of approval.
 
@@ -125,10 +129,11 @@ candidate. Listed here only for visibility; no decision needed.
 | [ ] | `fj0r/git.nu` |
 | [ ] | `lassoColombo/conventional-commits` |
 
-After sign-off, the approved candidate index is materialized as a
-filtered copy of `main` (provisional entries and excluded additions
-removed), validated, and its canonical sha256 recorded alongside this
-batch before the protected `production` workflow is dispatched.
+After sign-off, `scripts/materialize_candidate.py` produces the
+approved candidate index from `main` (provisional versions and
+excluded additions removed), which is validated and its canonical
+sha256 archived alongside this batch before the protected `production`
+workflow is dispatched.
 Post-deploy verification compares public index bytes, signature, key
 id, source commit, and deployed digest against the recorded
 materialized-candidate values.
