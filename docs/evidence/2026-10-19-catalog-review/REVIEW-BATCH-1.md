@@ -8,7 +8,9 @@ in this directory.
 
 Every unpublished difference is classified below. Approving this batch
 means approving the production-candidate rule at the end; anything not
-explicitly approved is excluded by the provisional filter.
+explicitly approved is excluded by that rule when the candidate index
+is materialized. The provisional filter is an additional hard
+exclusion that applies regardless of approval.
 
 ## Summary
 
@@ -47,16 +49,22 @@ Expansions only; no target was removed. The new digests point at
 upstream release assets and should be spot-verified before approval.
 Both entries also carried description/tags refreshes.
 
+Caveat: `abusch/nu_plugin_semver` `x86_64-unknown-linux-gnu` serves a
+`*-musl.tar.xz` artifact under the gnu target label; upstream ships no
+gnu x86_64 build. Approve this row only if musl-under-gnu aliasing is
+acceptable to clients, otherwise exclude it pending relabeling.
+
 ## C. New packages — non-provisional (12)
 
-These carry `stable` or `proven` evidence tiers. Each needs an explicit
+All carry `proven` evidence tier, either explicit or via the index-v1
+schema default when the field is absent. Each needs an explicit
 keep/exclude decision.
 
 | Package | Type | Version | Evidence | Host |
 | --- | --- | --- | --- | --- |
-| `fennewald/nu_plugin_net` | plugin | 1.9.0 | stable | upstream `fennewald/nu_plugin_net` |
-| `nushell/aws-completions` | completion | 0.1.0-44f8f25 | stable | `numan-cli/numan-registry` mirror |
-| `nushell/rg-completions` | completion | 0.1.0-44f8f25 | stable | `numan-cli/numan-registry` mirror |
+| `fennewald/nu_plugin_net` | plugin | 1.9.0 | proven (schema default) | upstream `fennewald/nu_plugin_net` |
+| `nushell/aws-completions` | completion | 0.1.0-44f8f25 | proven (schema default) | `numan-cli/numan-registry` mirror |
+| `nushell/rg-completions` | completion | 0.1.0-44f8f25 | proven (schema default) | `numan-cli/numan-registry` mirror |
 | `Euphrasiologist/nu_plugin_bio` | plugin | 0.0.0-snapshot.20260816.49ab341 | proven | `numan-cli/numan-plugins` |
 | `Euphrasiologist/nu_plugin_plot` | plugin | 0.0.0-snapshot.20260816.5a1ca2a | proven | `numan-cli/numan-plugins` |
 | `WindSoilder/nu_plugin_mongo` | plugin | 0.0.0-snapshot.20260816.47854d9 | proven | `numan-cli/numan-plugins` |
@@ -85,9 +93,14 @@ candidate. Listed here only for visibility; no decision needed.
 
 1. Baseline bytes + all 37 URL-migration diffs (A).
 2. Both target-expanded packages (B), after new-target digest
-   spot-checks.
+   spot-checks and resolution of the semver musl caveat.
 3. Each section-C package marked **keep** below.
-4. Hard filter: any version with `evidence_tier: provisional` is
+4. Materialize the candidate: build a filtered index from `main` minus
+   the approved exclusions, validate it, and record its canonical
+   sha256 in this directory before dispatch. The protected workflow
+   signs `registry/index.json` verbatim, so exclusion must happen in
+   this builder step; nothing in `production.yml` applies the filter.
+5. Hard filter: any version with `evidence_tier: provisional` is
    excluded regardless of approval.
 
 ## Sign-off
@@ -112,8 +125,10 @@ candidate. Listed here only for visibility; no decision needed.
 | [ ] | `fj0r/git.nu` |
 | [ ] | `lassoColombo/conventional-commits` |
 
-After sign-off, the approved candidate is built from `main` minus
-provisional entries minus excluded additions, then dispatched through
-the protected `production` workflow. Post-deploy verification compares
-public index bytes, signature, key id, source commit, and digest
-against this batch's records.
+After sign-off, the approved candidate index is materialized as a
+filtered copy of `main` (provisional entries and excluded additions
+removed), validated, and its canonical sha256 recorded alongside this
+batch before the protected `production` workflow is dispatched.
+Post-deploy verification compares public index bytes, signature, key
+id, source commit, and deployed digest against the recorded
+materialized-candidate values.

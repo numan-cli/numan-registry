@@ -85,7 +85,7 @@
     "1.9.0"
    ],
    "evidence_tiers": [
-    "stable"
+    "proven"
    ],
    "artifact_hosts": [
     "fennewald/nu_plugin_net"
@@ -171,7 +171,7 @@
     "0.1.0-44f8f25"
    ],
    "evidence_tiers": [
-    "stable"
+    "proven"
    ],
    "artifact_hosts": [
     "numan-cli/numan-registry"
@@ -265,7 +265,7 @@
     "0.1.0-44f8f25"
    ],
    "evidence_tiers": [
-    "stable"
+    "proven"
    ],
    "artifact_hosts": [
     "numan-cli/numan-registry"
@@ -582,5 +582,6 @@
    ],
    "details": []
   }
- }
+ },
+ "evidence_tier_note": "index-v1 schema: only proven and provisional are valid evidence tiers; an absent field resolves to proven."
 }
