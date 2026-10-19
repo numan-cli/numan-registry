@@ -210,6 +210,166 @@
           }
         }
       ]
+    },
+    {
+      "id": {
+        "owner": "JosephTLyons",
+        "name": "nu_plugin_units"
+      },
+      "description": "A Nushell plugin for easily converting between common units. CI-built from JosephTLyons/nu_plugin_units@v0.1.9 and pinned + hash-verified + signed downstream in numan-registry.",
+      "repo": "https://github.com/JosephTLyons/nu_plugin_units",
+      "type": "plugin",
+      "tags": [
+        "plugin",
+        "units",
+        "conversion",
+        "ci-built"
+      ],
+      "versions": [
+        {
+          "version": "0.1.9",
+          "nu_version": ">=0.116.0 <0.117.0",
+          "evidence_tier": "provisional",
+          "deferral_reason": "lifecycle-prove pending: ingested from CI build artifacts; clean-root prove against real Nu deferred to staging CI",
+          "source": {
+            "git": "https://github.com/JosephTLyons/nu_plugin_units",
+            "rev": "ecdecaf1895f25a50cd61c3d7984cfbbafcfb802",
+            "cargo_name": "nu_plugin_units"
+          },
+          "artifact": {
+            "kind": "binary",
+            "targets": {
+              "aarch64-apple-darwin": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_units-0.1.9/nu_plugin_units-0.1.9-aarch64-apple-darwin.tar.gz",
+                "sha256": "8a799f9c4c22d6e4bd6a392a1e004f9cfe57b1e79d32b2d0f00350e392b683ad",
+                "executable_path": "nu_plugin_units"
+              },
+              "aarch64-unknown-linux-gnu": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_units-0.1.9/nu_plugin_units-0.1.9-aarch64-unknown-linux-gnu.tar.gz",
+                "sha256": "8f6af1ee0efa8e7e081b2538d22e44141605dbd6fabd9c3fabb65b328b00959a",
+                "executable_path": "nu_plugin_units"
+              },
+              "x86_64-pc-windows-msvc": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_units-0.1.9/nu_plugin_units-0.1.9-x86_64-pc-windows-msvc.zip",
+                "sha256": "ec27fe2cd8c224d9d6d2126f32c557cfb157bbd2f0d3234c30d8d5c392bab4b7",
+                "executable_path": "nu_plugin_units.exe"
+              },
+              "x86_64-unknown-linux-gnu": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_units-0.1.9/nu_plugin_units-0.1.9-x86_64-unknown-linux-gnu.tar.gz",
+                "sha256": "d9067cbe5f2a1aa90a7d597a35ce7e83dddab407696d7d1c02834764da78e57c",
+                "executable_path": "nu_plugin_units"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "kaathewisegit",
+        "name": "nu_plugin_endecode"
+      },
+      "description": "A plugin with various encoding schemes, from Crockford's base-32 to HTML entity escaping. CI-built from kaathewisegit/nugins@2fe5276 (commit snapshot, no tagged release) and pinned + hash-verified + signed downstream in numan-registry.",
+      "repo": "https://github.com/kaathewisegit/nugins",
+      "type": "plugin",
+      "tags": [
+        "plugin",
+        "endecode",
+        "encoding",
+        "ci-built"
+      ],
+      "versions": [
+        {
+          "version": "0.0.0-snapshot.20261019.2fe5276",
+          "nu_version": ">=0.114.0 <0.115.0",
+          "evidence_tier": "provisional",
+          "deferral_reason": "lifecycle-prove pending: ingested from CI build artifacts; clean-root prove against real Nu deferred to staging CI",
+          "provenance": "commit-snapshot",
+          "source": {
+            "git": "https://github.com/kaathewisegit/nugins",
+            "rev": "2fe5276c69cfb79d7fc994ac336dcfb098bd966b",
+            "cargo_name": "nu_plugin_endecode"
+          },
+          "artifact": {
+            "kind": "binary",
+            "targets": {
+              "aarch64-apple-darwin": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276-aarch64-apple-darwin.tar.gz",
+                "sha256": "6e0163dd389beb574910b7d893106e26aa7bc812bf39ec5f75384c2b094e7b29",
+                "executable_path": "nu_plugin_endecode"
+              },
+              "aarch64-unknown-linux-gnu": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276-aarch64-unknown-linux-gnu.tar.gz",
+                "sha256": "cf4c68bf38a1037b534b92d04816308cb1fd8e3f6b9d4d442301e34272cb9e58",
+                "executable_path": "nu_plugin_endecode"
+              },
+              "x86_64-pc-windows-msvc": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276-x86_64-pc-windows-msvc.zip",
+                "sha256": "e59d03ba68ea5173eac82589030288ae935abe6e7408b04e9d3d468fb8d03ca4",
+                "executable_path": "nu_plugin_endecode.exe"
+              },
+              "x86_64-unknown-linux-gnu": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276-x86_64-unknown-linux-gnu.tar.gz",
+                "sha256": "f8bfb57bd34c724aaa8359a3416f13e8bd0f3b67e2dab6cd04f95b9646f6e123",
+                "executable_path": "nu_plugin_endecode"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "idanarye",
+        "name": "nu_plugin_handlebars"
+      },
+      "description": "An handlebars command for Nushell for rendering Nu values using Handlebars templates. CI-built from idanarye/nu_plugin_handlebars@v0.3.0 and pinned + hash-verified + signed downstream in numan-registry.",
+      "repo": "https://github.com/idanarye/nu_plugin_handlebars",
+      "type": "plugin",
+      "tags": [
+        "plugin",
+        "handlebars",
+        "templates",
+        "ci-built"
+      ],
+      "versions": [
+        {
+          "version": "0.3.0",
+          "nu_version": ">=0.116.0 <0.117.0",
+          "evidence_tier": "provisional",
+          "deferral_reason": "lifecycle-prove pending: ingested from CI build artifacts; clean-root prove against real Nu deferred to staging CI",
+          "source": {
+            "git": "https://github.com/idanarye/nu_plugin_handlebars",
+            "rev": "3af0f8747ffb73e7eaae4b0628eb90a6ba8b8d6d",
+            "cargo_name": "nu_plugin_handlebars"
+          },
+          "artifact": {
+            "kind": "binary",
+            "targets": {
+              "aarch64-apple-darwin": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_handlebars-0.3.0/nu_plugin_handlebars-0.3.0-aarch64-apple-darwin.tar.gz",
+                "sha256": "5b034cb7597739e43b555ea89a7bda611c2faeb27633d483211312ffce68c80a",
+                "executable_path": "nu_plugin_handlebars"
+              },
+              "aarch64-unknown-linux-gnu": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_handlebars-0.3.0/nu_plugin_handlebars-0.3.0-aarch64-unknown-linux-gnu.tar.gz",
+                "sha256": "a8c0daf76f1409a4a8977415d18c85167682763f9fa3e1a918577f79e5382120",
+                "executable_path": "nu_plugin_handlebars"
+              },
+              "x86_64-pc-windows-msvc": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_handlebars-0.3.0/nu_plugin_handlebars-0.3.0-x86_64-pc-windows-msvc.zip",
+                "sha256": "eea90112cbbdda75a153bcd8805a00572139b2f12bc9a8c8465e5a603377e34e",
+                "executable_path": "nu_plugin_handlebars.exe"
+              },
+              "x86_64-unknown-linux-gnu": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_handlebars-0.3.0/nu_plugin_handlebars-0.3.0-x86_64-unknown-linux-gnu.tar.gz",
+                "sha256": "71d440ae080154c705021fbd0fb8eb857969c95ff8e5eefe47f1d59ef707ad0e",
+                "executable_path": "nu_plugin_handlebars"
+              }
+            }
+          }
+        }
+      ]
     }
   ]
 }
