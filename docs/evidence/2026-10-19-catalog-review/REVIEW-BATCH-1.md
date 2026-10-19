@@ -3,7 +3,7 @@
 Reconciles `main` (`be65d58`, 65 packages) against the archived signed
 production baseline (`docs/evidence/2026-10-18-production-baseline/`,
 44 packages, key `official-2026-07-01`, canonical index sha256
-`674c49f9…eed5c`). Machine-readable detail: `catalog-review-batch-1.json`
+`674c49f971ed1bd4f2dee329e1ba07a648dd12b659176171dfe0009c644eed5c`). Machine-readable detail: `catalog-review-batch-1.json`
 in this directory.
 
 Every unpublished difference is classified below. Approving this batch
@@ -16,7 +16,7 @@ explicitly approved is excluded by the provisional filter.
 | --- | --- | --- |
 | Removed from catalog | 0 | Nothing to lose |
 | Changed: URL migration only | 37 | Approve as a batch |
-| Changed: URL migration + target expansion | 2 | Approve per package |
+| Changed: target expansion + metadata | 2 | Approve per package |
 | Added: non-provisional | 12 | Approve per package |
 | Added: provisional (`evidence_tier`) | 9 | Excluded mechanically |
 
@@ -32,16 +32,20 @@ byte-identical to the old host (sha256 equality is already asserted by
 the index). Spot-checking 2 to 3 URLs end-to-end before sign-off is
 cheap belt-and-suspenders, not strictly required.
 
-## B. URL migration + target expansion (2 packages)
+## B. Target expansion + metadata refresh (2 packages)
+
+These entries already pointed at upstream release hosts in production,
+so no URL migration applies; the shared `x86_64-pc-windows-msvc`
+target is byte-identical.
 
 | Package | Version | New targets | Artifact host |
 | --- | --- | --- | --- |
 | `abusch/nu_plugin_semver` | 0.11.17 | aarch64-apple-darwin, aarch64-unknown-linux-gnu, x86_64-apple-darwin, x86_64-unknown-linux-gnu | upstream `abusch/nu_plugin_semver` release |
 | `Trivernis/nu-plugin-dialog` | 0.1.0 | aarch64-apple-darwin, x86_64-apple-darwin, x86_64-unknown-linux-gnu | upstream `Trivernis/nu-plugin-dialog` release |
 
-Expansions only; no target was removed. New digests point at upstream
-release assets and should be spot-verified before approval. Both also
-carried description/tags refreshes.
+Expansions only; no target was removed. The new digests point at
+upstream release assets and should be spot-verified before approval.
+Both entries also carried description/tags refreshes.
 
 ## C. New packages — non-provisional (12)
 
