@@ -417,7 +417,7 @@
       "type": "plugin",
       "version": "0.0.0-snapshot.20261019.2fe5276",
       "platforms": "linux x64/arm64, macOS arm64, Windows x64",
-      "note": "ci-built via numan-plugins; Wave P6 gap-fill; lifecycle-proved on real Nu 0.114.1 (loopback candidate, search->gc full passes); promoted to index.json as proven",
+      "note": "ci-built commit-snapshot via numan-plugins; Wave P6 gap-fill; lifecycle-proved on real Nu 0.114.1 (loopback candidate, search->gc full passes); promoted to index.json as proven",
       "repo": "https://github.com/kaathewisegit/nugins",
       "spec": "specs/kaathewisegit-nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276.json"
     },
