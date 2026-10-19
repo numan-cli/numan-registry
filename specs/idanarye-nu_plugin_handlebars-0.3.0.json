@@ -1,0 +1,41 @@
+{
+  "owner": "idanarye",
+  "name": "nu_plugin_handlebars",
+  "description": "An handlebars command for Nushell for rendering Nu values using Handlebars templates. CI-built from idanarye/nu_plugin_handlebars@v0.3.0 and pinned + hash-verified + signed downstream in numan-registry.",
+  "repo": "https://github.com/idanarye/nu_plugin_handlebars",
+  "type": "plugin",
+  "tags": [
+    "plugin",
+    "handlebars",
+    "templates",
+    "ci-built"
+  ],
+  "version": "0.3.0",
+  "nu_version": ">=0.116.0 <0.117.0",
+  "source": {
+    "git": "https://github.com/idanarye/nu_plugin_handlebars",
+    "rev": "3af0f8747ffb73e7eaae4b0628eb90a6ba8b8d6d",
+    "cargo_name": "nu_plugin_handlebars"
+  },
+  "artifact": {
+    "kind": "binary",
+    "targets": {
+      "aarch64-apple-darwin": {
+        "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_handlebars-0.3.0/nu_plugin_handlebars-0.3.0-aarch64-apple-darwin.tar.gz",
+        "executable_path": "nu_plugin_handlebars"
+      },
+      "aarch64-unknown-linux-gnu": {
+        "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_handlebars-0.3.0/nu_plugin_handlebars-0.3.0-aarch64-unknown-linux-gnu.tar.gz",
+        "executable_path": "nu_plugin_handlebars"
+      },
+      "x86_64-pc-windows-msvc": {
+        "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_handlebars-0.3.0/nu_plugin_handlebars-0.3.0-x86_64-pc-windows-msvc.zip",
+        "executable_path": "nu_plugin_handlebars.exe"
+      },
+      "x86_64-unknown-linux-gnu": {
+        "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_handlebars-0.3.0/nu_plugin_handlebars-0.3.0-x86_64-unknown-linux-gnu.tar.gz",
+        "executable_path": "nu_plugin_handlebars"
+      }
+    }
+  }
+}
