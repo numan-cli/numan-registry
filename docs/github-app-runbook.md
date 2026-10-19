@@ -117,11 +117,11 @@ Replace `INSTALLATION_ID` with the value recorded in section 2:
 gh api /orgs/numan-cli/installations \
   --jq '.installations[] | select(.app_slug=="numan-update-automation") | {id, repository_selection, permissions}'
 
-# Repositories reachable by the installation. Use the org-admin endpoint:
-# /installation/repositories itself requires an installation access token
-# minted by the App, so it cannot be called with an admin PAT.
-gh api /orgs/numan-cli/installations/INSTALLATION_ID/repositories \
-  --jq '.repositories[].full_name'
+# Repositories reachable by the installation. There is no documented
+# org-admin API to list an installation's repositories — /installation/repositories
+# needs an installation token, and /orgs/{org}/installations/{id}/repositories
+# is not a real endpoint. Confirm the three repos on the App's Configure
+# page (org Settings → GitHub Apps → numan-update-automation → Configure).
 ```
 
 Expected: `repository_selection: "selected"`, the three repositories
