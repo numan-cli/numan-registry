@@ -2,15 +2,15 @@
 
 _Auto-generated from `registry/index.json`. Do not hand-edit._
 
-Generated: `2026-10-18T18:04:25Z` · Index `updated_at`: `2026-10-18T18:04:25Z` · `registry_revision`: `seed-2026-07-02`
+Generated: `2026-10-19T01:44:41Z` · Index `updated_at`: `2026-10-19T01:44:41Z` · `registry_revision`: `seed-2026-07-02`
 
 This is the **master list** of packages in the committed `registry/index.json` (in-tree; the public CDN updates after production signing/publish) and the Nu constraint on each package's **latest** version. For demand-ranked *plugin candidates* not yet in the registry, see [`numan-plugins/docs/backlog.json`](https://github.com/numan-cli/numan-plugins/blob/main/docs/backlog.json). For intake workflow status, see [`intake-candidates.md`](intake-candidates.md).
 
 ## Summary
 
-- **65** packages total
-- By type: `completion` 15, `module` 10, `plugin` 34, `script` 6
-- Latest version Nu band: `0.114` 26, `0.113` 3, `0.112` 1, `other` 12, `*` 23
+- **68** packages total
+- By type: `completion` 15, `module` 10, `plugin` 37, `script` 6
+- Latest version Nu band: `0.114` 27, `0.113` 3, `0.112` 1, `other` 14, `*` 23
 
 Nu band is a coarse label from the constraint **lower bound** (`>=0.114` / `>0.113` → `0.114` / `0.113`, etc.; else `*` or `other`). Exact constraints are in the table and in the signed index.
 
@@ -45,7 +45,10 @@ Nu band is a coarse label from the constraint **lower bound** (`>=0.114` / `>0.1
 | `FMotalleb/nu_plugin_port_extension` | plugin | 0.114.1 | `>=0.114.0 <0.115.0` | 0.114 | mac,linux,win | ci-built | 2 |
 | `fnuttens/nu_plugin_hmac` | plugin | 0.27.0 | `>=0.113.0 <0.114.0` | 0.113 | mac,linux,win | ci-built | 1 |
 | `galuszkak/nu_plugin_bigquery` | plugin | 0.3.0 | `>=0.114.0 <0.115.0` | 0.114 | mac,linux,win | ci-built | 1 |
+| `idanarye/nu_plugin_handlebars` | plugin | 0.3.0 | `>=0.116.0 <0.117.0` | other | mac,linux,win | ci-built | 1 |
 | `idanarye/nu_plugin_skim` | plugin | 0.29.1 | `>=0.114.0 <0.115.0` | 0.114 | mac,linux,win | ci-built | 1 |
+| `JosephTLyons/nu_plugin_units` | plugin | 0.1.9 | `>=0.116.0 <0.117.0` | other | mac,linux,win | ci-built | 1 |
+| `kaathewisegit/nu_plugin_endecode` | plugin | 0.0.0-snapshot.20261019.2fe5276 | `>=0.114.0 <0.115.0` | 0.114 | mac,linux,win | ci-built | 1 |
 | `KamilKleina/git-aliases` | script | 0.1.0-109cc61 | `*` | * | — | mirror | 1 |
 | `kik4444/nu_plugin_mime` | plugin | 0.0.0-snapshot.20260816.8e5872a | `>=0.114.0 <0.115.0` | 0.114 | mac,linux,win | ci-built | 1 |
 | `Kissaki/nu_plugin_bson` | plugin | 26.1140.0 | `>=0.114.0 <0.115.0` | 0.114 | mac,linux,win | ci-built | 1 |
