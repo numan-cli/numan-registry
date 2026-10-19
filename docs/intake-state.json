@@ -111,6 +111,17 @@
       "spec": "specs/dead10ck-nu_plugin_dns-4.0.10.json"
     },
     {
+      "id": "dead10ck/nu_plugin_dns",
+      "name": "nu_plugin_dns",
+      "owner": "dead10ck",
+      "type": "plugin",
+      "version": "4.0.11",
+      "platforms": "linux x64/arm64, macOS arm64 only",
+      "note": "ci-built via numan-plugins; no Windows (upstream build fails on Windows); Wave P6 gap-fill; Quarantined in registry/provisional.json; lifecycle-prove deferred to staging CI",
+      "repo": "https://github.com/dead10ck/nu_plugin_dns",
+      "spec": "specs/dead10ck-nu_plugin_dns-4.0.11.json"
+    },
+    {
       "id": "FMotalleb/nu_plugin_port_extension",
       "name": "nu_plugin_port_extension",
       "owner": "FMotalleb",
@@ -332,6 +343,28 @@
       "repo": "https://github.com/hulthe/nu_plugin_msgpack",
       "spec": "specs/hulthe-nu_plugin_msgpack-0.0.0-snapshot.20260816.38eb492.json",
       "note": "ci-built commit-snapshot; Wave 4 Lane 1; Quarantined in registry/provisional.json; lifecycle-prove failed 2026-10-18: Nu 0.90.1 lacks $nu.data-dir required by current Numan initialization; lifecycle preflight failed before mutation."
+    },
+    {
+      "id": "tonythethompson/nu_plugin_explore",
+      "name": "nu_plugin_explore",
+      "owner": "tonythethompson",
+      "type": "plugin",
+      "version": "0.114.1",
+      "platforms": "linux x64/arm64, macOS arm64 only",
+      "note": "ci-built via numan-plugins; Wave P6 gap-fill (Aug 9 build died before release); Quarantined in registry/provisional.json; lifecycle-prove deferred to staging CI",
+      "repo": "https://github.com/tonythethompson/nu_plugin_explore",
+      "spec": "specs/tonythethompson-nu_plugin_explore-0.114.1.json"
+    },
+    {
+      "id": "tonythethompson/nu_plugin_qr_maker",
+      "name": "nu_plugin_qr_maker",
+      "owner": "tonythethompson",
+      "type": "plugin",
+      "version": "1.2.0",
+      "platforms": "linux x64/arm64, macOS arm64, Windows x64",
+      "note": "ci-built via numan-plugins; Wave P6 gap-fill (Aug 9 build died before release); Quarantined in registry/provisional.json; lifecycle-prove deferred to staging CI",
+      "repo": "https://github.com/tonythethompson/nu_plugin_qr_maker",
+      "spec": "specs/tonythethompson-nu_plugin_qr_maker-1.2.0.json"
     },
     {
       "id": "kik4444/nu_plugin_mime",
@@ -1108,6 +1141,10 @@
     {
       "date": "2026-10-19",
       "change": "units@0.1.9, endecode@snapshot.2fe5276, handlebars@0.3.0 lifecycle-proved on real Nu and promoted to index.json as proven; endecode repo corrected to kaathewisegit/nugins monorepo"
+    },
+    {
+      "date": "2026-10-19",
+      "change": "Wave P6 gap-fill intake: dns@4.0.11, explore@0.114.1, qr_maker@1.2.0 quarantined in registry/provisional.json pending staging lifecycle-prove (#98); msgpack spec renamed to convention"
     }
   ]
 }
