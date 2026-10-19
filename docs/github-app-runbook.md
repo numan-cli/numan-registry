@@ -119,7 +119,9 @@ gh api /orgs/numan-cli/installations \
 
 # Repositories reachable by the installation. Use the org-admin endpoint:
 # /installation/repositories itself requires an installation access token
-# minted by the App, so it cannot be called with an admin PAT.
+# minted by the App, so it cannot be called with an admin PAT. If this
+# endpoint 404s under your credential, the equivalent UI check is the App's
+# Install -> Configure page, which lists the selected repositories.
 gh api /orgs/numan-cli/installations/INSTALLATION_ID/repositories \
   --jq '.repositories[].full_name'
 ```
