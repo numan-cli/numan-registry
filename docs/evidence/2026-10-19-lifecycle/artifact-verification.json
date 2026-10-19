@@ -1,0 +1,114 @@
+{
+  "verified_date": "2026-10-19",
+  "note": "Independent re-download of every release asset referenced by the three packages promoted in #99 (e2bfd2c); sha256 recomputed and compared against the committed catalog value.",
+  "results": [
+    {
+      "package": "JosephTLyons/nu_plugin_units@0.1.9",
+      "target": "aarch64-apple-darwin",
+      "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_units-0.1.9/nu_plugin_units-0.1.9-aarch64-apple-darwin.tar.gz",
+      "expected_sha256": "8a799f9c4c22d6e4bd6a392a1e004f9cfe57b1e79d32b2d0f00350e392b683ad",
+      "actual_sha256": "8a799f9c4c22d6e4bd6a392a1e004f9cfe57b1e79d32b2d0f00350e392b683ad",
+      "match": true,
+      "bytes": 2576830
+    },
+    {
+      "package": "JosephTLyons/nu_plugin_units@0.1.9",
+      "target": "aarch64-unknown-linux-gnu",
+      "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_units-0.1.9/nu_plugin_units-0.1.9-aarch64-unknown-linux-gnu.tar.gz",
+      "expected_sha256": "8f6af1ee0efa8e7e081b2538d22e44141605dbd6fabd9c3fabb65b328b00959a",
+      "actual_sha256": "8f6af1ee0efa8e7e081b2538d22e44141605dbd6fabd9c3fabb65b328b00959a",
+      "match": true,
+      "bytes": 2899542
+    },
+    {
+      "package": "JosephTLyons/nu_plugin_units@0.1.9",
+      "target": "x86_64-pc-windows-msvc",
+      "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_units-0.1.9/nu_plugin_units-0.1.9-x86_64-pc-windows-msvc.zip",
+      "expected_sha256": "ec27fe2cd8c224d9d6d2126f32c557cfb157bbd2f0d3234c30d8d5c392bab4b7",
+      "actual_sha256": "ec27fe2cd8c224d9d6d2126f32c557cfb157bbd2f0d3234c30d8d5c392bab4b7",
+      "match": true,
+      "bytes": 7421064
+    },
+    {
+      "package": "JosephTLyons/nu_plugin_units@0.1.9",
+      "target": "x86_64-unknown-linux-gnu",
+      "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_units-0.1.9/nu_plugin_units-0.1.9-x86_64-unknown-linux-gnu.tar.gz",
+      "expected_sha256": "d9067cbe5f2a1aa90a7d597a35ce7e83dddab407696d7d1c02834764da78e57c",
+      "actual_sha256": "d9067cbe5f2a1aa90a7d597a35ce7e83dddab407696d7d1c02834764da78e57c",
+      "match": true,
+      "bytes": 3018867
+    },
+    {
+      "package": "kaathewisegit/nu_plugin_endecode@0.0.0-snapshot.20261019.2fe5276",
+      "target": "aarch64-apple-darwin",
+      "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276-aarch64-apple-darwin.tar.gz",
+      "expected_sha256": "6e0163dd389beb574910b7d893106e26aa7bc812bf39ec5f75384c2b094e7b29",
+      "actual_sha256": "6e0163dd389beb574910b7d893106e26aa7bc812bf39ec5f75384c2b094e7b29",
+      "match": true,
+      "bytes": 3493863
+    },
+    {
+      "package": "kaathewisegit/nu_plugin_endecode@0.0.0-snapshot.20261019.2fe5276",
+      "target": "aarch64-unknown-linux-gnu",
+      "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276-aarch64-unknown-linux-gnu.tar.gz",
+      "expected_sha256": "cf4c68bf38a1037b534b92d04816308cb1fd8e3f6b9d4d442301e34272cb9e58",
+      "actual_sha256": "cf4c68bf38a1037b534b92d04816308cb1fd8e3f6b9d4d442301e34272cb9e58",
+      "match": true,
+      "bytes": 3951193
+    },
+    {
+      "package": "kaathewisegit/nu_plugin_endecode@0.0.0-snapshot.20261019.2fe5276",
+      "target": "x86_64-pc-windows-msvc",
+      "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276-x86_64-pc-windows-msvc.zip",
+      "expected_sha256": "e59d03ba68ea5173eac82589030288ae935abe6e7408b04e9d3d468fb8d03ca4",
+      "actual_sha256": "e59d03ba68ea5173eac82589030288ae935abe6e7408b04e9d3d468fb8d03ca4",
+      "match": true,
+      "bytes": 11458702
+    },
+    {
+      "package": "kaathewisegit/nu_plugin_endecode@0.0.0-snapshot.20261019.2fe5276",
+      "target": "x86_64-unknown-linux-gnu",
+      "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276/nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276-x86_64-unknown-linux-gnu.tar.gz",
+      "expected_sha256": "f8bfb57bd34c724aaa8359a3416f13e8bd0f3b67e2dab6cd04f95b9646f6e123",
+      "actual_sha256": "f8bfb57bd34c724aaa8359a3416f13e8bd0f3b67e2dab6cd04f95b9646f6e123",
+      "match": true,
+      "bytes": 3962731
+    },
+    {
+      "package": "idanarye/nu_plugin_handlebars@0.3.0",
+      "target": "aarch64-apple-darwin",
+      "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_handlebars-0.3.0/nu_plugin_handlebars-0.3.0-aarch64-apple-darwin.tar.gz",
+      "expected_sha256": "5b034cb7597739e43b555ea89a7bda611c2faeb27633d483211312ffce68c80a",
+      "actual_sha256": "5b034cb7597739e43b555ea89a7bda611c2faeb27633d483211312ffce68c80a",
+      "match": true,
+      "bytes": 3678573
+    },
+    {
+      "package": "idanarye/nu_plugin_handlebars@0.3.0",
+      "target": "aarch64-unknown-linux-gnu",
+      "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_handlebars-0.3.0/nu_plugin_handlebars-0.3.0-aarch64-unknown-linux-gnu.tar.gz",
+      "expected_sha256": "a8c0daf76f1409a4a8977415d18c85167682763f9fa3e1a918577f79e5382120",
+      "actual_sha256": "a8c0daf76f1409a4a8977415d18c85167682763f9fa3e1a918577f79e5382120",
+      "match": true,
+      "bytes": 4189135
+    },
+    {
+      "package": "idanarye/nu_plugin_handlebars@0.3.0",
+      "target": "x86_64-pc-windows-msvc",
+      "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_handlebars-0.3.0/nu_plugin_handlebars-0.3.0-x86_64-pc-windows-msvc.zip",
+      "expected_sha256": "eea90112cbbdda75a153bcd8805a00572139b2f12bc9a8c8465e5a603377e34e",
+      "actual_sha256": "eea90112cbbdda75a153bcd8805a00572139b2f12bc9a8c8465e5a603377e34e",
+      "match": true,
+      "bytes": 11888274
+    },
+    {
+      "package": "idanarye/nu_plugin_handlebars@0.3.0",
+      "target": "x86_64-unknown-linux-gnu",
+      "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_handlebars-0.3.0/nu_plugin_handlebars-0.3.0-x86_64-unknown-linux-gnu.tar.gz",
+      "expected_sha256": "71d440ae080154c705021fbd0fb8eb857969c95ff8e5eefe47f1d59ef707ad0e",
+      "actual_sha256": "71d440ae080154c705021fbd0fb8eb857969c95ff8e5eefe47f1d59ef707ad0e",
+      "match": true,
+      "bytes": 4245036
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+isolated Nu probe: {"version": "0.114.1", "plugin_path": "C:\\Users\\tonyt\\AppData\\Local\\Temp\\numan-lifecycle-prove-nl8ktklm\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "C:\\Users\\tonyt\\AppData\\Local\\Temp\\numan-lifecycle-prove-nl8ktklm\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "C:\\Users\\tonyt\\AppData\\Local\\Temp\\numan-lifecycle-prove-nl8ktklm\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: 49fb6abfefc74325d398138ce4d3dc0e9ea68aac5a739e638e0f00cb081e445f
+Numan SHA256: 41833aee5ae89859143b57039c3ed0060f80e0e434bbab6efc3afde71b4e630e
+package: kaathewisegit/nu_plugin_endecode
+numan:   D:\Dev\numan_workspace\numan\target\release\numan.exe
+nu:      C:\Users\tonyt\AppData\Local\Temp\nu-prove\0.114.1\nu.exe
+root:    C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm
+
+candidate package version: 0.0.0-snapshot.20261019.2fe5276
+candidate file SHA256: 0c5d19d6ccd5dfe5a3f97eb30b79d216c15639ecffc2600565d43aa48086ba64
+==> init: D:\Dev\numan_workspace\numan\target\release\numan.exe --root C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm'.
+  Nu executable: C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-shim-c6r2b0wq\nu.exe
+  Nu version:    0.114.1
+  Plugin registry: C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\release\numan.exe --root C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\release\numan.exe --root C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm registry add lifecycle-candidate http://127.0.0.1:54366/index.json --key b6AWLj206112cqmlxoG3gsFlTRBkgHaCE2k49PhxRis=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:54366/index.json
+  Fingerprint: sha256:acc644b4a7dc515b232ea2ed11222b7adfb40b544d985415e0709b2b02db3ad4
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\release\numan.exe --root C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:54366/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 54ff0f9c).
+==> search: D:\Dev\numan_workspace\numan\target\release\numan.exe --root C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm search nu_plugin_endecode
+Found 1 package(s) matching 'nu_plugin_endecode':
+checked against: Nu 0.114.1 (x86_64-pc-windows-msvc)
+
+  kaathewisegit/nu_plugin_endecode  v0.0.0-snapshot.20261019.2fe5276  [plugin]
+    A plugin with various encoding schemes, from Crockford's base-32 to HTML entity escaping. CI-built from kaathewisegit/nugins@2fe5276 (commit snapshot, no tagged release) and pinned + hash-verified + signed downstream in numan-registry.
+==> info: D:\Dev\numan_workspace\numan\target\release\numan.exe --root C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm info kaathewisegit/nu_plugin_endecode
+Package:    kaathewisegit/nu_plugin_endecode
+Type:       plugin
+Status:     verified upstream artifact
+Description: A plugin with various encoding schemes, from Crockford's base-32 to HTML entity escaping. CI-built from kaathewisegit/nugins@2fe5276 (commit snapshot, no tagged release) and pinned + hash-verified + signed downstream in numan-registry.
+Repository: https://github.com/kaathewisegit/nugins
+Tags:       plugin, endecode, encoding, ci-built
+Your Nu:    0.114.1 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.0.0-snapshot.20261019.2fe5276  [nu >=0.114.0 <0.115.0]  (compatible)
+    tested with: 0.114.1
+    note: built from a commit snapshot, not a tagged release
+    source git:  https://github.com/kaathewisegit/nugins
+    source rev:  2fe5276c69cfb79d7fc994ac336dcfb098bd966b
+    cargo_name:  nu_plugin_endecode
+    platform: aarch64-unknown-linux-gnu
+    platform: aarch64-apple-darwin
+    platform: x86_64-pc-windows-msvc
+    platform: x86_64-unknown-linux-gnu
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\release\numan.exe --root C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm install kaathewisegit/nu_plugin_endecode@0.0.0-snapshot.20261019.2fe5276
+✓ Installed kaathewisegit/nu_plugin_endecode@0.0.0-snapshot.20261019.2fe5276 to C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm\packages\plugins\kaathewisegit\nu_plugin_endecode\0.0.0-snapshot.20261019.2fe5276-e59d03ba
+==> activate: D:\Dev\numan_workspace\numan\target\release\numan.exe --root C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm activate kaathewisegit/nu_plugin_endecode
+
+Plugin registration
+  kaathewisegit/nu_plugin_endecode -> C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Registered kaathewisegit/nu_plugin_endecode — takes effect in future Nu sessions (not the current shell)
+==> doctor: D:\Dev\numan_workspace\numan\target\release\numan.exe --root C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm doctor
+Numan doctor — C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm
+
+Initialization
+  · PATH Nu: 0.114.1
+  · Managed Nu: not installed
+
+Activation
+  · Plugin 'kaathewisegit/nu_plugin_endecode' has an activation record (Issue #22). Deactivate is available; active remove stays gated (deactivate first). Active update is opt-in via NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly (default off): deactivate→upgrade→activate (https://github.com/numan-cli/numan/issues/22).
+    Fix: Remove: `numan deactivate <pkg>`, then `numan remove <pkg>`. Update: set NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly, then `numan update <pkg>` orchestrates deactivate→upgrade→activate; otherwise active update is gated (default off). See docs/active-plugin-gate.md.
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\release\numan.exe --root C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm list
+Installed packages (1):
+
+  kaathewisegit/nu_plugin_endecode  v0.0.0-snapshot.20261019.2fe5276  [plugin]  activated
+==> deactivate: D:\Dev\numan_workspace\numan\target\release\numan.exe --root C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm deactivate kaathewisegit/nu_plugin_endecode
+
+Plugin deactivation
+  kaathewisegit/nu_plugin_endecode (endecode) <- C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Unregistered kaathewisegit/nu_plugin_endecode — takes effect in future Nu sessions (not the current shell)
+==> remove: D:\Dev\numan_workspace\numan\target\release\numan.exe --root C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm remove --yes kaathewisegit/nu_plugin_endecode
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed kaathewisegit/nu_plugin_endecode
+==> gc: D:\Dev\numan_workspace\numan\target\release\numan.exe --root C:\Users\tonyt\AppData\Local\Temp\numan-lifecycle-prove-nl8ktklm gc
+No orphaned packages found.
+OK: lifecycle-prove passed.
