@@ -114,6 +114,15 @@ def main(argv: list[str] | None = None) -> int:
 
     index = json.loads(args.index.read_text(encoding="utf-8"))
     candidate, removals = materialize_candidate(index, set(args.exclude))
+    matched = {r["package"] for r in removals if r["reason"] == "excluded"}
+    unmatched = sorted(set(args.exclude) - matched)
+    for label in unmatched:
+        removals.append({"package": label, "version": "*", "reason": "unmatched_exclude"})
+    if unmatched:
+        sys.stderr.write(
+            "error: --exclude matched no package: " + ", ".join(unmatched) + "\n"
+        )
+        return 1
 
     canonical = canonical_json(candidate).encode("utf-8")
     args.out.parent.mkdir(parents=True, exist_ok=True)
