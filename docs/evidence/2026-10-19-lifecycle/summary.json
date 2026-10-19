@@ -1,0 +1,46 @@
+{
+ "run_date": "2026-10-19",
+ "registry_source_commit": "e2bfd2c618c42a7650474505eec4180c7a543a09",
+ "note": "Independent re-verification of PR #99 promotion claims (e2bfd2c) by a second agent on a different session. Loopback candidate index = the branch registry/index.json itself; ephemeral in-memory Ed25519 signing; clean disposable root per lifecycle-prove.py.",
+ "numan": "numan-cli 0.2.2 built from 9428037 (target/release, rebuilt 2026-10-19; the pre-existing target/release binary was a stale Jul-31 build that bails on non-TTY activate)",
+ "passed": 3,
+ "failed": 0,
+ "results": [
+  {
+   "package": "JosephTLyons/nu_plugin_units",
+   "package_version": "0.1.9",
+   "nu_version": "0.116.1",
+   "os": "Windows x86_64",
+   "status": "passed",
+   "log": "JosephTLyons__nu_plugin_units.log",
+   "log_sha256": "38190eb2603dac09cf121cc6094395afbcfce4712d63e8be2680ce793ede1dde",
+   "artifact_sha256": "ec27fe2cd8c224d9d6d2126f32c557cfb157bbd2f0d3234c30d8d5c392bab4b7",
+   "nu_executable_sha256": "e37dff301cf52a49eb82a90e8b4634328379fffa3b244b2172a1c307e03e5d69",
+   "candidate_file_sha256": "0c5d19d6ccd5dfe5a3f97eb30b79d216c15639ecffc2600565d43aa48086ba64"
+  },
+  {
+   "package": "idanarye/nu_plugin_handlebars",
+   "package_version": "0.3.0",
+   "nu_version": "0.116.1",
+   "os": "Windows x86_64",
+   "status": "passed",
+   "log": "idanarye__nu_plugin_handlebars.log",
+   "log_sha256": "3606a2008be14fb79d0cbe3e22fc5ccf140bf3be6cf6b120454d7be633edbdbe",
+   "artifact_sha256": "eea90112cbbdda75a153bcd8805a00572139b2f12bc9a8c8465e5a603377e34e",
+   "nu_executable_sha256": "e37dff301cf52a49eb82a90e8b4634328379fffa3b244b2172a1c307e03e5d69",
+   "candidate_file_sha256": "0c5d19d6ccd5dfe5a3f97eb30b79d216c15639ecffc2600565d43aa48086ba64"
+  },
+  {
+   "package": "kaathewisegit/nu_plugin_endecode",
+   "package_version": "0.0.0-snapshot.20261019.2fe5276",
+   "nu_version": "0.114.1",
+   "os": "Windows x86_64",
+   "status": "passed",
+   "log": "kaathewisegit__nu_plugin_endecode.log",
+   "log_sha256": "4e209901079517dca452e4824206c1f5953a451aab55104ff1244c44a96e852e",
+   "artifact_sha256": "e59d03ba68ea5173eac82589030288ae935abe6e7408b04e9d3d468fb8d03ca4",
+   "nu_executable_sha256": "49fb6abfefc74325d398138ce4d3dc0e9ea68aac5a739e638e0f00cb081e445f",
+   "candidate_file_sha256": "0c5d19d6ccd5dfe5a3f97eb30b79d216c15639ecffc2600565d43aa48086ba64"
+  }
+ ]
+}
