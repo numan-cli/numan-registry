@@ -117,13 +117,11 @@ Replace `INSTALLATION_ID` with the value recorded in section 2:
 gh api /orgs/numan-cli/installations \
   --jq '.installations[] | select(.app_slug=="numan-update-automation") | {id, repository_selection, permissions}'
 
-# Repositories reachable by the installation. Use the org-admin endpoint:
-# /installation/repositories itself requires an installation access token
-# minted by the App, so it cannot be called with an admin PAT. If this
-# endpoint 404s under your credential, the equivalent UI check is the App's
-# Install -> Configure page, which lists the selected repositories.
-gh api /orgs/numan-cli/installations/INSTALLATION_ID/repositories \
-  --jq '.repositories[].full_name'
+# Repositories reachable by the installation. There is no documented
+# org-admin API to list an installation's repositories — /installation/repositories
+# needs an installation token, and /orgs/{org}/installations/{id}/repositories
+# is not a real endpoint. Confirm the three repos on the App's Configure
+# page (org Settings → GitHub Apps → numan-update-automation → Configure).
 ```
 
 Expected: `repository_selection: "selected"`, the three repositories
@@ -131,15 +129,15 @@ listed, and permissions showing the five granted scopes plus the
 mandatory implicit `metadata: read`. Anything beyond those six is an
 over-grant; fix the App permissions before proceeding.
 
-Inside a coordinator job the minted installation token can also call
-`gh api /installation/repositories` directly; the org-admin endpoint
-above is the offline equivalent.
+Inside a coordinator job the minted installation token can call
+`gh api /installation/repositories` directly; the Configure page is
+the offline equivalent.
 
 ## 6. Rotation
 
 1. App settings → **Private keys** → *Generate a private key*.
-2. Update `NUMAN_AUTOMATION_APP_PRIVATE_KEY` in
-   `numan-cli/numan-registry` Actions secrets.
+2. Update `NUMAN_AUTOMATION_APP_PRIVATE_KEY` on the `automation`
+   environment in `numan-cli/numan-registry`.
 3. Confirm a coordinator run succeeds (manual dispatch of the
    coordinator workflow once it exists, or a `gh api` smoke call with a
    token minted locally).
