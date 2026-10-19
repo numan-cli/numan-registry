@@ -431,6 +431,39 @@
       "repo": "https://github.com/galuszkak/nu_plugin_bigquery",
       "spec": "specs/galuszkak-nu_plugin_bigquery-0.3.0.json",
       "note": "ci-built via numan-plugins; P6 provisional tier (GCP credential requirement)"
+    },
+    {
+      "id": "JosephTLyons/nu_plugin_units",
+      "name": "nu_plugin_units",
+      "owner": "JosephTLyons",
+      "type": "plugin",
+      "version": "0.1.9",
+      "platforms": "linux x64/arm64, macOS arm64, Windows x64",
+      "note": "ci-built via numan-plugins; Wave P6 gap-fill; lifecycle-proved on real Nu 0.116.1 (loopback candidate, search->gc full passes); promoted to index.json as proven",
+      "repo": "https://github.com/JosephTLyons/nu_plugin_units",
+      "spec": "specs/JosephTLyons-nu_plugin_units-0.1.9.json"
+    },
+    {
+      "id": "kaathewisegit/nu_plugin_endecode",
+      "name": "nu_plugin_endecode",
+      "owner": "kaathewisegit",
+      "type": "plugin",
+      "version": "0.0.0-snapshot.20261019.2fe5276",
+      "platforms": "linux x64/arm64, macOS arm64, Windows x64",
+      "note": "ci-built commit-snapshot via numan-plugins; Wave P6 gap-fill; lifecycle-proved on real Nu 0.114.1 (loopback candidate, search->gc full passes); promoted to index.json as proven",
+      "repo": "https://github.com/kaathewisegit/nugins",
+      "spec": "specs/kaathewisegit-nu_plugin_endecode-0.0.0-snapshot.20261019.2fe5276.json"
+    },
+    {
+      "id": "idanarye/nu_plugin_handlebars",
+      "name": "nu_plugin_handlebars",
+      "owner": "idanarye",
+      "type": "plugin",
+      "version": "0.3.0",
+      "platforms": "linux x64/arm64, macOS arm64, Windows x64",
+      "note": "ci-built via numan-plugins; Wave P6 gap-fill; lifecycle-proved on real Nu 0.116.1 (loopback candidate, search->gc full passes); promoted to index.json as proven",
+      "repo": "https://github.com/idanarye/nu_plugin_handlebars",
+      "spec": "specs/idanarye-nu_plugin_handlebars-0.3.0.json"
     }
   ],
   "mirror": [
@@ -1100,6 +1133,14 @@
     {
       "date": "2026-07-30",
       "change": "Intake Wave 1 CI-built plugins: FMotalleb/nu_plugin_port_extension@0.113.1, FMotalleb/nu_plugin_image@0.112.2"
+    },
+    {
+      "date": "2026-10-19",
+      "change": "Wave P6 gap-fill intake: units@0.1.9, endecode@snapshot.2fe5276, handlebars@0.3.0 quarantined in registry/provisional.json pending staging lifecycle-prove (#99); dns/msgpack/explore/qr_maker handled by #98"
+    },
+    {
+      "date": "2026-10-19",
+      "change": "units@0.1.9, endecode@snapshot.2fe5276, handlebars@0.3.0 lifecycle-proved on real Nu and promoted to index.json as proven; endecode repo corrected to kaathewisegit/nugins monorepo"
     },
     {
       "date": "2026-10-19",
