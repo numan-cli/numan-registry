@@ -162,7 +162,21 @@
                   "additionalProperties": false,
                   "properties": {
                     "kind": { "type": "string" },
-                    "import": { "type": "string", "enum": ["module", "all"] }
+                    "import": { "type": "string", "enum": ["module", "all"] },
+                    "bindings": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["id", "event", "handler"],
+                        "additionalProperties": false,
+                        "properties": {
+                          "id": { "type": "string", "minLength": 1 },
+                          "event": { "type": "string", "enum": ["pre_prompt", "pre_execution", "env_change", "display_output"] },
+                          "handler": { "type": "string", "minLength": 1 },
+                          "filter": { "type": "string" }
+                        }
+                      }
+                    }
                   }
                 }
               },
