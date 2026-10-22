@@ -165,6 +165,7 @@
                     "import": { "type": "string", "enum": ["module", "all"] },
                     "bindings": {
                       "type": "array",
+                      "minItems": 1,
                       "items": {
                         "type": "object",
                         "required": ["id", "event", "handler"],
@@ -173,11 +174,17 @@
                           "id": { "type": "string", "minLength": 1 },
                           "event": { "type": "string", "enum": ["pre_prompt", "pre_execution", "env_change", "display_output"] },
                           "handler": { "type": "string", "minLength": 1 },
-                          "filter": { "type": "string" }
+                          "filter": { "type": "string", "minLength": 1 }
                         }
                       }
                     }
-                  }
+                  },
+                  "allOf": [
+                    {
+                      "if": { "required": ["bindings"] },
+                      "then": { "properties": { "kind": { "const": "nu-hook" } } }
+                    }
+                  ]
                 }
               },
               "allOf": [
