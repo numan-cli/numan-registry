@@ -277,6 +277,13 @@ class WatchIndexedTests(unittest.TestCase):
         self.assertTrue(expected)
         self.assertEqual(gaps["upstream_updates"][0]["artifact_id"], expected)
 
+    def test_read_target_nu_file_rejects_non_dict(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "target.json"
+            target.write_text('["0.114.1"]', encoding="utf-8")
+            with mock.patch.object(self.mod, "DEFAULT_TARGET_FILE", target):
+                self.assertEqual(self.mod._read_target_nu_file(), "")
+
     def test_process_rejects_invalid_target_nu(self):
         with tempfile.TemporaryDirectory() as tmp:
             index = Path(tmp) / "index.json"

@@ -417,6 +417,8 @@ def _read_target_nu_file() -> str:
         state = json.loads(DEFAULT_TARGET_FILE.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return ""
+    if not isinstance(state, dict):
+        return ""
     return str(state.get("target_nu", "")).strip().lstrip("vV")
 
 
