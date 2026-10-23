@@ -266,59 +266,72 @@ def detect(packages: list[dict], releases: dict[str, dict], target_nu: str) -> d
     return {"upstream_updates": upstream_updates, "nu_gaps": nu_gaps}
 
 
+def _is_major_bump(hit: dict) -> bool | None:
+    """True on a major bump, False on minor/patch, None when uncomparable."""
+    upstream = parse_version_tuple(str(hit.get("upstream", "")))
+    indexed = parse_version_tuple(str(hit.get("indexed", ""))) or (0, 0, 0)
+    if upstream is None:
+        return None
+    return upstream[0] > indexed[0]
+
+
+def _decide_upstream(hit: dict, ptype: str, reasons: list[str]) -> dict:
+    newer = is_newer(str(hit.get("upstream", "")), str(hit.get("indexed", "")))
+    if newer is None:
+        reasons.append("version is not plain semver; map it by hand")
+    elif _is_major_bump(hit):
+        reasons.append("major version bump; review behavior changes")
+    elif ptype in ("module", "script", "completion") and newer and not reasons:
+        return {"verdict": "auto-merge-eligible",
+                "reasons": ["minor/patch bump; lifecycle proof required before merge"]}
+    elif not newer:
+        return {"verdict": "up-to-date",
+                "reasons": ["indexed version already covers upstream"]}
+    return {"verdict": "needs-review", "reasons": reasons or ["manual mapping needed"]}
+
+
+def _decide_nu_gap(hit: dict, ptype: str, reasons: list[str]) -> dict:
+    if ptype not in ("module", "script", "completion") or reasons:
+        return {"verdict": "needs-review", "reasons": reasons or ["manual mapping needed"]}
+    if parse_version_tuple(str(hit.get("indexed", ""))) is None:
+        return {"verdict": "needs-review",
+                "reasons": ["indexed version is not plain semver; map it by hand"]}
+    plan = nu_gap_plan(str(hit.get("constraint", "*")), str(hit.get("target_nu", "")))
+    if plan == "append":
+        return {"verdict": "auto-merge-eligible",
+                "reasons": ["same artifact; re-prove on the new Nu then append verified_with"]}
+    if plan == "widen":
+        return {"verdict": "auto-merge-eligible",
+                "reasons": ["same artifact; re-prove on the new Nu, then append verified_with "
+                            "and widen the constraint by one minor"]}
+    return {"verdict": "needs-review",
+            "reasons": ["constraint step is bigger than one minor; widen it by hand"]}
+
+
+def _plugin_reasons(kind: str, reasons: list[str]) -> list[str]:
+    if kind == "upstream":
+        reasons.append("plugins rebuild via numan-plugins before intake")
+    else:
+        reasons.append("plugins are ABI-locked; a new Nu minor needs a rebuild check")
+    return reasons or ["plugin gate"]
+
+
 def decide(hit: dict, latest: dict) -> dict:
     """Verdict for one hit. Proof still runs in CI; eligible merges only on green."""
-    reasons: list[str] = []
     kind = hit.get("kind", "")
     ptype = hit.get("type", "")
-    provisional = (latest.get("evidence_tier") or "") == "provisional"
-
     if kind == "upstream-unparsed":
         return {"verdict": "needs-review",
                 "reasons": ["upstream tag is not plain semver; map it by hand"]}
-
-    if provisional:
+    reasons: list[str] = []
+    if (latest.get("evidence_tier") or "") == "provisional":
         reasons.append("evidence_tier is provisional; a human owns the deferral")
-
     if ptype == "plugin":
-        if kind == "upstream":
-            reasons.append("plugins rebuild via numan-plugins before intake")
-        else:
-            reasons.append("plugins are ABI-locked; a new Nu minor needs a rebuild check")
-        return {"verdict": "needs-review", "reasons": reasons or ["plugin gate"]}
-
+        return {"verdict": "needs-review", "reasons": _plugin_reasons(kind, reasons)}
     if kind == "upstream":
-        newer = is_newer(str(hit.get("upstream", "")), str(hit.get("indexed", "")))
-        if newer is None:
-            reasons.append("version is not plain semver; map it by hand")
-        elif newer and parse_version_tuple(str(hit["upstream"]))[0] > (
-                parse_version_tuple(str(hit["indexed"])) or (0, 0, 0))[0]:
-            reasons.append("major version bump; review behavior changes")
-        elif ptype in ("module", "script", "completion") and newer:
-            if not reasons:
-                return {"verdict": "auto-merge-eligible",
-                        "reasons": ["minor/patch bump; lifecycle proof required before merge"]}
-        elif not newer:
-            return {"verdict": "up-to-date", "reasons": ["indexed version already covers upstream"]}
-        return {"verdict": "needs-review", "reasons": reasons or ["manual mapping needed"]}
-
+        return _decide_upstream(hit, ptype, reasons)
     if kind == "nu-gap":
-        if ptype in ("module", "script", "completion") and not reasons:
-            if parse_version_tuple(str(hit.get("indexed", ""))) is None:
-                return {"verdict": "needs-review",
-                        "reasons": ["indexed version is not plain semver; map it by hand"]}
-            plan = nu_gap_plan(str(hit.get("constraint", "*")), str(hit.get("target_nu", "")))
-            if plan == "append":
-                return {"verdict": "auto-merge-eligible",
-                        "reasons": ["same artifact; re-prove on the new Nu then append verified_with"]}
-            if plan == "widen":
-                return {"verdict": "auto-merge-eligible",
-                        "reasons": ["same artifact; re-prove on the new Nu, then append verified_with "
-                                    "and widen the constraint by one minor"]}
-            return {"verdict": "needs-review",
-                    "reasons": ["constraint step is bigger than one minor; widen it by hand"]}
-        return {"verdict": "needs-review", "reasons": reasons or ["manual mapping needed"]}
-
+        return _decide_nu_gap(hit, ptype, reasons)
     return {"verdict": "needs-review", "reasons": ["unknown hit kind"]}
 
 
@@ -395,16 +408,21 @@ def write_outputs(gaps: dict, target_nu: str) -> None:
             f.write("\n")
 
 
+def _read_target_nu_file() -> str:
+    """Target Nu from the checked-in default file, or '' when unreadable."""
+    try:
+        state = json.loads(DEFAULT_TARGET_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return ""
+    return str(state.get("target_nu", "")).strip().lstrip("vV")
+
+
 def resolve_target_nu(explicit: str | None) -> str:
     if explicit:
         return explicit.lstrip("vV")
-    try:
-        state = json.loads(DEFAULT_TARGET_FILE.read_text(encoding="utf-8"))
-        version = str(state.get("target_nu", "")).strip().lstrip("vV")
-        if version:
-            return version
-    except Exception:
-        pass
+    version = _read_target_nu_file()
+    if version:
+        return version
     raise ValueError(f"no --target-nu and no readable {DEFAULT_TARGET_FILE}")
 
 
