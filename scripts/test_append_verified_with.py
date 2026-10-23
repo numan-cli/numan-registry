@@ -109,6 +109,16 @@ class AppendVerifiedWithTests(unittest.TestCase):
         self.assertEqual(changed, [])
         self.assertEqual(refused, ["a/mod"])
 
+    def test_apply_refuses_when_hit_lacks_artifact_id(self):
+        index = index_doc()
+        index["packages"][0]["versions"][0]["artifact"] = {
+            "kind": "archive", "url": "https://example.com/m.zip",
+            "sha256": "1" * 64,
+        }
+        changed, refused = self.mod.apply(index, hits_doc(), {"a/mod"}, "0.114.1")
+        self.assertEqual(changed, [])
+        self.assertEqual(refused, ["a/mod"])
+
     def test_apply_refuses_two_minor_jump(self):
         index = index_doc()
         changed, refused = self.mod.apply(index, hits_doc(), {"a/mod"}, "0.116.1")

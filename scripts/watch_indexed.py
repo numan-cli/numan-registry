@@ -151,11 +151,12 @@ def artifact_id(entry: dict) -> str:
 
 
 def widen_constraint(constraint: str, target_nu: str) -> str | None:
-    """Extend a single `<M.m.0`-style upper bound to cover one new minor.
+    """Extend a single clean `<M.m.0` upper bound to cover one new minor.
 
     Returns the widened constraint, or None when the step is bigger than
-    one minor or the shape is not a plain upper bound. Proof on the target
-    Nu is what backs the widened claim; anything else stays human-gated.
+    one minor, the bound is not a clean minor floor, or the shape is not
+    a plain upper bound. Proof on the target Nu is what backs the widened
+    claim; anything else stays human-gated.
     """
     target = parse_version_tuple(target_nu)
     if target is None:
@@ -165,7 +166,9 @@ def widen_constraint(constraint: str, target_nu: str) -> str | None:
     if len(upper) != 1:
         return None
     bound = parse_version_tuple(upper[0][1:])
-    if bound is None or (bound[0], bound[1]) != (target[0], target[1]):
+    if bound is None or bound[2] != 0:
+        return None
+    if (bound[0], bound[1]) != (target[0], target[1]):
         return None
     widened = [t for t in tokens if t != upper[0]]
     widened.append(f"<{target[0]}.{target[1] + 1}.0")

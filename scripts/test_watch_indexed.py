@@ -236,6 +236,21 @@ class WatchIndexedTests(unittest.TestCase):
         self.assertIsNone(
             self.mod.widen_constraint(">=0.113.0 <=0.114.1", "0.114.1"))
 
+    def test_widen_rejects_ragged_upper_bound(self):
+        self.assertIsNone(
+            self.mod.widen_constraint(">=0.113.0 <0.114.5", "0.114.6"))
+        self.assertIsNone(
+            self.mod.widen_constraint(">=0.113.0", "0.114.1"))
+        self.assertIsNone(
+            self.mod.widen_constraint(">=0.113.0 <0.114.0 <0.115.0", "0.114.1"))
+
+    def test_dirty_bound_nu_gap_needs_review(self):
+        hit = {"kind": "nu-gap", "package": "a/mod", "type": "module",
+               "indexed": "1.0.0", "constraint": ">=1.0.0 <1.1.5",
+               "target_nu": "1.1.6", "artifact_id": ""}
+        d = self.mod.decide(hit, ver("1.0.0", ">=1.0.0 <1.1.5", []))
+        self.assertEqual(d["verdict"], "needs-review")
+
     def test_nu_gap_plan(self):
         self.assertEqual(
             self.mod.nu_gap_plan(">=0.113.0", "0.114.1"), "append")

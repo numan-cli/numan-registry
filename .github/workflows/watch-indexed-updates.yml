@@ -102,7 +102,7 @@ jobs:
         with:
           repository: numan-cli/numan
           path: _numan
-          ref: dd902d31c10171bb0339721916aed7f4497e5c3 # numan master (2026-10-22); bump deliberately
+          ref: dd902d31c10171bb033a9721916aed7f4497e5c3 # numan master (2026-10-22); bump deliberately
           persist-credentials: false
 
       - name: Install Rust toolchain
@@ -170,7 +170,7 @@ jobs:
         with:
           repository: numan-cli/numan
           path: _numan
-          ref: dd902d31c10171bb0339721916aed7f4497e5c3 # numan master (2026-10-22); bump deliberately
+          ref: dd902d31c10171bb033a9721916aed7f4497e5c3 # numan master (2026-10-22); bump deliberately
           persist-credentials: false
 
       - name: Install Rust toolchain
@@ -264,14 +264,22 @@ jobs:
       - name: Apply verified_with and validate
         if: steps.pick.outputs.proven != ''
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # WATCH_PAT (repo-scoped PAT) lets the opened PR trigger checks so
+          # auto-merge can complete; GITHUB_TOKEN cannot trigger new runs.
+          GH_TOKEN: ${{ secrets.WATCH_PAT || secrets.GITHUB_TOKEN }}
           TARGET_NU: ${{ needs.detect.outputs.target_nu }}
           PROVEN: ${{ steps.pick.outputs.proven }}
         run: |
-          BRANCH="watch/verified-with-${TARGET_NU}-$(date -u +%Y%m%d)"
-          if [ "$(gh pr list --head "$BRANCH" --state open --json number --jq 'length')" != "0" ]; then
-            echo "Open PR already exists for $BRANCH; skipping."
+          PREFIX="watch/verified-with-${TARGET_NU}-"
+          if [ "$(gh pr list --state open --limit 100 --json headRefName \
+              --jq "[.[].headRefName | select(startswith(\"${PREFIX}\"))] | length")" != "0" ]; then
+            echo "An open watch PR already exists for ${TARGET_NU}; skipping."
             exit 0
+          fi
+          BRANCH="${PREFIX}$(date -u +%Y%m%d)"
+          if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
+            echo "Deleting stale branch $BRANCH left by a closed run."
+            git push origin --delete "$BRANCH"
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -312,7 +320,7 @@ jobs:
 
       - name: Open or update one issue per package
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WATCH_PAT || secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
         run: |
           python - <<'EOF' > "${RUNNER_TEMP}/issues.json"
@@ -346,7 +354,8 @@ jobs:
           import json, os, subprocess
           issues = json.load(open(os.environ["RUNNER_TEMP"] + "/issues.json"))
           known = subprocess.run(
-              ["gh", "issue", "list", "--state", "open", "--json", "number,title,body"],
+              ["gh", "issue", "list", "--state", "open", "--limit", "100",
+               "--json", "number,title,body"],
               capture_output=True, text=True, check=True)
           by_title = {item["title"]: item
                       for item in json.loads(known.stdout or "[]")}

@@ -54,7 +54,7 @@ def apply(index: dict, hits: dict, proven: set[str], target_nu: str
         if latest is None or str(latest.get("version", "")) != str(hit.get("indexed", "")):
             refused.append(scoped)  # artifact moved under us; refuse
             continue
-        if hit.get("artifact_id") and artifact_id(latest) != hit["artifact_id"]:
+        if artifact_id(latest) != (hit.get("artifact_id") or ""):
             refused.append(scoped)  # same version string, different bytes; refuse
             continue
         plan = nu_gap_plan(str(latest.get("nu_version", "*")), target_nu)
