@@ -1,0 +1,339 @@
+name: Watch indexed packages
+
+# Nightly rails for already-indexed packages. Type A finds newer upstream
+# releases; Type B finds indexed versions that exclude the target Nu.
+# The nu-gap lane is zero-touch: prove on both OSes, append verified_with,
+# open one PR, auto-merge when every package was eligible and green.
+# Upstream-tag hits open per-package tracking issues with the exact spec
+# inputs (plugins always need review: rebuild via numan-plugins first).
+# Nothing here signs or publishes; production stays human-gated.
+
+on:
+  schedule:
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+    inputs:
+      target_nu:
+        description: 'Target Nu version (blank = docs/watch-target-nu.json)'
+        required: false
+        type: string
+      packages:
+        description: 'Comma-separated owner/name filter (blank = all)'
+        required: false
+        type: string
+
+concurrency:
+  group: registry-indexed-watch
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  detect:
+    name: Detect upstream releases and Nu gaps
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      has_updates: ${{ steps.watcher.outputs.has_updates }}
+      nu_gap_count: ${{ steps.watcher.outputs.nu_gap_count }}
+      upstream_count: ${{ steps.watcher.outputs.upstream_count }}
+      target_nu: ${{ steps.watcher.outputs.target_nu }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Run indexed watcher (detection plus verdicts)
+        id: watcher
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ARGS="--write --report-json ${RUNNER_TEMP}/hits.json --report-md ${RUNNER_TEMP}/update-watch.md"
+          if [ -n "${{ inputs.target_nu }}" ]; then ARGS="${ARGS} --target-nu ${{ inputs.target_nu }}"; fi
+          if [ -n "${{ inputs.packages }}" ]; then ARGS="${ARGS} --packages ${{ inputs.packages }}"; fi
+          python scripts/watch_indexed.py ${ARGS}
+
+      - name: Upload watch reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: indexed-watch-reports
+          path: |
+            ${{ runner.temp }}/hits.json
+            ${{ runner.temp }}/update-watch.md
+          if-no-files-found: warn
+          retention-days: 30
+
+  prove-linux:
+    name: Prove nu-gap hits on Linux
+    needs: detect
+    if: needs.detect.outputs.nu_gap_count != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      proven: ${{ steps.prove.outputs.proven }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Nushell
+        uses: hustcer/setup-nu@v3
+        with:
+          version: ${{ needs.detect.outputs.target_nu }}
+
+      - name: Check out numan (client CLI)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: numan-cli/numan
+          path: _numan
+          persist-credentials: false
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable
+        with:
+          toolchain: stable
+
+      - name: Restore Rust cache
+        uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          workspaces: _numan
+
+      - name: Build numan (release)
+        working-directory: _numan
+        run: |
+          cargo build --locked --release
+          mkdir -p "$HOME/tools/numan-bin"
+          cp target/release/numan "$HOME/tools/numan-bin/numan"
+          echo "$HOME/tools/numan-bin" >> "$GITHUB_PATH"
+
+      - name: Download hits
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: indexed-watch-reports
+          path: ${{ runner.temp }}/watch
+
+      - name: Run lifecycle-prove for each nu-gap package
+        id: prove
+        run: |
+          set -euo pipefail
+          mapfile -t PKGS < <(python -c "import json;print('\n'.join(h['package'] for h in json.load(open('${{ runner.temp }}/watch/hits.json'))['nu_gaps']))")
+          PROVEN=""
+          for pkg in "${PKGS[@]}"; do
+            [ -n "$pkg" ] || continue
+            if python scripts/lifecycle-prove.py --package "$pkg" --numan "$(command -v numan)" --nu "$(command -v nu)"; then
+              PROVEN="${PROVEN}${PROVEN:+,}${pkg}"
+              echo "PROVED $pkg"
+            else
+              echo "PROOF FAILED $pkg (stays for human review)"
+            fi
+          done
+          echo "proven=${PROVEN}" >> "$GITHUB_OUTPUT"
+
+  prove-windows:
+    name: Prove nu-gap hits on Windows
+    needs: detect
+    if: needs.detect.outputs.nu_gap_count != '0'
+    runs-on: windows-latest
+    timeout-minutes: 60
+    outputs:
+      proven: ${{ steps.prove.outputs.proven }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Nushell
+        uses: hustcer/setup-nu@v3
+        with:
+          version: ${{ needs.detect.outputs.target_nu }}
+
+      - name: Check out numan (client CLI)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: numan-cli/numan
+          path: _numan
+          persist-credentials: false
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable
+        with:
+          toolchain: stable
+
+      - name: Restore Rust cache
+        uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          workspaces: _numan
+
+      - name: Build numan (release)
+        shell: pwsh
+        working-directory: _numan
+        run: |
+          cargo build --locked --release
+          $bindir = Join-Path $env:USERPROFILE "tools\numan-bin"
+          New-Item -ItemType Directory -Force -Path $bindir | Out-Null
+          Copy-Item "target\release\numan.exe" (Join-Path $bindir "numan.exe") -Force
+          Add-Content -Path $env:GITHUB_PATH -Value $bindir
+
+      - name: Download hits
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: indexed-watch-reports
+          path: ${{ runner.temp }}\watch
+
+      - name: Run lifecycle-prove for each nu-gap package
+        id: prove
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Continue"
+          $hits = Get-Content "${{ runner.temp }}\watch\hits.json" -Raw | ConvertFrom-Json
+          $proven = @()
+          foreach ($hit in $hits.nu_gaps) {
+            $pkg = $hit.package
+            if ([string]::IsNullOrWhiteSpace($pkg)) { continue }
+            & python scripts/lifecycle-prove.py --package $pkg --numan (Get-Command numan).Source --nu (Get-Command nu).Source
+            if ($LASTEXITCODE -eq 0) { $proven += $pkg; Write-Host "PROVED $pkg" }
+            else { Write-Host "PROOF FAILED $pkg (stays for human review)" }
+          }
+          Add-Content -Path $env:GITHUB_OUTPUT -Value ("proven=" + ($proven -join ","))
+
+  open-pr:
+    name: Open verified_with PR and auto-merge when eligible
+    needs: [detect, prove-linux, prove-windows]
+    if: needs.detect.outputs.nu_gap_count != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Download hits
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: indexed-watch-reports
+          path: ${{ runner.temp }}/watch
+
+      - name: Intersect eligible with both-OS proof
+        id: pick
+        env:
+          LINUX: ${{ needs.prove-linux.outputs.proven }}
+          WINDOWS: ${{ needs.prove-windows.outputs.proven }}
+        run: |
+          python - <<'EOF' >> "$GITHUB_OUTPUT"
+          import json, os
+          hits = json.load(open(os.environ["RUNNER_TEMP"] + "/watch/hits.json"))
+          linux = set(filter(None, os.environ.get("LINUX", "").split(",")))
+          windows = set(filter(None, os.environ.get("WINDOWS", "").split(",")))
+          both = sorted(linux & windows)
+          eligible = {h["package"] for h in hits.get("nu_gaps", [])
+                      if h.get("verdict") == "auto-merge-eligible"}
+          picked = sorted(set(both) & eligible)
+          print(f"proven={','.join(picked)}")
+          EOF
+
+      - name: Apply verified_with and validate
+        if: steps.pick.outputs.proven != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="watch/verified-with-${{ needs.detect.outputs.target_nu }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          python scripts/append-verified-with.py \
+            --hits "${RUNNER_TEMP}/watch/hits.json" \
+            --proven "${{ steps.pick.outputs.proven }}" \
+            --target-nu "${{ needs.detect.outputs.target_nu }}" --write
+          python scripts/scan_for_secrets.py
+          python scripts/preflight.py
+          python scripts/validate.py --index registry/index.json
+          git add registry/index.json
+          git commit -m "chore(watch): append verified_with ${{ needs.detect.outputs.target_nu }} for ${{ steps.pick.outputs.proven }}"
+          git push origin "$BRANCH"
+          PR_URL=$(gh pr create --title "chore(watch): verified_with ${{ needs.detect.outputs.target_nu }}" \
+            --body "Lifecycle-prove passed on Linux and Windows for: ${{ steps.pick.outputs.proven }}. Auto-merge is enabled; production signing stays human-gated." \
+            --head "$BRANCH" --base main)
+          echo "Created $PR_URL"
+          gh pr merge "$PR_URL" --auto --squash || echo "Auto-merge could not be enabled; manual merge required."
+
+  upstream-issues:
+    name: File tracking issues for upstream releases
+    needs: detect
+    if: needs.detect.outputs.upstream_count != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Download hits
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: indexed-watch-reports
+          path: ${{ runner.temp }}/watch
+
+      - name: Open or update one issue per package
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python - <<'EOF' > "${RUNNER_TEMP}/issues.json"
+          import json, os
+          hits = json.load(open(os.environ["RUNNER_TEMP"] + "/watch/hits.json"))
+          out = []
+          for h in hits.get("upstream_updates", []):
+              assets = "\n".join(f"- {a['name']}: {a['url']}" for a in h.get("assets", [])) or "(no assets listed)"
+              out.append({
+                  "title": f"[watch] {h['package']} has upstream {h.get('upstream', '?')} (indexed {h['indexed']})",
+                  "package": h["package"],
+                  "body": (
+                      f"Upstream release: {h.get('url', '')}\n"
+                      f"Indexed: {h['indexed']} -> upstream {h.get('upstream', '?')}\n"
+                      f"Verdict: **{h.get('verdict', 'needs-review')}** ({'; '.join(h.get('reasons', []))})\n\n"
+                      f"Release assets:\n{assets}\n\n"
+                      "One command away:\n"
+                      "1. Draft a spec from the assets above (no hand-typed hashes).\n"
+                      "2. `python scripts/add-package.py --spec spec.json --write`\n"
+                      "3. `python scripts/validate.py --index registry/index.json`\n"
+                      "4. `python scripts/lifecycle-prove.py --package "
+                      f"{h['package']} --numan <numan> --nu <nu>`\n"
+                      f"5. `python scripts/open_intake_pr.py --spec spec.json --evidence evidence.json --push`\n\n"
+                      "Plugins: rebuild via numan-plugins before intake. "
+                      "Production signing stays human-gated."
+                  ),
+              })
+          print(json.dumps(out))
+          EOF
+          python - <<'EOF'
+          import json, os, subprocess
+          issues = json.load(open(os.environ["RUNNER_TEMP"] + "/issues.json"))
+          for issue in issues:
+              title = issue["title"]
+              existing = subprocess.run(
+                  ["gh", "issue", "list", "--state", "open", "--search", title,
+                   "--json", "number", "--jq", ".[0].number // empty"],
+                  capture_output=True, text=True).stdout.strip()
+              if existing:
+                  subprocess.run(["gh", "issue", "comment", existing, "--body", issue["body"]], check=True)
+                  print(f"Updated issue #{existing}")
+              else:
+                  subprocess.run(["gh", "issue", "create", "--title", title, "--body", issue["body"]], check=True)
+                  print(f"Created issue for {issue['package']}")
+          EOF
