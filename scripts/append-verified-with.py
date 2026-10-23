@@ -18,6 +18,8 @@ import json
 import sys
 from pathlib import Path
 
+from watch_indexed import artifact_id, latest_entry, nu_gap_plan, widen_constraint
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_INDEX = REPO_ROOT / "registry" / "index.json"
 
@@ -27,28 +29,51 @@ def split_scoped(package: dict) -> str:
     return f"{pid.get('owner', '?')}/{pid.get('name', '?')}"
 
 
-def apply(index: dict, hits: dict, proven: set[str], target_nu: str) -> list[str]:
-    """Append target_nu to verified_with for proven nu-gap hits. Returns changed ids."""
+def apply(index: dict, hits: dict, proven: set[str], target_nu: str
+          ) -> tuple[list[str], list[str]]:
+    """Close proven nu-gap hits. Returns (changed ids, refused ids).
+
+    Appends target_nu to verified_with, widening a single-minor upper
+    bound first when the plan calls for it. Refuses anything else: the
+    artifact must be byte-identical to detection time, the indexed
+    version must still match, and the constraint step must be closable
+    by append or one-minor widen.
+    """
     wanted = {h["package"] for h in hits.get("nu_gaps", [])
               if h.get("verdict") == "auto-merge-eligible" and h["package"] in proven}
+    by_package = {split_scoped(p): p for p in index.get("packages", [])
+                  if isinstance(p, dict)}
     changed: list[str] = []
-    for package in index.get("packages", []):
-        if not isinstance(package, dict) or split_scoped(package) not in wanted:
+    refused: list[str] = []
+    for hit in hits.get("nu_gaps", []):
+        scoped = hit.get("package", "")
+        if scoped not in wanted:
             continue
-        versions = [v for v in package.get("versions", []) if isinstance(v, dict)]
-        if not versions:
+        package = by_package.get(scoped)
+        latest = latest_entry(package) if package else None
+        if latest is None or str(latest.get("version", "")) != str(hit.get("indexed", "")):
+            refused.append(scoped)  # artifact moved under us; refuse
             continue
-        latest = max(versions, key=lambda v: str(v.get("version", "")))
-        if latest.get("version") != next(
-                h["indexed"] for h in hits["nu_gaps"]
-                if h["package"] == split_scoped(package)):
-            continue  # artifact moved under us; refuse
+        if hit.get("artifact_id") and artifact_id(latest) != hit["artifact_id"]:
+            refused.append(scoped)  # same version string, different bytes; refuse
+            continue
+        plan = nu_gap_plan(str(latest.get("nu_version", "*")), target_nu)
+        if plan == "widen":
+            widened = widen_constraint(str(latest.get("nu_version", "*")), target_nu)
+            if widened is None:
+                refused.append(scoped)
+                continue
+            latest["nu_version"] = widened
+        elif plan != "append":
+            refused.append(scoped)
+            continue
         verified = latest.setdefault("verified_with", [])
         if target_nu not in verified:
             verified.append(target_nu)
             verified.sort()
-            changed.append(split_scoped(package))
-    return changed
+        if scoped not in changed:
+            changed.append(scoped)
+    return changed, refused
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -73,8 +98,12 @@ def main(argv: list[str] | None = None) -> int:
         if not target_nu:
             print("no target Nu: pass --target-nu or include nu-gap hits", file=sys.stderr)
             return 1
-        changed = apply(index, hits, proven, target_nu)
+        changed, refused = apply(index, hits, proven, target_nu)
         print(f"would update: {', '.join(changed) or 'none'}")
+        if refused:
+            print(f"refused (needs a human): {', '.join(refused)}", file=sys.stderr)
+            print("[refused] index not written. Resolve the refusals first.")
+            return 1
         if args.write and not args.dry_run:
             args.index.write_text(json.dumps(index, indent=2) + "\n", encoding="utf-8")
             print(f"Updated {args.index}")

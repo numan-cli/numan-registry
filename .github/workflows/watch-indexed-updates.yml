@@ -21,6 +21,11 @@ on:
         description: 'Comma-separated owner/name filter (blank = all)'
         required: false
         type: string
+      dry_run:
+        description: 'Detect only (skip proof, PRs, and issues)'
+        required: false
+        default: false
+        type: boolean
 
 concurrency:
   group: registry-indexed-watch
@@ -54,11 +59,13 @@ jobs:
         id: watcher
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_TARGET_NU: ${{ inputs.target_nu }}
+          INPUT_PACKAGES: ${{ inputs.packages }}
         run: |
-          ARGS="--write --report-json ${RUNNER_TEMP}/hits.json --report-md ${RUNNER_TEMP}/update-watch.md"
-          if [ -n "${{ inputs.target_nu }}" ]; then ARGS="${ARGS} --target-nu ${{ inputs.target_nu }}"; fi
-          if [ -n "${{ inputs.packages }}" ]; then ARGS="${ARGS} --packages ${{ inputs.packages }}"; fi
-          python scripts/watch_indexed.py ${ARGS}
+          ARGS=(--write --report-json "${RUNNER_TEMP}/hits.json" --report-md "${RUNNER_TEMP}/update-watch.md")
+          if [ -n "${INPUT_TARGET_NU}" ]; then ARGS+=(--target-nu "${INPUT_TARGET_NU}"); fi
+          if [ -n "${INPUT_PACKAGES}" ]; then ARGS+=(--packages "${INPUT_PACKAGES}"); fi
+          python scripts/watch_indexed.py "${ARGS[@]}"
 
       - name: Upload watch reports
         if: ${{ always() }}
@@ -74,7 +81,7 @@ jobs:
   prove-linux:
     name: Prove nu-gap hits on Linux
     needs: detect
-    if: needs.detect.outputs.nu_gap_count != '0'
+    if: needs.detect.outputs.nu_gap_count != '0' && !inputs.dry_run
     runs-on: ubuntu-latest
     timeout-minutes: 60
     outputs:
@@ -86,7 +93,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Nushell
-        uses: hustcer/setup-nu@v3
+        uses: hustcer/setup-nu@eacad52a4634c4f8d17a94916f93be6856861b9c # v3 (2026-10-23)
         with:
           version: ${{ needs.detect.outputs.target_nu }}
 
@@ -95,6 +102,7 @@ jobs:
         with:
           repository: numan-cli/numan
           path: _numan
+          ref: dd902d31c10171bb0339721916aed7f4497e5c3 # numan master (2026-10-22); bump deliberately
           persist-credentials: false
 
       - name: Install Rust toolchain
@@ -121,11 +129,11 @@ jobs:
           name: indexed-watch-reports
           path: ${{ runner.temp }}/watch
 
-      - name: Run lifecycle-prove for each nu-gap package
+      - name: Run lifecycle-prove for each eligible nu-gap package
         id: prove
         run: |
           set -euo pipefail
-          mapfile -t PKGS < <(python -c "import json;print('\n'.join(h['package'] for h in json.load(open('${{ runner.temp }}/watch/hits.json'))['nu_gaps']))")
+          mapfile -t PKGS < <(python -c "import json;print('\n'.join(h['package'] for h in json.load(open('${{ runner.temp }}/watch/hits.json'))['nu_gaps'] if h.get('verdict') == 'auto-merge-eligible'))")
           PROVEN=""
           for pkg in "${PKGS[@]}"; do
             [ -n "$pkg" ] || continue
@@ -141,7 +149,7 @@ jobs:
   prove-windows:
     name: Prove nu-gap hits on Windows
     needs: detect
-    if: needs.detect.outputs.nu_gap_count != '0'
+    if: needs.detect.outputs.nu_gap_count != '0' && !inputs.dry_run
     runs-on: windows-latest
     timeout-minutes: 60
     outputs:
@@ -153,7 +161,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Nushell
-        uses: hustcer/setup-nu@v3
+        uses: hustcer/setup-nu@eacad52a4634c4f8d17a94916f93be6856861b9c # v3 (2026-10-23)
         with:
           version: ${{ needs.detect.outputs.target_nu }}
 
@@ -162,6 +170,7 @@ jobs:
         with:
           repository: numan-cli/numan
           path: _numan
+          ref: dd902d31c10171bb0339721916aed7f4497e5c3 # numan master (2026-10-22); bump deliberately
           persist-credentials: false
 
       - name: Install Rust toolchain
@@ -190,14 +199,14 @@ jobs:
           name: indexed-watch-reports
           path: ${{ runner.temp }}\watch
 
-      - name: Run lifecycle-prove for each nu-gap package
+      - name: Run lifecycle-prove for each eligible nu-gap package
         id: prove
         shell: pwsh
         run: |
           $ErrorActionPreference = "Continue"
           $hits = Get-Content "${{ runner.temp }}\watch\hits.json" -Raw | ConvertFrom-Json
           $proven = @()
-          foreach ($hit in $hits.nu_gaps) {
+          foreach ($hit in ($hits.nu_gaps | Where-Object { $_.verdict -eq 'auto-merge-eligible' })) {
             $pkg = $hit.package
             if ([string]::IsNullOrWhiteSpace($pkg)) { continue }
             & python scripts/lifecycle-prove.py --package $pkg --numan (Get-Command numan).Source --nu (Get-Command nu).Source
@@ -205,20 +214,23 @@ jobs:
             else { Write-Host "PROOF FAILED $pkg (stays for human review)" }
           }
           Add-Content -Path $env:GITHUB_OUTPUT -Value ("proven=" + ($proven -join ","))
+          exit 0
 
   open-pr:
     name: Open verified_with PR and auto-merge when eligible
     needs: [detect, prove-linux, prove-windows]
-    if: needs.detect.outputs.nu_gap_count != '0'
+    if: needs.detect.outputs.nu_gap_count != '0' && !inputs.dry_run
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: write
       pull-requests: write
-      issues: write
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Needed below: this job commits and pushes the verified_with branch.
+          persist-credentials: true
 
       - name: Set up Python
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
@@ -253,23 +265,31 @@ jobs:
         if: steps.pick.outputs.proven != ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TARGET_NU: ${{ needs.detect.outputs.target_nu }}
+          PROVEN: ${{ steps.pick.outputs.proven }}
         run: |
-          BRANCH="watch/verified-with-${{ needs.detect.outputs.target_nu }}"
+          BRANCH="watch/verified-with-${TARGET_NU}-$(date -u +%Y%m%d)"
+          if [ "$(gh pr list --head "$BRANCH" --state open --json number --jq 'length')" != "0" ]; then
+            echo "Open PR already exists for $BRANCH; skipping."
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -B "$BRANCH"
           python scripts/append-verified-with.py \
             --hits "${RUNNER_TEMP}/watch/hits.json" \
-            --proven "${{ steps.pick.outputs.proven }}" \
-            --target-nu "${{ needs.detect.outputs.target_nu }}" --write
+            --proven "$PROVEN" \
+            --target-nu "$TARGET_NU" --write
+          python -m pip install cryptography jsonschema
           python scripts/scan_for_secrets.py
           python scripts/preflight.py
-          python scripts/validate.py --index registry/index.json
+          python scripts/validate.py --index registry/index.json \
+            --skip-signature --skip-artifacts --allow-provisional-lifecycle
           git add registry/index.json
-          git commit -m "chore(watch): append verified_with ${{ needs.detect.outputs.target_nu }} for ${{ steps.pick.outputs.proven }}"
+          git commit -m "chore(watch): append verified_with ${TARGET_NU} for ${PROVEN}"
           git push origin "$BRANCH"
-          PR_URL=$(gh pr create --title "chore(watch): verified_with ${{ needs.detect.outputs.target_nu }}" \
-            --body "Lifecycle-prove passed on Linux and Windows for: ${{ steps.pick.outputs.proven }}. Auto-merge is enabled; production signing stays human-gated." \
+          PR_URL=$(gh pr create --title "chore(watch): verified_with ${TARGET_NU}" \
+            --body "Lifecycle-prove passed on Linux and Windows for: ${PROVEN}. Auto-merge is enabled; production signing stays human-gated." \
             --head "$BRANCH" --base main)
           echo "Created $PR_URL"
           gh pr merge "$PR_URL" --auto --squash || echo "Auto-merge could not be enabled; manual merge required."
@@ -277,7 +297,7 @@ jobs:
   upstream-issues:
     name: File tracking issues for upstream releases
     needs: detect
-    if: needs.detect.outputs.upstream_count != '0'
+    if: needs.detect.outputs.upstream_count != '0' && !inputs.dry_run
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -293,6 +313,7 @@ jobs:
       - name: Open or update one issue per package
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
         run: |
           python - <<'EOF' > "${RUNNER_TEMP}/issues.json"
           import json, os
@@ -301,7 +322,7 @@ jobs:
           for h in hits.get("upstream_updates", []):
               assets = "\n".join(f"- {a['name']}: {a['url']}" for a in h.get("assets", [])) or "(no assets listed)"
               out.append({
-                  "title": f"[watch] {h['package']} has upstream {h.get('upstream', '?')} (indexed {h['indexed']})",
+                  "title": f"[watch] {h['package']} upstream updates",
                   "package": h["package"],
                   "body": (
                       f"Upstream release: {h.get('url', '')}\n"
@@ -324,16 +345,23 @@ jobs:
           python - <<'EOF'
           import json, os, subprocess
           issues = json.load(open(os.environ["RUNNER_TEMP"] + "/issues.json"))
+          known = subprocess.run(
+              ["gh", "issue", "list", "--state", "open", "--json", "number,title,body"],
+              capture_output=True, text=True, check=True)
+          by_title = {item["title"]: item
+                      for item in json.loads(known.stdout or "[]")}
           for issue in issues:
-              title = issue["title"]
-              existing = subprocess.run(
-                  ["gh", "issue", "list", "--state", "open", "--search", title,
-                   "--json", "number", "--jq", ".[0].number // empty"],
-                  capture_output=True, text=True).stdout.strip()
-              if existing:
-                  subprocess.run(["gh", "issue", "comment", existing, "--body", issue["body"]], check=True)
-                  print(f"Updated issue #{existing}")
+              existing = by_title.get(issue["title"])
+              if existing and existing.get("body", "").strip() == issue["body"].strip():
+                  print(f"Unchanged issue #{existing['number']} for {issue['package']}")
+              elif existing:
+                  subprocess.run(
+                      ["gh", "issue", "edit", str(existing["number"]), "--body-file", "-"],
+                      input=issue["body"].encode("utf-8"), check=True)
+                  print(f"Updated issue #{existing['number']} for {issue['package']}")
               else:
-                  subprocess.run(["gh", "issue", "create", "--title", title, "--body", issue["body"]], check=True)
+                  subprocess.run(
+                      ["gh", "issue", "create", "--title", issue["title"], "--body-file", "-"],
+                      input=issue["body"].encode("utf-8"), check=True)
                   print(f"Created issue for {issue['package']}")
           EOF

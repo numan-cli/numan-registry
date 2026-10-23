@@ -27,7 +27,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlencode
 
-from nu_version_constraint import matches_nu_constraint
+from nu_version_constraint import (
+    matches_nu_constraint,
+    parse_exact_nu_version,
+)
 from url_safety import ensure_http_url, github_repo_key
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -84,19 +87,38 @@ def http_opener() -> urllib.request.OpenerDirector:
     return urllib.request.build_opener(_HttpOnlyRedirectHandler())
 
 
+def fetch_stable_releases(owner_repo: str, pages: int = 5) -> list[dict]:
+    """Stable (non-draft, non-prerelease) releases, newest API order first."""
+    stable: list[dict] = []
+    for page in range(1, pages + 1):
+        url = (f"{GITHUB_API}/repos/{owner_repo}/releases?"
+               f"{urlencode({'per_page': RELEASES_PER_PAGE, 'page': page})}")
+        ensure_http_url(url)
+        req = urllib.request.Request(url, headers=_github_headers())
+        with http_opener().open(req, timeout=30) as resp:
+            releases = json.loads(resp.read().decode("utf-8"))
+        if not isinstance(releases, list):
+            return stable
+        stable.extend(
+            rel for rel in releases
+            if isinstance(rel, dict) and not rel.get("draft") and not rel.get("prerelease")
+        )
+        if len(releases) < RELEASES_PER_PAGE:
+            break
+    return stable
+
+
 def fetch_latest_release(owner_repo: str) -> dict | None:
-    """Newest stable (non-draft, non-prerelease) release, or None."""
-    url = f"{GITHUB_API}/repos/{owner_repo}/releases?{urlencode({'per_page': RELEASES_PER_PAGE})}"
-    ensure_http_url(url)
-    req = urllib.request.Request(url, headers=_github_headers())
-    with http_opener().open(req, timeout=30) as resp:
-        releases = json.loads(resp.read().decode("utf-8"))
-    if not isinstance(releases, list):
+    """Highest-semver stable release, or the newest stable one when none parse."""
+    stable = fetch_stable_releases(owner_repo)
+    if not stable:
         return None
-    for rel in releases:
-        if isinstance(rel, dict) and not rel.get("draft") and not rel.get("prerelease"):
-            return rel
-    return None
+    parsable = [rel for rel in stable
+                if parse_version_tuple(str(rel.get("tag_name", ""))) is not None]
+    if parsable:
+        return max(parsable,
+                   key=lambda rel: parse_version_tuple(str(rel.get("tag_name", ""))))
+    return stable[0]
 
 
 def split_scoped(package: dict) -> str:
@@ -104,11 +126,68 @@ def split_scoped(package: dict) -> str:
     return f"{pid.get('owner', '?')}/{pid.get('name', '?')}"
 
 
+def version_key(version: str) -> tuple[tuple[int, int, int], str]:
+    """Numeric semver ordering with a deterministic string tiebreak."""
+    return (parse_version_tuple(version) or (0, 0, 0), str(version))
+
+
 def latest_entry(package: dict) -> dict | None:
     versions = [v for v in package.get("versions", []) if isinstance(v, dict)]
     if not versions:
         return None
-    return max(versions, key=lambda v: parse_version_tuple(str(v.get("version", ""))) or (0, 0, 0))
+    return max(versions, key=lambda v: version_key(str(v.get("version", ""))))
+
+
+def artifact_id(entry: dict) -> str:
+    """Stable identity for a version's artifact block (empty when absent)."""
+    import hashlib
+
+    artifact = entry.get("artifact")
+    if not isinstance(artifact, dict):
+        return ""
+    return hashlib.sha256(
+        json.dumps(artifact, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+
+
+def widen_constraint(constraint: str, target_nu: str) -> str | None:
+    """Extend a single `<M.m.0`-style upper bound to cover one new minor.
+
+    Returns the widened constraint, or None when the step is bigger than
+    one minor or the shape is not a plain upper bound. Proof on the target
+    Nu is what backs the widened claim; anything else stays human-gated.
+    """
+    target = parse_version_tuple(target_nu)
+    if target is None:
+        return None
+    tokens = str(constraint).split()
+    upper = [t for t in tokens if t.startswith("<") and not t.startswith("<=")]
+    if len(upper) != 1:
+        return None
+    bound = parse_version_tuple(upper[0][1:])
+    if bound is None or (bound[0], bound[1]) != (target[0], target[1]):
+        return None
+    widened = [t for t in tokens if t != upper[0]]
+    widened.append(f"<{target[0]}.{target[1] + 1}.0")
+    candidate = " ".join(widened)
+    try:
+        if not matches_nu_constraint(target_nu, candidate):
+            return None
+    except ValueError:
+        return None
+    return candidate
+
+
+def nu_gap_plan(constraint: str, target_nu: str) -> str | None:
+    """How a Nu gap can close: 'append', 'widen', or None (human-gated)."""
+    try:
+        if matches_nu_constraint(target_nu, constraint):
+            return "append"
+    except ValueError:
+        return None
+    if widen_constraint(constraint, target_nu) is not None:
+        return "widen"
+    return None
 
 
 def should_skip(package: dict) -> bool:
@@ -153,6 +232,7 @@ def detect(packages: list[dict], releases: dict[str, dict], target_nu: str) -> d
                     "upstream": str(rel["tag_name"]),
                     "url": str(rel.get("html_url", "")),
                     "assets": _asset_briefs(rel),
+                    "artifact_id": artifact_id(latest),
                 })
             elif newer is None:
                 upstream_updates.append({
@@ -163,6 +243,7 @@ def detect(packages: list[dict], releases: dict[str, dict], target_nu: str) -> d
                     "upstream": str(rel["tag_name"]),
                     "url": str(rel.get("html_url", "")),
                     "assets": _asset_briefs(rel),
+                    "artifact_id": artifact_id(latest),
                 })
         constraint = str(latest.get("nu_version", "*"))
         verified = [str(v) for v in (latest.get("verified_with") or [])]
@@ -178,6 +259,7 @@ def detect(packages: list[dict], releases: dict[str, dict], target_nu: str) -> d
                 "indexed": indexed,
                 "constraint": constraint,
                 "target_nu": target_nu,
+                "artifact_id": artifact_id(latest),
             })
     upstream_updates.sort(key=lambda h: h["package"])
     nu_gaps.sort(key=lambda h: h["package"])
@@ -215,15 +297,26 @@ def decide(hit: dict, latest: dict) -> dict:
         elif ptype in ("module", "script", "completion") and newer:
             if not reasons:
                 return {"verdict": "auto-merge-eligible",
-                        "reasons": ["minor/patch bump with passing lifecycle proof"]}
+                        "reasons": ["minor/patch bump; lifecycle proof required before merge"]}
         elif not newer:
             return {"verdict": "up-to-date", "reasons": ["indexed version already covers upstream"]}
         return {"verdict": "needs-review", "reasons": reasons or ["manual mapping needed"]}
 
     if kind == "nu-gap":
         if ptype in ("module", "script", "completion") and not reasons:
-            return {"verdict": "auto-merge-eligible",
-                    "reasons": ["same artifact; re-prove on the new Nu then append verified_with"]}
+            if parse_version_tuple(str(hit.get("indexed", ""))) is None:
+                return {"verdict": "needs-review",
+                        "reasons": ["indexed version is not plain semver; map it by hand"]}
+            plan = nu_gap_plan(str(hit.get("constraint", "*")), str(hit.get("target_nu", "")))
+            if plan == "append":
+                return {"verdict": "auto-merge-eligible",
+                        "reasons": ["same artifact; re-prove on the new Nu then append verified_with"]}
+            if plan == "widen":
+                return {"verdict": "auto-merge-eligible",
+                        "reasons": ["same artifact; re-prove on the new Nu, then append verified_with "
+                                    "and widen the constraint by one minor"]}
+            return {"verdict": "needs-review",
+                    "reasons": ["constraint step is bigger than one minor; widen it by hand"]}
         return {"verdict": "needs-review", "reasons": reasons or ["manual mapping needed"]}
 
     return {"verdict": "needs-review", "reasons": ["unknown hit kind"]}
@@ -318,6 +411,7 @@ def resolve_target_nu(explicit: str | None) -> str:
 def process(index_path: Path, target_nu: str, write: bool,
             report_json: Path, report_md: Path,
             package_filter: list[str] | None = None) -> int:
+    parse_exact_nu_version(target_nu)
     index = json.loads(Path(index_path).read_text(encoding="utf-8"))
     packages = [p for p in index.get("packages", []) if isinstance(p, dict)]
     if package_filter:
@@ -364,7 +458,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--dry-run", action="store_true", help="Print only (default).")
     parser.add_argument("--write", action="store_true", help="Write JSON and Markdown reports.")
     parser.add_argument("--report-json", type=Path, default=REPO_ROOT / "hits.json")
-    parser.add_argument("--report-md", type=Path, default=REPO_ROOT / "docs" / "update-watch.md")
+    parser.add_argument("--report-md", type=Path, default=REPO_ROOT / "watch-indexed-report.md")
     parser.add_argument("--packages", default=None, help="Comma-separated owner/name filter.")
     return parser.parse_args(argv)
 

@@ -221,6 +221,110 @@ class WatchIndexedTests(unittest.TestCase):
             self.assertIn("eligible_count=1\n", text)
             self.assertIn("target_nu=0.114.1\n", text)
 
+    def test_version_key_orders_numerically(self):
+        versions = ["0.9.0", "0.10.0", "0.2.10", "0.2.8", "main"]
+        self.assertEqual(sorted(versions, key=self.mod.version_key),
+                         ["main", "0.2.8", "0.2.10", "0.9.0", "0.10.0"])
+
+    def test_widen_constraint_single_minor(self):
+        self.assertEqual(
+            self.mod.widen_constraint(">=0.113.0 <0.114.0", "0.114.1"),
+            ">=0.113.0 <0.115.0")
+        self.assertIsNone(
+            self.mod.widen_constraint(">=0.113.0 <0.114.0", "0.116.1"))
+        self.assertIsNone(self.mod.widen_constraint("*", "0.114.1"))
+        self.assertIsNone(
+            self.mod.widen_constraint(">=0.113.0 <=0.114.1", "0.114.1"))
+
+    def test_nu_gap_plan(self):
+        self.assertEqual(
+            self.mod.nu_gap_plan(">=0.113.0", "0.114.1"), "append")
+        self.assertEqual(
+            self.mod.nu_gap_plan(">=0.113.0 <0.114.0", "0.114.1"), "widen")
+        self.assertIsNone(
+            self.mod.nu_gap_plan(">=0.113.0 <0.114.0", "0.116.1"))
+        self.assertIsNone(self.mod.nu_gap_plan("bogus", "0.114.1"))
+
+    def test_unparsed_indexed_nu_gap_needs_review(self):
+        hit = {"kind": "nu-gap", "package": "s/wttr", "type": "script",
+               "indexed": "0.1.0-main", "constraint": "*",
+               "target_nu": "0.114.1", "artifact_id": ""}
+        d = self.mod.decide(hit, ver("0.1.0-main", "*"))
+        self.assertEqual(d["verdict"], "needs-review")
+
+    def test_detect_carries_artifact_id(self):
+        entry = ver("1.0.0")
+        entry["artifact"] = {"kind": "archive", "url": "https://example.com/m.zip"}
+        packages = [pkg("a", "mod", "module", "https://github.com/a/mod", [entry])]
+        releases = {"a/mod": {"tag_name": "v1.1.0", "html_url": "https://example.com/r"}}
+        gaps = self.mod.detect(packages, releases, "0.114.1")
+        expected = self.mod.artifact_id(entry)
+        self.assertTrue(expected)
+        self.assertEqual(gaps["upstream_updates"][0]["artifact_id"], expected)
+
+    def test_process_rejects_invalid_target_nu(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            index = Path(tmp) / "index.json"
+            index.write_text(json.dumps({"schema_version": 1, "packages": []}),
+                             encoding="utf-8")
+            with self.assertRaises(ValueError):
+                self.mod.process(
+                    index_path=index, target_nu="not-a-version", write=False,
+                    report_json=Path(tmp) / "h.json", report_md=Path(tmp) / "r.md")
+
+    def test_fetch_latest_release_prefers_highest_semver(self):
+        payload = json.dumps([
+            {"tag_name": "v1.9.1", "draft": False, "prerelease": False,
+             "html_url": "https://example.com/1"},
+            {"tag_name": "v2.0.0", "draft": False, "prerelease": False,
+             "html_url": "https://example.com/2"},
+        ]).encode("utf-8")
+
+        class FakeResp:
+            def read(self):
+                return payload
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+        with mock.patch.object(self.mod, "http_opener") as opener_fn:
+            opener = mock.MagicMock()
+            opener.open.return_value = FakeResp()
+            opener_fn.return_value = opener
+            rel = self.mod.fetch_latest_release("a/mod")
+            self.assertEqual(rel["tag_name"], "v2.0.0")
+
+    def test_fetch_stable_releases_paginates(self):
+        full = [{"tag_name": f"v1.0.{i}", "draft": False, "prerelease": False}
+                for i in range(35)]
+
+        class FakeResp:
+            def __init__(self, data):
+                self._data = data
+
+            def read(self):
+                return self._data
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+        with mock.patch.object(self.mod, "http_opener") as opener_fn:
+            opener = mock.MagicMock()
+            opener.open.side_effect = [
+                FakeResp(json.dumps(full[:30]).encode("utf-8")),
+                FakeResp(json.dumps(full[30:]).encode("utf-8")),
+            ]
+            opener_fn.return_value = opener
+            stable = self.mod.fetch_stable_releases("a/mod", pages=5)
+            self.assertEqual(len(stable), 35)
+            self.assertEqual(opener.open.call_count, 2)
+
     def test_fetch_latest_release_skips_unstable(self):
         payload = json.dumps([
             {"tag_name": "v2.0.0-rc.1", "draft": False, "prerelease": True},

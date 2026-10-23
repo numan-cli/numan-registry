@@ -26,7 +26,8 @@ new Nushell minor leave an indexed entry behind?
   bumps, unparsable versions, and anything provisional.
 
 Eligible merges only when lifecycle proof passed on **both** Linux and
-Windows. Everything else stays a draft PR or a tracking issue.
+Windows. Everything else stays human-gated: upstream hits get a tracking
+issue, and anything unproven lives only in the uploaded report.
 
 ## What runs automatically
 
@@ -40,9 +41,19 @@ Windows. Everything else stays a draft PR or a tracking issue.
 3. Production signing is untouched. It stays human-gated in
    `production.yml` as before.
 
+## Nu-gap reconciliation
+
+Appending `verified_with` alone fails validation when the new Nu sits
+outside the indexed `nu_version` constraint, so the lane reconciles the
+two: when the constraint is a single `<M.m.0`-style upper bound exactly
+one minor behind the target, the PR widens it by that minor (backed by
+the passing proof) and appends the evidence. Anything bigger, any other
+shape, or any changed artifact bytes refuses and stays human-gated.
+
 ## Maintainer overrides
 
 - Tag a package `watch-off` to silence it (archived/abandoned upstream).
 - Bump `docs/watch-target-nu.json` when a new Nushell minor lands; the
   next run queues every entry that excludes it.
-- `workflow_dispatch` accepts `target_nu` and `packages` for dry runs.
+- `workflow_dispatch` accepts `target_nu` and `packages` to scope a live
+  run, plus `dry_run: true` for detect-only (skips proof, PRs, issues).
