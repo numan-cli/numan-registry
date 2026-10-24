@@ -121,6 +121,48 @@ def fetch_latest_release(owner_repo: str) -> dict | None:
     return stable[0]
 
 
+# Nushell minor versions are >= 100 (0.113, 0.114, ...), so an indexed
+# version like 0.116.0 (or 26.1160.0) is a Nu-band label from the
+# numan-plugins republish lane, not the upstream product version. Repos
+# that dual-tag (band releases v0.116.0 plus product releases v1.2.12)
+# must only be compared inside the band scheme, or the watcher reports
+# the package as perpetually outdated.
+BAND_MINOR_FLOOR = 100
+
+
+def select_latest_release(stable: list[dict], indexed_version: str) -> dict | None:
+    """Newest stable release comparable to the indexed version's scheme.
+
+    Band-versioned entries only compare within their own major (no
+    comparable band release means no hit, never a product tag);
+    plain-semver entries see their own and the next major, so a genuine
+    major bump still surfaces for review. Unparsable indexed versions
+    keep the historical global-semver-max behavior.
+    """
+    if not stable:
+        return None
+    parsable = [rel for rel in stable
+                if parse_version_tuple(str(rel.get("tag_name", ""))) is not None]
+    if not parsable:
+        return stable[0]
+
+    def tag_tuple(rel: dict) -> tuple[int, int, int]:
+        return parse_version_tuple(str(rel.get("tag_name", ""))) or (0, 0, 0)
+
+    cur = parse_version_tuple(indexed_version)
+    if cur is None:
+        return max(parsable, key=tag_tuple)
+    if cur[1] >= BAND_MINOR_FLOOR:
+        # Band scheme: a product-scheme tag is never comparable, so "no
+        # band release in the window" means no comparable release at all.
+        candidates = [rel for rel in parsable if tag_tuple(rel)[0] == cur[0]]
+        return max(candidates, key=tag_tuple) if candidates else None
+    candidates = [rel for rel in parsable if tag_tuple(rel)[0] in (cur[0], cur[0] + 1)]
+    if not candidates:
+        candidates = parsable
+    return max(candidates, key=tag_tuple)
+
+
 def split_scoped(package: dict) -> str:
     pid = package.get("id") or {}
     return f"{pid.get('owner', '?')}/{pid.get('name', '?')}"
@@ -293,10 +335,14 @@ def _decide_upstream(hit: dict, ptype: str, reasons: list[str]) -> dict:
     return {"verdict": "needs-review", "reasons": reasons or ["manual mapping needed"]}
 
 
-def _decide_nu_gap(hit: dict, ptype: str, reasons: list[str]) -> dict:
+def _decide_nu_gap(hit: dict, ptype: str, reasons: list[str],
+                   version_count: int = 0) -> dict:
     if ptype not in ("module", "script", "completion") or reasons:
         return {"verdict": "needs-review", "reasons": reasons or ["manual mapping needed"]}
-    if parse_version_tuple(str(hit.get("indexed", ""))) is None:
+    # Snapshot-style versions cannot be ordered against each other, but a
+    # single-version package has no "latest" ambiguity and the artifact is
+    # pinned by artifact_id before anything merges, so proof can proceed.
+    if parse_version_tuple(str(hit.get("indexed", ""))) is None and version_count != 1:
         return {"verdict": "needs-review",
                 "reasons": ["indexed version is not plain semver; map it by hand"]}
     plan = nu_gap_plan(str(hit.get("constraint", "*")), str(hit.get("target_nu", "")))
@@ -319,7 +365,7 @@ def _plugin_reasons(kind: str, reasons: list[str]) -> list[str]:
     return reasons or ["plugin gate"]
 
 
-def decide(hit: dict, latest: dict) -> dict:
+def decide(hit: dict, latest: dict, version_count: int = 0) -> dict:
     """Verdict for one hit. Proof still runs in CI; eligible merges only on green."""
     kind = hit.get("kind", "")
     ptype = hit.get("type", "")
@@ -334,7 +380,7 @@ def decide(hit: dict, latest: dict) -> dict:
     if kind == "upstream":
         return _decide_upstream(hit, ptype, reasons)
     if kind == "nu-gap":
-        return _decide_nu_gap(hit, ptype, reasons)
+        return _decide_nu_gap(hit, ptype, reasons, version_count)
     return {"verdict": "needs-review", "reasons": ["unknown hit kind"]}
 
 
@@ -342,8 +388,11 @@ def attach_verdicts(gaps: dict, by_package: dict[str, dict]) -> dict:
     """Add a decide() verdict to every hit. Returns the same gaps dict."""
     for section in ("upstream_updates", "nu_gaps"):
         for hit in gaps.get(section, []):
-            latest = latest_entry(by_package.get(hit["package"], {})) or {}
-            outcome = decide(hit, latest)
+            package = by_package.get(hit["package"], {})
+            latest = latest_entry(package) or {}
+            version_count = len(
+                [v for v in package.get("versions", []) if isinstance(v, dict)])
+            outcome = decide(hit, latest, version_count)
             hit["verdict"] = outcome["verdict"]
             hit["reasons"] = outcome["reasons"]
     return gaps
@@ -441,6 +490,7 @@ def process(index_path: Path, target_nu: str, write: bool,
         wanted = set(package_filter)
         packages = [p for p in packages if split_scoped(p) in wanted]
     releases: dict[str, dict] = {}
+    stable_by_repo: dict[str, list[dict]] = {}
     for package in packages:
         if should_skip(package):
             continue
@@ -449,7 +499,11 @@ def process(index_path: Path, target_nu: str, write: bool,
             continue
         scoped = split_scoped(package)
         try:
-            rel = fetch_latest_release(key)
+            if key not in stable_by_repo:
+                stable_by_repo[key] = fetch_stable_releases(key)
+            latest = latest_entry(package) or {}
+            rel = select_latest_release(
+                stable_by_repo[key], str(latest.get("version", "0.0.0")))
         except Exception as exc:  # one bad repo must not sink the whole run
             print(f"warning: {scoped}: release lookup failed: {exc}", file=sys.stderr)
             continue
