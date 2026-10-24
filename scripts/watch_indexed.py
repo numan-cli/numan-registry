@@ -121,6 +121,48 @@ def fetch_latest_release(owner_repo: str) -> dict | None:
     return stable[0]
 
 
+# Nushell minor versions are >= 100 (0.113, 0.114, ...), so an indexed
+# version like 0.116.0 (or 26.1160.0) is a Nu-band label from the
+# numan-plugins republish lane, not the upstream product version. Repos
+# that dual-tag (band releases v0.116.0 plus product releases v1.2.12)
+# must only be compared inside the band scheme, or the watcher reports
+# the package as perpetually outdated.
+BAND_MINOR_FLOOR = 100
+
+
+def select_latest_release(stable: list[dict], indexed_version: str) -> dict | None:
+    """Newest stable release comparable to the indexed version's scheme.
+
+    Band-versioned entries only compare within their own major; anchored
+    plain-semver entries also see the next major (a genuine major bump
+    still surfaces for review). Anything unanchored or unparsable keeps
+    the historical global-semver-max behavior.
+    """
+    if not stable:
+        return None
+    parsable = [rel for rel in stable
+                if parse_version_tuple(str(rel.get("tag_name", ""))) is not None]
+    if not parsable:
+        return stable[0]
+
+    def tag_tuple(rel: dict) -> tuple[int, int, int]:
+        return parse_version_tuple(str(rel.get("tag_name", ""))) or (0, 0, 0)
+
+    cur = parse_version_tuple(indexed_version)
+    if cur is None:
+        return max(parsable, key=tag_tuple)
+    anchored = any(tag_tuple(rel) == cur for rel in parsable)
+    if cur[1] >= BAND_MINOR_FLOOR:
+        candidates = [rel for rel in parsable if tag_tuple(rel)[0] == cur[0]]
+    elif anchored:
+        candidates = [rel for rel in parsable if tag_tuple(rel)[0] in (cur[0], cur[0] + 1)]
+    else:
+        candidates = parsable
+    if not candidates:
+        candidates = parsable
+    return max(candidates, key=tag_tuple)
+
+
 def split_scoped(package: dict) -> str:
     pid = package.get("id") or {}
     return f"{pid.get('owner', '?')}/{pid.get('name', '?')}"
@@ -441,6 +483,7 @@ def process(index_path: Path, target_nu: str, write: bool,
         wanted = set(package_filter)
         packages = [p for p in packages if split_scoped(p) in wanted]
     releases: dict[str, dict] = {}
+    stable_by_repo: dict[str, list[dict]] = {}
     for package in packages:
         if should_skip(package):
             continue
@@ -449,7 +492,11 @@ def process(index_path: Path, target_nu: str, write: bool,
             continue
         scoped = split_scoped(package)
         try:
-            rel = fetch_latest_release(key)
+            if key not in stable_by_repo:
+                stable_by_repo[key] = fetch_stable_releases(key)
+            latest = latest_entry(package) or {}
+            rel = select_latest_release(
+                stable_by_repo[key], str(latest.get("version", "0.0.0")))
         except Exception as exc:  # one bad repo must not sink the whole run
             print(f"warning: {scoped}: release lookup failed: {exc}", file=sys.stderr)
             continue
