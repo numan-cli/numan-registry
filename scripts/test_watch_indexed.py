@@ -389,6 +389,17 @@ class WatchIndexedTests(unittest.TestCase):
         rel = self.mod.select_latest_release(stable, "0.9.0")
         self.assertEqual(rel["tag_name"], "v1.0.0")
 
+    def test_select_latest_release_band_without_band_releases_is_none(self):
+        stable = [{"tag_name": "v1.2.12"}, {"tag_name": "v1.2.11"}]
+        self.assertIsNone(self.mod.select_latest_release(stable, "0.116.0"))
+
+    def test_select_latest_release_plain_semver_without_indexed_tag(self):
+        # Indexed tag fell out of the paginated window: selection still
+        # caps at the next major instead of jumping schemes.
+        stable = [{"tag_name": "v1.0.0"}, {"tag_name": "v3.5.0"}]
+        rel = self.mod.select_latest_release(stable, "0.9.0")
+        self.assertEqual(rel["tag_name"], "v1.0.0")
+
     def test_select_latest_release_unanchored_falls_back_to_global_max(self):
         stable = [{"tag_name": "v2.0.0"}, {"tag_name": "v1.9.0"}]
         rel = self.mod.select_latest_release(stable, "0.1.0-main")
