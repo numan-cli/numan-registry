@@ -129,6 +129,9 @@ jobs:
           name: indexed-watch-reports
           path: ${{ runner.temp }}/watch
 
+      - name: Install candidate-signing dependency
+        run: python -m pip install cryptography
+
       - name: Run lifecycle-prove for each eligible nu-gap package
         id: prove
         env:
@@ -212,6 +215,10 @@ jobs:
         with:
           name: indexed-watch-reports
           path: ${{ runner.temp }}\watch
+
+      - name: Install candidate-signing dependency
+        shell: pwsh
+        run: python -m pip install cryptography
 
       - name: Run lifecycle-prove for each eligible nu-gap package
         id: prove
