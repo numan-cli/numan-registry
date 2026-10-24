@@ -3141,7 +3141,7 @@
       "versions": [
         {
           "version": "0.1.0-2241050",
-          "nu_version": ">=0.114.0 <0.115.0",
+          "nu_version": ">=0.114.0 <0.116.0",
           "evidence_tier": "proven",
           "artifact": {
             "kind": "archive",
@@ -3154,7 +3154,8 @@
             "import": "all"
           },
           "verified_with": [
-            "0.114.1"
+            "0.114.1",
+            "0.115.1"
           ]
         }
       ]
