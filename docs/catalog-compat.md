@@ -2,7 +2,7 @@
 
 _Auto-generated from `registry/index.json`. Do not hand-edit._
 
-Generated: `2026-10-19T01:44:41Z` · Index `updated_at`: `2026-10-19T01:44:41Z` · `registry_revision`: `seed-2026-07-02`
+Generated: `2026-10-24T02:19:37Z` · Index `updated_at`: `2026-10-24T02:19:37Z` · `registry_revision`: `seed-2026-07-02`
 
 This is the **master list** of packages in the committed `registry/index.json` (in-tree; the public CDN updates after production signing/publish) and the Nu constraint on each package's **latest** version. For demand-ranked *plugin candidates* not yet in the registry, see [`numan-plugins/docs/backlog.json`](https://github.com/numan-cli/numan-plugins/blob/main/docs/backlog.json). For intake workflow status, see [`intake-candidates.md`](intake-candidates.md).
 
@@ -55,7 +55,7 @@ Nu band is a coarse label from the constraint **lower bound** (`>=0.114` / `>0.1
 | `lassoColombo/conventional-commits` | module | 0.1.0-44dc459 | `>=0.114.0 <0.115.0` | 0.114 | — | mirror | 1 |
 | `lizclipse/nu_plugin_ulid` | plugin | 0.23.0 | `>=0.114.0 <0.115.0` | 0.114 | mac,linux,win | ci-built | 1 |
 | `nushell-prophet/dotnu` | module | 0.0.18 | `*` | * | — | mirror | 1 |
-| `nushell-prophet/numd` | module | 0.4.0 | `*` | * | — | mirror | 1 |
+| `nushell-prophet/numd` | module | 0.5.0 | `*` | * | — | mirror | 2 |
 | `nushell-works/nu_plugin_nw_ulid` | plugin | 0.2.0 | `>=0.111.0 <0.112.0` | other | mac,linux,win | upstream | 1 |
 | `nushell/aws-completions` | completion | 0.1.0-44f8f25 | `*` | * | — | mirror | 1 |
 | `nushell/bat-completions` | completion | 0.1.0-44f8f25 | `*` | * | — | mirror | 1 |
