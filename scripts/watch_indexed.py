@@ -335,10 +335,14 @@ def _decide_upstream(hit: dict, ptype: str, reasons: list[str]) -> dict:
     return {"verdict": "needs-review", "reasons": reasons or ["manual mapping needed"]}
 
 
-def _decide_nu_gap(hit: dict, ptype: str, reasons: list[str]) -> dict:
+def _decide_nu_gap(hit: dict, ptype: str, reasons: list[str],
+                   version_count: int = 0) -> dict:
     if ptype not in ("module", "script", "completion") or reasons:
         return {"verdict": "needs-review", "reasons": reasons or ["manual mapping needed"]}
-    if parse_version_tuple(str(hit.get("indexed", ""))) is None:
+    # Snapshot-style versions cannot be ordered against each other, but a
+    # single-version package has no "latest" ambiguity and the artifact is
+    # pinned by artifact_id before anything merges, so proof can proceed.
+    if parse_version_tuple(str(hit.get("indexed", ""))) is None and version_count != 1:
         return {"verdict": "needs-review",
                 "reasons": ["indexed version is not plain semver; map it by hand"]}
     plan = nu_gap_plan(str(hit.get("constraint", "*")), str(hit.get("target_nu", "")))
@@ -361,7 +365,7 @@ def _plugin_reasons(kind: str, reasons: list[str]) -> list[str]:
     return reasons or ["plugin gate"]
 
 
-def decide(hit: dict, latest: dict) -> dict:
+def decide(hit: dict, latest: dict, version_count: int = 0) -> dict:
     """Verdict for one hit. Proof still runs in CI; eligible merges only on green."""
     kind = hit.get("kind", "")
     ptype = hit.get("type", "")
@@ -376,7 +380,7 @@ def decide(hit: dict, latest: dict) -> dict:
     if kind == "upstream":
         return _decide_upstream(hit, ptype, reasons)
     if kind == "nu-gap":
-        return _decide_nu_gap(hit, ptype, reasons)
+        return _decide_nu_gap(hit, ptype, reasons, version_count)
     return {"verdict": "needs-review", "reasons": ["unknown hit kind"]}
 
 
@@ -384,8 +388,11 @@ def attach_verdicts(gaps: dict, by_package: dict[str, dict]) -> dict:
     """Add a decide() verdict to every hit. Returns the same gaps dict."""
     for section in ("upstream_updates", "nu_gaps"):
         for hit in gaps.get(section, []):
-            latest = latest_entry(by_package.get(hit["package"], {})) or {}
-            outcome = decide(hit, latest)
+            package = by_package.get(hit["package"], {})
+            latest = latest_entry(package) or {}
+            version_count = len(
+                [v for v in package.get("versions", []) if isinstance(v, dict)])
+            outcome = decide(hit, latest, version_count)
             hit["verdict"] = outcome["verdict"]
             hit["reasons"] = outcome["reasons"]
     return gaps

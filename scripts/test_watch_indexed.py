@@ -146,6 +146,22 @@ class WatchIndexedTests(unittest.TestCase):
         d = self.mod.decide(hit, ver("1.0.0", ">=0.113.0 <0.114.0", ["0.113.1"]))
         self.assertEqual(d["verdict"], "auto-merge-eligible")
 
+    def test_snapshot_single_version_nu_gap_is_eligible(self):
+        hit = {"kind": "nu-gap", "package": "a/mod", "type": "module",
+               "indexed": "0.1.0-abc1234", "constraint": ">=0.114.0 <0.115.0",
+               "target_nu": "0.115.1"}
+        d = self.mod.decide(hit, ver("0.1.0-abc1234", ">=0.114.0 <0.115.0", ["0.114.1"]),
+                            version_count=1)
+        self.assertEqual(d["verdict"], "auto-merge-eligible")
+
+    def test_snapshot_multi_version_nu_gap_needs_review(self):
+        hit = {"kind": "nu-gap", "package": "a/mod", "type": "module",
+               "indexed": "0.1.0-abc1234", "constraint": ">=0.114.0 <0.115.0",
+               "target_nu": "0.115.1"}
+        d = self.mod.decide(hit, ver("0.1.0-abc1234", ">=0.114.0 <0.115.0", ["0.114.1"]),
+                            version_count=2)
+        self.assertEqual(d["verdict"], "needs-review")
+
     def test_plugin_nu_gap_needs_review(self):
         hit = {"kind": "nu-gap", "package": "b/plug", "type": "plugin",
                "indexed": "2.0.0", "constraint": ">=0.113.0 <0.114.0", "target_nu": "0.114.1"}
