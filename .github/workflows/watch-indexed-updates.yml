@@ -370,7 +370,8 @@ jobs:
                   print(f"Updated issue #{existing['number']} for {issue['package']}")
               else:
                   subprocess.run(
-                      ["gh", "issue", "create", "--title", issue["title"], "--body-file", "-"],
+                      ["gh", "issue", "create", "--title", issue["title"], "--body-file", "-",
+                       "--label", "watch"],
                       input=issue["body"].encode("utf-8"), check=True)
                   print(f"Created issue for {issue['package']}")
           EOF
