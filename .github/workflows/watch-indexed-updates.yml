@@ -131,13 +131,27 @@ jobs:
 
       - name: Run lifecycle-prove for each eligible nu-gap package
         id: prove
+        env:
+          TARGET_NU: ${{ needs.detect.outputs.target_nu }}
         run: |
           set -euo pipefail
           mapfile -t PKGS < <(python -c "import json;print('\n'.join(h['package'] for h in json.load(open('${{ runner.temp }}/watch/hits.json'))['nu_gaps'] if h.get('verdict') == 'auto-merge-eligible'))")
+          # Prove against a temp candidate with the append/widen already
+          # applied: a widen candidate's published constraint excludes the
+          # target Nu, so install would refuse before proof could run.
+          # The real append happens in open-pr, gated on these results.
+          CANDIDATE="${{ runner.temp }}/watch/candidate.json"
+          cp registry/index.json "$CANDIDATE"
+          ELIGIBLE=$(printf '%s,' "${PKGS[@]}" | sed 's/,$//')
+          if [ -n "$ELIGIBLE" ]; then
+            python scripts/append-verified-with.py --index "$CANDIDATE" \
+              --hits "${{ runner.temp }}/watch/hits.json" \
+              --proven "$ELIGIBLE" --target-nu "$TARGET_NU" --write
+          fi
           PROVEN=""
           for pkg in "${PKGS[@]}"; do
             [ -n "$pkg" ] || continue
-            if python scripts/lifecycle-prove.py --package "$pkg" --numan "$(command -v numan)" --nu "$(command -v nu)"; then
+            if python scripts/lifecycle-prove.py --package "$pkg" --candidate-index "$CANDIDATE" --numan "$(command -v numan)" --nu "$(command -v nu)"; then
               PROVEN="${PROVEN}${PROVEN:+,}${pkg}"
               echo "PROVED $pkg"
             else
@@ -202,14 +216,27 @@ jobs:
       - name: Run lifecycle-prove for each eligible nu-gap package
         id: prove
         shell: pwsh
+        env:
+          TARGET_NU: ${{ needs.detect.outputs.target_nu }}
         run: |
           $ErrorActionPreference = "Continue"
           $hits = Get-Content "${{ runner.temp }}\watch\hits.json" -Raw | ConvertFrom-Json
+          # Prove against a temp candidate with the append/widen already
+          # applied (a widen candidate's published constraint excludes the
+          # target Nu, so install would refuse before proof could run).
+          # The real append happens in open-pr, gated on these results.
+          $candidate = "${{ runner.temp }}\watch\candidate.json"
+          Copy-Item registry/index.json $candidate
+          $eligible = @($hits.nu_gaps | Where-Object { $_.verdict -eq 'auto-merge-eligible' } | ForEach-Object { $_.package })
+          if ($eligible.Count -gt 0) {
+            & python scripts/append-verified-with.py --index $candidate --hits "${{ runner.temp }}\watch\hits.json" --proven ($eligible -join ",") --target-nu $env:TARGET_NU --write
+            if ($LASTEXITCODE -ne 0) { throw "candidate append failed" }
+          }
           $proven = @()
           foreach ($hit in ($hits.nu_gaps | Where-Object { $_.verdict -eq 'auto-merge-eligible' })) {
             $pkg = $hit.package
             if ([string]::IsNullOrWhiteSpace($pkg)) { continue }
-            & python scripts/lifecycle-prove.py --package $pkg --numan (Get-Command numan).Source --nu (Get-Command nu).Source
+            & python scripts/lifecycle-prove.py --package $pkg --candidate-index $candidate --numan (Get-Command numan).Source --nu (Get-Command nu).Source
             if ($LASTEXITCODE -eq 0) { $proven += $pkg; Write-Host "PROVED $pkg" }
             else { Write-Host "PROOF FAILED $pkg (stays for human review)" }
           }
