@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-19T01:44:41Z",
+  "updated_at": "2026-10-24T02:19:37Z",
   "registry_revision": "seed-2026-07-02",
   "packages": [
     {
@@ -418,7 +418,7 @@
         "owner": "nushell-prophet",
         "name": "numd"
       },
-      "description": "Reproducible Nushell Markdown documents. Registry-hosted mirror of upstream tag 0.4.0.",
+      "description": "Reproducible Nushell Markdown documents. Registry-hosted mirror of upstream tag 0.5.0.",
       "repo": "https://github.com/nushell-prophet/numd",
       "type": "module",
       "tags": [
@@ -445,6 +445,24 @@
             "kind": "nu-module",
             "import": "all"
           }
+        },
+        {
+          "version": "0.5.0",
+          "nu_version": "*",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-prophet-numd-0.5.0/numd-0.5.0.zip",
+            "sha256": "7a92b0de7581cfae654faac17f1899117e7b2b92bcec7af34423c318be06822e",
+            "entry": "numd/mod.nu",
+            "archive_root": "numd-0.5.0"
+          },
+          "activation": {
+            "import": "all",
+            "kind": "nu-module"
+          },
+          "verified_with": [
+            "0.114.1"
+          ]
         }
       ]
     },
