@@ -169,8 +169,8 @@ class WatchIndexedTests(unittest.TestCase):
                                   "https://github.com/a/mod", [ver("1.0.0")])],
             }), encoding="utf-8")
             with mock.patch.object(
-                self.mod, "fetch_latest_release",
-                return_value={"tag_name": "v1.0.0", "html_url": "https://example.com"},
+                self.mod, "fetch_stable_releases",
+                return_value=[{"tag_name": "v1.0.0", "html_url": "https://example.com"}],
             ):
                 buf = io.StringIO()
                 with redirect_stdout(buf):
@@ -370,6 +370,46 @@ class WatchIndexedTests(unittest.TestCase):
             opener_fn.return_value = opener
             rel = self.mod.fetch_latest_release("a/mod")
             self.assertEqual(rel["tag_name"], "v1.9.0")
+
+    def test_select_latest_release_band_scheme_ignores_product_tags(self):
+        stable = [{"tag_name": "v1.2.12"}, {"tag_name": "v0.116.0"},
+                  {"tag_name": "v0.115.0"}]
+        rel = self.mod.select_latest_release(stable, "0.116.0")
+        self.assertEqual(rel["tag_name"], "v0.116.0")
+
+    def test_select_latest_release_band_scheme_sees_new_band(self):
+        stable = [{"tag_name": "v1.2.12"}, {"tag_name": "v0.117.0"},
+                  {"tag_name": "v0.116.0"}]
+        rel = self.mod.select_latest_release(stable, "0.116.0")
+        self.assertEqual(rel["tag_name"], "v0.117.0")
+
+    def test_select_latest_release_plain_semver_sees_next_major(self):
+        stable = [{"tag_name": "v1.0.0"}, {"tag_name": "v0.9.0"},
+                  {"tag_name": "v3.5.0"}]
+        rel = self.mod.select_latest_release(stable, "0.9.0")
+        self.assertEqual(rel["tag_name"], "v1.0.0")
+
+    def test_select_latest_release_band_without_band_releases_is_none(self):
+        stable = [{"tag_name": "v1.2.12"}, {"tag_name": "v1.2.11"}]
+        self.assertIsNone(self.mod.select_latest_release(stable, "0.116.0"))
+
+    def test_select_latest_release_plain_semver_without_indexed_tag(self):
+        # Indexed tag fell out of the paginated window: selection still
+        # caps at the next major instead of jumping schemes.
+        stable = [{"tag_name": "v1.0.0"}, {"tag_name": "v3.5.0"}]
+        rel = self.mod.select_latest_release(stable, "0.9.0")
+        self.assertEqual(rel["tag_name"], "v1.0.0")
+
+    def test_select_latest_release_unanchored_falls_back_to_global_max(self):
+        stable = [{"tag_name": "v2.0.0"}, {"tag_name": "v1.9.0"}]
+        rel = self.mod.select_latest_release(stable, "0.1.0-main")
+        self.assertEqual(rel["tag_name"], "v2.0.0")
+
+    def test_select_latest_release_unparsable_returns_newest(self):
+        stable = [{"tag_name": "nightly"}, {"tag_name": "edge"}]
+        rel = self.mod.select_latest_release(stable, "1.0.0")
+        self.assertEqual(rel["tag_name"], "nightly")
+        self.assertIsNone(self.mod.select_latest_release([], "1.0.0"))
 
 
 if __name__ == "__main__":

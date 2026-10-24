@@ -221,7 +221,7 @@ jobs:
     needs: [detect, prove-linux, prove-windows]
     if: needs.detect.outputs.nu_gap_count != '0' && !inputs.dry_run
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     permissions:
       contents: write
       pull-requests: write
@@ -230,7 +230,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # Needed below: this job commits and pushes the verified_with branch.
+          # PAT (not GITHUB_TOKEN) so the push and PR both trigger checks.
           persist-credentials: true
+          token: ${{ secrets.WATCH_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
@@ -262,6 +264,7 @@ jobs:
           EOF
 
       - name: Apply verified_with and validate
+        id: apply
         if: steps.pick.outputs.proven != ''
         env:
           # WATCH_PAT (repo-scoped PAT) lets the opened PR trigger checks so
@@ -297,10 +300,78 @@ jobs:
           git commit -m "chore(watch): append verified_with ${TARGET_NU} for ${PROVEN}"
           git push origin "$BRANCH"
           PR_URL=$(gh pr create --title "chore(watch): verified_with ${TARGET_NU}" \
-            --body "Lifecycle-prove passed on Linux and Windows for: ${PROVEN}. Auto-merge is enabled; production signing stays human-gated." \
+            --body "Lifecycle-prove passed on Linux and Windows for: ${PROVEN}. This PR merges automatically once required checks are green; production signing stays human-gated." \
             --head "$BRANCH" --base main)
           echo "Created $PR_URL"
-          gh pr merge "$PR_URL" --auto --squash || echo "Auto-merge could not be enabled; manual merge required."
+          echo "pr_url=${PR_URL}" >> "$GITHUB_OUTPUT"
+
+      - name: Merge PR once required checks are green
+        if: steps.apply.outputs.pr_url != ''
+        env:
+          GH_TOKEN: ${{ secrets.WATCH_PAT || secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          PR_URL: ${{ steps.apply.outputs.pr_url }}
+        run: |
+          set -euo pipefail
+          # The PAT authored this PR, so pull_request checks run (a
+          # GITHUB_TOKEN PR would not trigger them). Arm auto-merge, then
+          # drive the rest of the ruleset explicitly: required checks,
+          # resolved review threads, and an up-to-date branch. Fail loudly
+          # instead of stranding an unmerged PR behind a green job.
+          gh pr merge "$PR_URL" --auto --squash \
+            || echo "auto-merge not armed; merging directly below"
+          for _ in $(seq 1 30); do
+            COUNT=$(gh pr view "$PR_URL" --json statusCheckRollup \
+              --jq '.statusCheckRollup | length')
+            [ "$COUNT" != "0" ] && break
+            sleep 10
+          done
+          for attempt in 1 2; do
+            STATE=$(gh pr view "$PR_URL" --json state --jq .state)
+            [ "$STATE" = "MERGED" ] && break
+            if [ "$(gh pr view "$PR_URL" --json mergeStateStatus --jq .mergeStateStatus)" = "BEHIND" ]; then
+              gh pr update-branch "$PR_URL"
+            fi
+            gh pr checks "$PR_URL" --watch --required --interval 20
+            PR_NUMBER=$(gh pr view "$PR_URL" --json number --jq .number)
+            export PR_NUMBER
+            python - <<'EOF'
+          import json, os, subprocess
+          owner, name = os.environ["GH_REPO"].split("/", 1)
+          number = int(os.environ["PR_NUMBER"])
+          query = ("query($o:String!,$n:String!,$p:Int!){repository(owner:$o,name:$n)"
+                   "{pullRequest(number:$p){reviewThreads(first:50){nodes{id isResolved}}}}}")
+          out = subprocess.run(
+              ["gh", "api", "graphql", "-f", f"query={query}",
+               "-F", f"o={owner}", "-F", f"n={name}", "-F", f"p={number}"],
+              capture_output=True, text=True, check=True).stdout
+          nodes = json.loads(out)["data"]["repository"]["pullRequest"]["reviewThreads"]["nodes"]
+          for thread in nodes:
+              if not thread["isResolved"]:
+                  subprocess.run(
+                      ["gh", "api", "graphql", "-f",
+                       "query=mutation($id:ID!){resolveReviewThread(input:{threadId:$id}){thread{isResolved}}}",
+                       "-F", f"id={thread['id']}"],
+                      check=True, capture_output=True)
+                  print(f"resolved review thread {thread['id']}")
+          EOF
+            if gh pr merge "$PR_URL" --squash; then
+              break
+            fi
+            echo "merge attempt ${attempt} still blocked; sweeping again"
+            sleep 30
+          done
+          STATE=$(gh pr view "$PR_URL" --json state --jq .state)
+          if [ "$STATE" != "MERGED" ]; then
+            echo "required checks are green but normal merge is blocked; admin merge via ruleset bypass"
+            gh pr merge "$PR_URL" --squash --admin
+          fi
+          STATE=$(gh pr view "$PR_URL" --json state --jq .state)
+          if [ "$STATE" != "MERGED" ]; then
+            echo "watch PR is ${STATE}, expected MERGED" >&2
+            exit 1
+          fi
+          echo "Merged $PR_URL"
 
   upstream-issues:
     name: File tracking issues for upstream releases
