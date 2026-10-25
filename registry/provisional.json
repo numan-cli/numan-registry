@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-18T16:24:17Z",
+  "updated_at": "2026-10-25T02:56:43Z",
   "registry_revision": "seed-2026-07-02",
   "packages": [
     {
@@ -359,6 +359,40 @@
                 "executable_path": "nu_plugin_qr_maker"
               }
             }
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "amtoine",
+        "name": "nu-git-manager-sugar"
+      },
+      "description": "Git prompt sugar for nu-git-manager (right prompt, completions). Registry-hosted mirror of upstream tag 0.8.0 (pkgs/nu-git-manager-sugar).",
+      "repo": "https://github.com/amtoine/nu-git-manager",
+      "type": "module",
+      "tags": [
+        "module",
+        "git",
+        "prompt",
+        "mirror"
+      ],
+      "versions": [
+        {
+          "version": "0.8.0",
+          "nu_version": ">=0.92.0",
+          "evidence_tier": "provisional",
+          "deferral_reason": "lifecycle-prove fails on current Nushell: module candidate validation errors inside package code (git/lib/prompt.nu duration input type mismatch on Nu 0.116.1; query git requires nu_plugin_query_git at runtime). Upstream-blocked; see PR discussion.",
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-amtoine-nu-git-manager-sugar-0.8.0/nu-git-manager-sugar-0.8.0.zip",
+            "sha256": "43adbff32c30af53eeab84f56f074792a26145f985e8d2994f4ef09169e71f1a",
+            "entry": "pkgs/nu-git-manager-sugar/nu-git-manager-sugar/mod.nu",
+            "archive_root": "nu-git-manager-sugar-0.8.0"
+          },
+          "activation": {
+            "import": "all",
+            "kind": "nu-module"
           }
         }
       ]

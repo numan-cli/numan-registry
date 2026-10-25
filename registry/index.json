@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-24T06:06:33Z",
+  "updated_at": "2026-10-25T02:56:43Z",
   "registry_revision": "seed-2026-07-02",
   "packages": [
     {
@@ -538,7 +538,7 @@
         "owner": "nushell",
         "name": "custom-completions"
       },
-      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, \u2026). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Install-only: completion activation is deferred in Numan.",
+      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, …). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Install-only: completion activation is deferred in Numan.",
       "repo": "https://github.com/nushell/nu_scripts",
       "type": "completion",
       "tags": [
@@ -773,23 +773,6 @@
           "activation": {
             "kind": "nu-module",
             "import": "all"
-          }
-        },
-        {
-          "version": "0.8.0",
-          "nu_version": ">=0.92.0",
-          "evidence_tier": "provisional",
-          "deferral_reason": "lifecycle-prove pending on intake branch; verified_with to follow after proof",
-          "artifact": {
-            "kind": "archive",
-            "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-amtoine-nu-git-manager-sugar-0.8.0/nu-git-manager-sugar-0.8.0.zip",
-            "sha256": "43adbff32c30af53eeab84f56f074792a26145f985e8d2994f4ef09169e71f1a",
-            "entry": "pkgs/nu-git-manager-sugar/nu-git-manager-sugar/mod.nu",
-            "archive_root": "nu-git-manager-sugar-0.8.0"
-          },
-          "activation": {
-            "import": "all",
-            "kind": "nu-module"
           }
         }
       ]
