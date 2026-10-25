@@ -330,7 +330,8 @@ jobs:
           python scripts/preflight.py
           python scripts/validate.py --index registry/index.json \
             --skip-signature --skip-artifacts --allow-provisional-lifecycle
-          git add registry/index.json
+          python scripts/render_catalog_compat.py
+          git add registry/index.json docs/catalog-compat.md
           git commit -m "chore(watch): append verified_with ${TARGET_NU} for ${PROVEN}"
           git push origin "$BRANCH"
           PR_URL=$(gh pr create --title "chore(watch): verified_with ${TARGET_NU}" \
