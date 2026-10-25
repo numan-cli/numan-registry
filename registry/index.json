@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-24T06:06:33Z",
+  "updated_at": "2026-10-25T02:46:52Z",
   "registry_revision": "seed-2026-07-02",
   "packages": [
     {
@@ -165,7 +165,7 @@
         "owner": "SuaveIV",
         "name": "nu_plugin_audio"
       },
-      "description": "Nushell plugin for generating tones, reading/writing audio metadata, and playing audio files. Upstream v0.2.10 (Nu 0.114.1): Windows zip, Linux aarch64 tar.gz, and macOS/Linux x86_64 tar.xz (nested cargo-dist layout).",
+      "description": "Nushell plugin for generating tones, reading/writing audio metadata, and playing audio files. Upstream v0.2.13 (Nu 0.116.1): Windows zip, Linux aarch64 tar.gz, and macOS/Linux x86_64 tar.xz (nested cargo-dist layout).",
       "repo": "https://github.com/SuaveIV/nu_plugin_audio",
       "type": "plugin",
       "tags": [
@@ -228,6 +228,43 @@
               "x86_64-apple-darwin": {
                 "url": "https://github.com/SuaveIV/nu_plugin_audio/releases/download/v0.2.10/nu_plugin_audio-x86_64-apple-darwin.tar.xz",
                 "sha256": "b8ab95e1929096f2954322cfc069b2606236f83e63d00132d21a955a39f60d89",
+                "executable_path": "nu_plugin_audio-x86_64-apple-darwin/nu_plugin_audio"
+              }
+            }
+          }
+        },
+        {
+          "version": "0.2.13",
+          "nu_version": ">=0.116.0 <0.117.0",
+          "verified_with": [
+            "0.116.1"
+          ],
+          "artifact": {
+            "kind": "binary",
+            "targets": {
+              "x86_64-pc-windows-msvc": {
+                "url": "https://github.com/SuaveIV/nu_plugin_audio/releases/download/v0.2.13/nu_plugin_audio-x86_64-pc-windows-msvc.zip",
+                "sha256": "2aed4441b23a07de7fd784a0ea67674120557ddc6a2c50dc0768dd1dd164d093",
+                "executable_path": "nu_plugin_audio.exe"
+              },
+              "aarch64-unknown-linux-gnu": {
+                "url": "https://github.com/SuaveIV/nu_plugin_audio/releases/download/v0.2.13/nu_plugin_audio-v0.2.13-aarch64-unknown-linux-gnu.tar.gz",
+                "sha256": "aadc05a06a5d95025960f810280872e5f1c92559ebca31ddecfeb94193a6a782",
+                "executable_path": "nu_plugin_audio"
+              },
+              "x86_64-unknown-linux-gnu": {
+                "url": "https://github.com/SuaveIV/nu_plugin_audio/releases/download/v0.2.13/nu_plugin_audio-x86_64-unknown-linux-gnu.tar.xz",
+                "sha256": "0183c22d3c350b428309b25d03b5caf2eb2d7ddcbb05679e63667e911124e1c4",
+                "executable_path": "nu_plugin_audio-x86_64-unknown-linux-gnu/nu_plugin_audio"
+              },
+              "aarch64-apple-darwin": {
+                "url": "https://github.com/SuaveIV/nu_plugin_audio/releases/download/v0.2.13/nu_plugin_audio-aarch64-apple-darwin.tar.xz",
+                "sha256": "83b1651204d6c83c284d430e77408533a25278edd6efacbdf734ff2e319a715b",
+                "executable_path": "nu_plugin_audio-aarch64-apple-darwin/nu_plugin_audio"
+              },
+              "x86_64-apple-darwin": {
+                "url": "https://github.com/SuaveIV/nu_plugin_audio/releases/download/v0.2.13/nu_plugin_audio-x86_64-apple-darwin.tar.xz",
+                "sha256": "432e5a20384b600da46338eee6a9eb5414b688a4f0cb354f91602ec2d3c03652",
                 "executable_path": "nu_plugin_audio-x86_64-apple-darwin/nu_plugin_audio"
               }
             }
@@ -538,7 +575,7 @@
         "owner": "nushell",
         "name": "custom-completions"
       },
-      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, \u2026). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Install-only: completion activation is deferred in Numan.",
+      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, …). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Install-only: completion activation is deferred in Numan.",
       "repo": "https://github.com/nushell/nu_scripts",
       "type": "completion",
       "tags": [
