@@ -249,7 +249,7 @@
               },
               "aarch64-unknown-linux-gnu": {
                 "url": "https://github.com/SuaveIV/nu_plugin_audio/releases/download/v0.2.13/nu_plugin_audio-v0.2.13-aarch64-unknown-linux-gnu.tar.gz",
-                "sha256": "aadc05a06a5d95025960f810280872e5f1c92559ebca31ddecfeb94193a6a782",
+                "sha256": "aadc05a06a5d95025960f810280872e5f1c92559ebca31ddecfeb94193a6a7820",
                 "executable_path": "nu_plugin_audio"
               },
               "x86_64-unknown-linux-gnu": {
