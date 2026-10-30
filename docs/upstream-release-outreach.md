@@ -125,7 +125,7 @@ Two registry entries from one monorepo:
 | Entry | Pin | Problem |
 |-------|-----|---------|
 | `nushell/nu-hooks@0.1.0` | commit `f04cb44` | No `mod.nu`; hook collection |
-| `nushell/custom-completions@0.1.0-f04cb44` | same commit | Large tree; completion activation deferred in Numan |
+| `nushell/custom-completions@0.1.0-f04cb44` | same commit | Large tree; completion activation targets now declared in the registry |
 
 | Field | Detail |
 |-------|--------|

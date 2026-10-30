@@ -1,7 +1,7 @@
 {
   "owner": "SuaveIV",
   "name": "nu_script_hnews",
-  "description": "Browse Hacker News from Nushell. Registry-hosted mirror of upstream commit 6cd8aef. Install-only: script activation is deferred in Numan.",
+  "description": "Browse Hacker News from Nushell. Registry-hosted mirror of upstream commit 6cd8aef. Script activation is not offered for this package: hnews.nu only exports commands (hn) for use as a module and defines no script entry point, so running it as a script does nothing.",
   "repo": "https://github.com/SuaveIV/nu_script_hnews",
   "type": "script",
   "tags": ["script", "news", "mirror", "install-only"],

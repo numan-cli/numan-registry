@@ -1,17 +1,26 @@
 {
   "owner": "SuaveIV",
   "name": "nu_script_wttr",
-  "description": "Weather fetcher for Nushell using wttr.in. Registry-hosted mirror of upstream @ main. Install-only: script activation is deferred in Numan.",
+  "description": "Weather fetcher for Nushell using wttr.in. Registry-hosted mirror of upstream @ main. Declares a script entry point for weather for activation with `numan activate`.",
   "repo": "https://github.com/SuaveIV/nu_script_wttr",
   "type": "script",
-  "tags": ["script", "weather", "mirror", "install-only"],
+  "tags": ["script", "weather", "mirror"],
   "version": "0.1.0-main",
   "nu_version": "*",
-  "verified_with": ["0.113.1"],
+  "verified_with": ["0.113.1", "0.116.1"],
   "artifact": {
     "kind": "archive",
     "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-SuaveIV-nu_script_wttr-main/nu_script_wttr-main.zip",
     "entry": "weather.nu",
     "archive_root": "nu_script_wttr-main"
+  },
+  "activation": {
+    "kind": "nu-script",
+    "entry_points": [
+      {
+        "name": "weather",
+        "path": "weather.nu"
+      }
+    ]
   }
 }

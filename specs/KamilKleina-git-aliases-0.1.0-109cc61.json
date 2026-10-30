@@ -1,7 +1,7 @@
 {
   "owner": "KamilKleina",
   "name": "git-aliases",
-  "description": "Git aliases for Nushell (overlay use). Registry-hosted mirror of upstream commit 109cc61. Install-only: script activation is deferred in Numan; after install, overlay use the installed git-aliases.nu path.",
+  "description": "Git aliases for Nushell (overlay use). Registry-hosted mirror of upstream commit 109cc61. Script activation is not offered for this package: git-aliases.nu defines git aliases for `overlay use` and has no script entry point; after install, overlay use the installed git-aliases.nu path.",
   "repo": "https://github.com/KamilKleina/git-aliases.nu",
   "type": "script",
   "tags": ["script", "git", "mirror", "install-only"],

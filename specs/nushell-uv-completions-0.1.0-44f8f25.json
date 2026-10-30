@@ -1,14 +1,13 @@
 {
   "owner": "nushell",
   "name": "uv-completions",
-  "description": "uv custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/uv @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+  "description": "uv custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/uv @ 44f8f25. Declares a completion target for uv for activation with `numan activate`.",
   "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/uv",
   "type": "completion",
   "tags": [
     "completion",
     "uv",
-    "mirror",
-    "install-only"
+    "mirror"
   ],
   "version": "0.1.0-44f8f25",
   "nu_version": "*",
@@ -16,5 +15,15 @@
     "kind": "archive",
     "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-uv-completions-44f8f25/uv-completions-44f8f25.zip",
     "archive_root": "uv-completions-44f8f25"
+  },
+  "activation": {
+    "kind": "nu-completion",
+    "targets": [
+      {
+        "command": "uv",
+        "path": "custom-completions/uv/uv-completions.nu",
+        "kind": "command-backed"
+      }
+    ]
   }
 }
