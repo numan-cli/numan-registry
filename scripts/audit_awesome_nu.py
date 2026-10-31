@@ -80,7 +80,7 @@ def extract_repo_slug(url: str) -> str | None:
     """Extract repository slug from GitHub, Codeberg, or GitLab URL, or return slug directly."""
     low = url.lower().rstrip("/")
     if "github.com/" in low:
-        return low.split("github.com/")[-1].split("/tree/")[0]
+        return low.split("github.com/")[-1].split("/tree/")[0].split("/blob/")[0]
     if "codeberg.org/" in low:
         return low.split("codeberg.org/")[-1].split("/src/")[0]
     if "gitlab.com/" in low:
@@ -167,6 +167,174 @@ def match_registry_package(
         return candidates[0]
 
     return None
+
+
+def build_intake_indices(
+    state_data: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, list[Any]]]:
+    """Build name and repo lookups for intake-state candidates (all lanes)."""
+    by_name: dict[str, Any] = {}
+    by_repo: dict[str, list[Any]] = {}
+
+    for lane in ("ready", "mirror", "blocked"):
+        for entry in state_data.get(lane, []):
+            if entry.get("name"):
+                by_name[normalize_name(entry["name"])] = entry
+            if entry.get("id"):
+                by_name[normalize_name(entry["id"])] = entry
+            repo = entry.get("repo", "")
+            slug = extract_repo_slug(repo) if repo else None
+            if slug:
+                by_repo.setdefault(slug, []).append(entry)
+
+    return by_name, by_repo
+
+
+def build_non_plugin_backlog_indices(
+    backlog_data: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, list[Any]]]:
+    """Build name and repo lookups for non-plugin backlog candidates."""
+    by_name: dict[str, Any] = {}
+    by_repo: dict[str, list[Any]] = {}
+
+    for entry in backlog_data.get("candidates", []):
+        if entry.get("name"):
+            by_name[normalize_name(entry["name"])] = entry
+        repo = entry.get("repo", "")
+        slug = extract_repo_slug(repo) if repo else None
+        if slug:
+            by_repo.setdefault(slug, []).append(entry)
+
+    return by_name, by_repo
+
+
+def _match_named_or_unique_repo(
+    clean_name: str,
+    repo_slug: str | None,
+    by_name: dict[str, Any],
+    by_repo: dict[str, list[Any]],
+) -> Any | None:
+    """Match by name, or by repo only when the repo has a single entry.
+
+    A shared repo (for example nushell/nu_scripts) hosts many distinct
+    candidates, so for multi-entry repos the name must match one of the
+    entries; a bare repo match would misattribute the rest.
+    """
+    if clean_name in by_name:
+        return by_name[clean_name]
+    if repo_slug and repo_slug in by_repo:
+        entries = by_repo[repo_slug]
+        for entry in entries:
+            if normalize_name(entry.get("name", "")) == clean_name:
+                return entry
+        if len(entries) == 1:
+            return entries[0]
+    return None
+
+
+def _url_subpath(url: str) -> str | None:
+    """Return the path below the branch in a /blob/ or /tree/ URL, if any."""
+    match = re.search(r"/(?:blob|tree)/[^/]+/(.+)$", url.lower().rstrip("/"))
+    return match.group(1) if match else None
+
+
+def _registry_match_ok(item: dict[str, str], pkg: dict[str, Any]) -> bool:
+    """Guard a registry match against shared-repo misattribution.
+
+    When an item URL points into a subdirectory of a shared repo (a /blob/
+    or /tree/ path), the matched package must live at a compatible subpath.
+    Without this, the single-candidate fallback in match_registry_package
+    attributes every file of a shared repo to its one packaged member.
+    """
+    item_sub = _url_subpath(item["url"])
+    if item_sub is None:
+        return True
+    pkg_sub = _url_subpath(pkg.get("repo", ""))
+    if pkg_sub is None:
+        return False
+    return (
+        item_sub == pkg_sub
+        or item_sub.startswith(pkg_sub + "/")
+        or pkg_sub.startswith(item_sub + "/")
+    )
+
+
+def audit_non_plugins(
+    items: list[dict[str, str]],
+    reg_by_name: dict[str, Any],
+    reg_by_repo: dict[str, list[Any]],
+    prov_by_name: dict[str, Any],
+    prov_by_repo: dict[str, list[Any]],
+    intake_by_name: dict[str, Any],
+    intake_by_repo: dict[str, list[Any]],
+    np_by_name: dict[str, Any],
+    np_by_repo: dict[str, list[Any]],
+) -> list[dict[str, Any]]:
+    """Audit a non-plugin awesome-nu section against registry and backlog."""
+    results: list[dict[str, Any]] = []
+
+    for item in items:
+        c_name = normalize_name(item["name"])
+        url = item["url"]
+        repo_slug = extract_repo_slug(url)
+
+        match_reg = match_registry_package(c_name, url, reg_by_name, reg_by_repo)
+        if match_reg and not _registry_match_ok(item, match_reg):
+            match_reg = None
+        if match_reg:
+            results.append({"item": item, "status": "IN_REGISTRY", "match": match_reg})
+            continue
+
+        match_prov = match_registry_package(c_name, url, prov_by_name, prov_by_repo)
+        if match_prov and not _registry_match_ok(item, match_prov):
+            match_prov = None
+        if match_prov:
+            results.append({"item": item, "status": "IN_PROVISIONAL", "match": match_prov})
+            continue
+
+        match_intake = _match_named_or_unique_repo(
+            c_name, repo_slug, intake_by_name, intake_by_repo
+        )
+        if match_intake:
+            results.append({"item": item, "status": "IN_INTAKE", "match": match_intake})
+            continue
+
+        match_np = _match_named_or_unique_repo(c_name, repo_slug, np_by_name, np_by_repo)
+        if match_np:
+            results.append({"item": item, "status": "IN_BACKLOG", "match": match_np})
+            continue
+
+        results.append({"item": item, "status": "UNTRACKED", "match": None})
+
+    return results
+
+
+def format_section_audit(title: str, audit_results: list[dict[str, Any]]) -> str:
+    """Format non-plugin audit results into report string."""
+    in_reg = [r for r in audit_results if r["status"] == "IN_REGISTRY"]
+    in_prov = [r for r in audit_results if r["status"] == "IN_PROVISIONAL"]
+    in_intake = [r for r in audit_results if r["status"] == "IN_INTAKE"]
+    in_bl = [r for r in audit_results if r["status"] == "IN_BACKLOG"]
+    untracked = [r for r in audit_results if r["status"] == "UNTRACKED"]
+
+    lines = [
+        "",
+        "=================================================================",
+        f"{title.upper()} AUDIT",
+        "=================================================================",
+        f"Awesome-Nu {title} Total: {len(audit_results)}",
+        f"  [+] In Numan Registry: {len(in_reg)}",
+        f"  [~] In Provisional Catalog: {len(in_prov)}",
+        f"  [~] In Intake State: {len(in_intake)}",
+        f"  [.] In Non-Plugin Backlog: {len(in_bl)}",
+        f"  [-] Untracked / Missing: {len(untracked)}",
+        "",
+        "[-] UNTRACKED CANDIDATES:",
+    ]
+    for r in untracked:
+        lines.append(f"  * {r['item']['name']} ({r['item']['url']}) - {r['item']['desc']}")
+
+    return "\n".join(lines)
 
 
 def audit_plugins(
@@ -299,6 +467,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--index", type=Path, default=Path(__file__).resolve().parent.parent / "registry" / "index.json")
     parser.add_argument("--manifest", type=Path, default=Path(__file__).resolve().parent.parent.parent / "numan-plugins" / "manifest.json")
     parser.add_argument("--backlog", type=Path, default=Path(__file__).resolve().parent.parent.parent / "numan-plugins" / "docs" / "backlog.json")
+    parser.add_argument("--provisional", type=Path, default=Path(__file__).resolve().parent.parent / "registry" / "provisional.json")
+    parser.add_argument("--intake-state", type=Path, default=Path(__file__).resolve().parent.parent / "docs" / "intake-state.json")
+    parser.add_argument("--non-plugin-backlog", type=Path, default=Path(__file__).resolve().parent.parent / "docs" / "non-plugin-backlog.json")
     args = parser.parse_args(argv)
 
     readme_content = fetch_readme(args.readme)
@@ -332,6 +503,36 @@ def main(argv: list[str] | None = None) -> int:
 
     report = format_plugin_audit(plugin_results)
     print(report)
+
+    prov_data = load_json_file(args.provisional, dataset_name="provisional catalog")
+    intake_data = load_json_file(args.intake_state, dataset_name="intake state")
+    try:
+        np_data = load_json_file(
+            args.non_plugin_backlog, dataset_name="non-plugin backlog"
+        )
+    except FileNotFoundError:
+        # The backlog file is optional: without it, everything not tracked
+        # elsewhere simply reports as untracked.
+        np_data = {"candidates": []}
+
+    prov_by_name, prov_by_repo = build_registry_indices(prov_data)
+    intake_by_name, intake_by_repo = build_intake_indices(intake_data)
+    np_by_name, np_by_repo = build_non_plugin_backlog_indices(np_data)
+
+    for section in ("Scripts", "Custom Completions"):
+        section_results = audit_non_plugins(
+            sections.get(section, []),
+            reg_by_name,
+            reg_by_repo,
+            prov_by_name,
+            prov_by_repo,
+            intake_by_name,
+            intake_by_repo,
+            np_by_name,
+            np_by_repo,
+        )
+        print(format_section_audit(section, section_results))
+
     return 0
 
 
