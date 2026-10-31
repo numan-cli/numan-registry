@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-24T06:06:33Z",
+  "updated_at": "2026-10-25T02:56:43Z",
   "registry_revision": "seed-2026-07-02",
   "packages": [
     {
@@ -538,7 +538,7 @@
         "owner": "nushell",
         "name": "custom-completions"
       },
-      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, \u2026). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Install-only: completion activation is deferred in Numan.",
+      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, …). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Install-only: completion activation is deferred in Numan.",
       "repo": "https://github.com/nushell/nu_scripts",
       "type": "completion",
       "tags": [
@@ -747,7 +747,7 @@
         "owner": "amtoine",
         "name": "nu-git-manager-sugar"
       },
-      "description": "Git prompt sugar for nu-git-manager (right prompt, completions). Registry-hosted mirror of upstream tag 0.7.0 (pkgs/nu-git-manager-sugar).",
+      "description": "Git prompt sugar for nu-git-manager (right prompt, completions). Registry-hosted mirror of upstream tag 0.8.0 (pkgs/nu-git-manager-sugar).",
       "repo": "https://github.com/amtoine/nu-git-manager",
       "type": "module",
       "tags": [
