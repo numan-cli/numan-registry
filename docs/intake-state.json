@@ -17,9 +17,9 @@
       "name": "nu_plugin_audio",
       "owner": "SuaveIV",
       "type": "plugin",
-      "version": "0.2.10",
+      "version": "0.2.13",
       "platforms": "Windows zip; Linux aarch64 tar.gz; Linux x86_64 + macOS tar.xz (nested cargo-dist paths)",
-      "note": "full-platform upstream ABI bump; 0.2.8 retained for Nu 0.113; Windows lifecycle-prove OK / Nu 0.114.1",
+      "note": "Nu >=0.116 <0.117 full-platform upstream ABI bump; lifecycle-prove OK on Nu 0.116.1; 0.2.10 retained for Nu 0.114",
       "repo": "https://github.com/SuaveIV/nu_plugin_audio",
       "spec": "specs/SuaveIV-nu_plugin_audio-0.2.10.json",
       "pr": 11
@@ -1046,6 +1046,10 @@
     }
   ],
   "changelog": [
+    {
+      "date": "2026-10-25",
+      "change": "SuaveIV/nu_plugin_audio@0.2.13 (Nu >=0.116 <0.117): full-platform upstream assets; lifecycle-prove OK on Nu 0.116.1. Retain 0.2.10 for Nu 0.114."
+    },
     {
       "date": "2026-10-18",
       "change": "Wave 6 completions: nushell/bat-completions, aws-completions, rg-completions @ 0.1.0-44f8f25 (install-only mirrors)."
