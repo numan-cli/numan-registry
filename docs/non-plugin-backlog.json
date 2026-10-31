@@ -120,7 +120,7 @@
       "license": "MIT",
       "last_activity": "2026-09-17",
       "status": "CANDIDATE",
-      "note": "Single-file module, 1 export def. Same author as KamilKleina/git-aliases, already in the registry as a module."
+      "note": "Single-file module, 1 export def. Same author as KamilKleina/git-aliases, already in the registry as a script."
     },
     {
       "repo": "nushell-prophet/nu-telegram-bot",
@@ -131,8 +131,8 @@
       "entry": "nutgb.nu",
       "license": "Unlicense",
       "last_activity": "2024-06-16",
-      "status": "CANDIDATE",
-      "note": "Single-file module, 7 export defs, Telegram Bot API wrapper. Dormant since 2024-06; verify against current Nu before intake. Live proof needs a bot token."
+      "status": "STALE",
+      "note": "Single-file module, 7 export defs, Telegram Bot API wrapper. Dormant since 2024-06; revive only if demand appears, then verify against current Nu before intake. Live proof needs a bot token."
     },
     {
       "repo": "nushell/nu_scripts",
@@ -260,11 +260,23 @@
       "type": "script",
       "awesome_nu_section": "Scripts",
       "description": "Check if your system clock is drifting using the Time.now API.",
-      "entry": "time-sync.nu (plus world-time/world-time.nu)",
+      "entry": "time-sync.nu",
       "license": "MIT",
       "last_activity": "2026-03-12",
       "status": "CANDIDATE",
-      "note": "Repo yields two tools awesome-nu lists separately: time-sync (clock drift check) and world-time (timezone lookup). Export defs with no def main, the same shape as nu_script_gh_status and nu_script_hnews, which sit in the registry as install-only scripts. Author already has three scripts in the registry."
+      "note": "Clock drift check via the Time.now API. Export defs with no def main, the same shape as nu_script_gh_status and nu_script_hnews, which sit in the registry as install-only scripts. Shares repo SuaveIV/nu_script_time_sync with nu_script_world_time. Author already has three scripts in the registry."
+    },
+    {
+      "repo": "SuaveIV/nu_script_time_sync",
+      "name": "nu_script_world_time",
+      "type": "script",
+      "awesome_nu_section": "Scripts",
+      "description": "Look up the current time in any timezone using the Time.now API.",
+      "entry": "world-time/world-time.nu",
+      "license": "MIT",
+      "last_activity": "2026-03-12",
+      "status": "CANDIDATE",
+      "note": "Timezone lookup via the Time.now API. Export defs with no def main, install-only like nu_script_time_sync. Shares repo SuaveIV/nu_script_time_sync with nu_script_time_sync. Author already has three scripts in the registry."
     },
     {
       "repo": "phoenixr-codes/wi",

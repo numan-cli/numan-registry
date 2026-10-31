@@ -32,6 +32,50 @@ class NormalizeNameTests(unittest.TestCase):
         self.assertEqual(audit.normalize_name("nu-git-manager"), "nu_git_manager")
 
 
+class ExtractRepoSlugTests(unittest.TestCase):
+    def test_github_tree_url(self):
+        self.assertEqual(
+            audit.extract_repo_slug("https://github.com/nushell/nu_scripts/tree/main/custom-completions/git"),
+            "nushell/nu_scripts",
+        )
+
+    def test_github_blob_url(self):
+        self.assertEqual(
+            audit.extract_repo_slug("https://github.com/nushell/nu_scripts/blob/main/modules/weather/get-weather.nu"),
+            "nushell/nu_scripts",
+        )
+
+    def test_gitlab_tree_url(self):
+        self.assertEqual(
+            audit.extract_repo_slug("https://gitlab.com/boweflex/sessionizer.nu/-/tree/main"),
+            "boweflex/sessionizer.nu",
+        )
+
+    def test_gitlab_blob_url(self):
+        self.assertEqual(
+            audit.extract_repo_slug("https://gitlab.com/boweflex/sessionizer.nu/-/blob/main/sessionizer.nu"),
+            "boweflex/sessionizer.nu",
+        )
+
+    def test_gitlab_root_url(self):
+        self.assertEqual(
+            audit.extract_repo_slug("https://gitlab.com/boweflex/sessionizer.nu"),
+            "boweflex/sessionizer.nu",
+        )
+
+    def test_codeberg_src_url(self):
+        self.assertEqual(
+            audit.extract_repo_slug("https://codeberg.org/org/tool/src/branch/main/mod.nu"),
+            "org/tool",
+        )
+
+    def test_bare_slug(self):
+        self.assertEqual(
+            audit.extract_repo_slug("boweflex/sessionizer.nu"),
+            "boweflex/sessionizer.nu",
+        )
+
+
 class ParseAwesomeNuMarkdownTests(unittest.TestCase):
     def test_parse_sections_and_items(self):
         content = """# Awesome Nu

@@ -84,7 +84,7 @@ def extract_repo_slug(url: str) -> str | None:
     if "codeberg.org/" in low:
         return low.split("codeberg.org/")[-1].split("/src/")[0]
     if "gitlab.com/" in low:
-        return low.split("gitlab.com/")[-1]
+        return low.split("gitlab.com/")[-1].split("/-/tree/")[0].split("/-/blob/")[0]
     if "/" in low and not low.startswith("http://") and not low.startswith("https://"):
         return low
     return None
