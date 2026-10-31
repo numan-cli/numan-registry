@@ -730,6 +730,64 @@ def lint_version(
     )
 
 
+def _lint_cross_package_activation_ownership(
+    packages: list, errors: list[str]
+) -> None:
+    """Reject an activation command claimed by more than one package.
+
+    The client enforces exclusive ownership when it renders the managed
+    activation file: two installed packages declaring the same completion
+    target (or the same script entry point) make a plain activate fail.
+    Ownership is per package id, not per version: one package may declare
+    the same command in several of its versions, since only one version is
+    installed at a time. Completion targets and script entry points are
+    separate lanes in the client, so they are checked separately.
+    """
+    lanes: dict[str, dict[str, set[str]]] = {
+        "completion target": {},
+        "script entry point": {},
+    }
+    for pkg in packages:
+        if not isinstance(pkg, dict):
+            continue
+        label = package_label(pkg)
+        versions = pkg.get("versions")
+        if not isinstance(versions, list):
+            continue
+        for version in versions:
+            if not isinstance(version, dict):
+                continue
+            activation = version.get("activation")
+            if not isinstance(activation, dict):
+                continue
+            targets = activation.get("targets")
+            if isinstance(targets, list):
+                for target in targets:
+                    if isinstance(target, dict) and isinstance(
+                        target.get("command"), str
+                    ):
+                        lanes["completion target"].setdefault(
+                            target["command"], set()
+                        ).add(label)
+            entry_points = activation.get("entry_points")
+            if isinstance(entry_points, list):
+                for entry_point in entry_points:
+                    if isinstance(entry_point, dict) and isinstance(
+                        entry_point.get("name"), str
+                    ):
+                        lanes["script entry point"].setdefault(
+                            entry_point["name"], set()
+                        ).add(label)
+    for lane, claims in lanes.items():
+        for command in sorted(claims):
+            owners = sorted(claims[command])
+            if len(owners) > 1:
+                errors.append(
+                    f"activation ownership: {lane} {command!r} is declared by "
+                    f"multiple packages: {', '.join(owners)}"
+                )
+
+
 def lint_index(index: dict) -> list[str]:
     errors: list[str] = []
     packages = index.get("packages")
@@ -767,6 +825,7 @@ def lint_index(index: dict) -> list[str]:
                 entry_index=entry_index,
                 version_index=version_index,
             )
+    _lint_cross_package_activation_ownership(packages, errors)
     return errors
 
 

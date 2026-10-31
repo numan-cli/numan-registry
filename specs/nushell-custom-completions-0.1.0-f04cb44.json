@@ -32,21 +32,6 @@
         "kind": "static"
       },
       {
-        "command": "cargo",
-        "path": "custom-completions/cargo/cargo-completions.nu",
-        "kind": "command-backed"
-      },
-      {
-        "command": "gh",
-        "path": "custom-completions/gh/gh-completions.nu",
-        "kind": "command-backed"
-      },
-      {
-        "command": "git",
-        "path": "custom-completions/git/git-completions.nu",
-        "kind": "command-backed"
-      },
-      {
         "command": "glow",
         "path": "custom-completions/glow/glow-completions.nu",
         "kind": "static"
@@ -54,11 +39,6 @@
       {
         "command": "just",
         "path": "custom-completions/just/just-completions.nu",
-        "kind": "command-backed"
-      },
-      {
-        "command": "make",
-        "path": "custom-completions/make/make-completions.nu",
         "kind": "command-backed"
       },
       {
@@ -77,11 +57,6 @@
         "kind": "command-backed"
       },
       {
-        "command": "npm",
-        "path": "custom-completions/npm/npm-completions.nu",
-        "kind": "command-backed"
-      },
-      {
         "command": "pass",
         "path": "custom-completions/pass/pass-completions.nu",
         "kind": "command-backed"
@@ -94,11 +69,6 @@
       {
         "command": "pixi",
         "path": "custom-completions/pixi/pixi-completions.nu",
-        "kind": "command-backed"
-      },
-      {
-        "command": "pnpm",
-        "path": "custom-completions/pnpm/pnpm-completions.nu",
         "kind": "command-backed"
       },
       {

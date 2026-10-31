@@ -1061,5 +1061,94 @@ class ProvisionalDeferralWarningsTests(unittest.TestCase):
         self.assertEqual(errors, [])
 
 
+class CrossPackageOwnershipTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.lint = load_lint()
+
+    @staticmethod
+    def _completion_pkg(owner, name, command):
+        pkg = base_package(
+            id={"owner": owner, "name": name},
+            type="completion",
+            tags=["completion"],
+        )
+        pkg["versions"][0]["activation"] = {
+            "kind": "nu-completion",
+            "targets": [
+                {
+                    "command": command,
+                    "path": f"custom-completions/{command}/{command}-completions.nu",
+                    "kind": "command-backed",
+                }
+            ],
+        }
+        return pkg
+
+    @staticmethod
+    def _script_pkg(owner, name, entry_name):
+        pkg = base_package(
+            id={"owner": owner, "name": name},
+            type="script",
+            tags=["script"],
+        )
+        pkg["versions"][0]["activation"] = {
+            "kind": "nu-script",
+            "entry_points": [{"name": entry_name, "path": f"{entry_name}.nu"}],
+        }
+        return pkg
+
+    def _ownership_errors(self, packages):
+        errors = self.lint.lint_index({"packages": packages})
+        return [e for e in errors if e.startswith("activation ownership:")]
+
+    def test_duplicate_completion_target_across_packages_is_error(self):
+        errors = self._ownership_errors(
+            [
+                self._completion_pkg("nushell", "custom-completions", "git"),
+                self._completion_pkg("nushell", "git-completions", "git"),
+            ]
+        )
+        self.assertEqual(len(errors), 1)
+        self.assertIn("'git'", errors[0])
+        self.assertIn("nushell/custom-completions", errors[0])
+        self.assertIn("nushell/git-completions", errors[0])
+
+    def test_distinct_completion_targets_pass(self):
+        errors = self._ownership_errors(
+            [
+                self._completion_pkg("nushell", "git-completions", "git"),
+                self._completion_pkg("nushell", "cargo-completions", "cargo"),
+            ]
+        )
+        self.assertEqual(errors, [])
+
+    def test_same_package_two_versions_same_target_passes(self):
+        pkg = self._completion_pkg("nushell", "git-completions", "git")
+        second = json.loads(json.dumps(pkg["versions"][0]))
+        second["version"] = "1.0.1"
+        pkg["versions"].append(second)
+        self.assertEqual(self._ownership_errors([pkg]), [])
+
+    def test_duplicate_script_entry_point_across_packages_is_error(self):
+        errors = self._ownership_errors(
+            [
+                self._script_pkg("acme", "weather-a", "weather"),
+                self._script_pkg("acme", "weather-b", "weather"),
+            ]
+        )
+        self.assertEqual(len(errors), 1)
+        self.assertIn("script entry point", errors[0])
+
+    def test_completion_and_script_same_name_are_separate_lanes(self):
+        errors = self._ownership_errors(
+            [
+                self._completion_pkg("acme", "weather-completions", "weather"),
+                self._script_pkg("acme", "weather-script", "weather"),
+            ]
+        )
+        self.assertEqual(errors, [])
+
+
 if __name__ == "__main__":
     unittest.main()
