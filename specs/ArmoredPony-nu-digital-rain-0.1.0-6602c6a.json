@@ -1,7 +1,7 @@
 {
   "owner": "ArmoredPony",
   "name": "nu-digital-rain",
-  "description": "Digital rain visual effect implementation for Nushell",
+  "description": "Digital rain visual effect implementation for Nushell. Declares a script entry point for digital-rain for activation with `numan activate`.",
   "repo": "https://github.com/ArmoredPony/nu-digital-rain",
   "type": "script",
   "tags": [
@@ -11,10 +11,20 @@
   ],
   "version": "0.1.0-6602c6a",
   "nu_version": ">=0.114.0 <0.115.0",
+  "verified_with": ["0.114.1"],
   "artifact": {
     "kind": "archive",
     "url": "https://github.com/numan-cli/numan-registry/releases/download/archive-ArmoredPony-nu-digital-rain-0.1.0-6602c6a/ArmoredPony-nu-digital-rain-0.1.0-6602c6a.tar.gz",
     "entry": "digital-rain.nu",
     "sha256": "841139fc009611e2ec49869bed4946035df1924dcc95da9862d21eda88f77efa"
+  },
+  "activation": {
+    "kind": "nu-script",
+    "entry_points": [
+      {
+        "name": "digital-rain",
+        "path": "digital-rain.nu"
+      }
+    ]
   }
 }

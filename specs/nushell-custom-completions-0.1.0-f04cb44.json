@@ -1,16 +1,116 @@
 {
   "owner": "nushell",
   "name": "custom-completions",
-  "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, …). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Install-only: completion activation is deferred in Numan.",
+  "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, …). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Declares completion targets for its curated custom-completions files for activation with `numan activate`.",
   "repo": "https://github.com/nushell/nu_scripts",
   "type": "completion",
-  "tags": ["completion", "mirror", "install-only"],
+  "tags": ["completion", "mirror"],
   "version": "0.1.0-f04cb44",
   "nu_version": "*",
-  "verified_with": ["0.113.1"],
+  "verified_with": ["0.113.1", "0.116.1"],
   "artifact": {
     "kind": "archive",
     "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-custom-completions-f04cb44/custom-completions-f04cb44.zip",
     "archive_root": "custom-completions-f04cb44"
+  },
+  "activation": {
+    "kind": "nu-completion",
+    "targets": [
+      {
+        "command": "ani-cli",
+        "path": "custom-completions/ani-cli/ani-cli-completions.nu",
+        "kind": "static"
+      },
+      {
+        "command": "bw",
+        "path": "custom-completions/bitwarden-cli/bitwarden-cli-completions.nu",
+        "kind": "command-backed"
+      },
+      {
+        "command": "btm",
+        "path": "custom-completions/btm/btm-completions.nu",
+        "kind": "static"
+      },
+      {
+        "command": "glow",
+        "path": "custom-completions/glow/glow-completions.nu",
+        "kind": "static"
+      },
+      {
+        "command": "just",
+        "path": "custom-completions/just/just-completions.nu",
+        "kind": "command-backed"
+      },
+      {
+        "command": "man",
+        "path": "custom-completions/man/man-completions.nu",
+        "kind": "static"
+      },
+      {
+        "command": "nano",
+        "path": "custom-completions/nano/nano-completions.nu",
+        "kind": "static"
+      },
+      {
+        "command": "nix",
+        "path": "custom-completions/nix/nix-completions.nu",
+        "kind": "command-backed"
+      },
+      {
+        "command": "pass",
+        "path": "custom-completions/pass/pass-completions.nu",
+        "kind": "command-backed"
+      },
+      {
+        "command": "pdm",
+        "path": "custom-completions/pdm/pdm-completions.nu",
+        "kind": "command-backed"
+      },
+      {
+        "command": "pixi",
+        "path": "custom-completions/pixi/pixi-completions.nu",
+        "kind": "command-backed"
+      },
+      {
+        "command": "reflector",
+        "path": "custom-completions/reflector/reflector-completions.nu",
+        "kind": "command-backed"
+      },
+      {
+        "command": "rustup",
+        "path": "custom-completions/rustup/rustup-completions.nu",
+        "kind": "command-backed"
+      },
+      {
+        "command": "tldr",
+        "path": "custom-completions/tealdeer/tldr-completions.nu",
+        "kind": "static"
+      },
+      {
+        "command": "toipe",
+        "path": "custom-completions/toipe/toipe-completions.nu",
+        "kind": "command-backed"
+      },
+      {
+        "command": "typst",
+        "path": "custom-completions/typst/typst-completions.nu",
+        "kind": "static"
+      },
+      {
+        "command": "code",
+        "path": "custom-completions/vscode/vscode-completions.nu",
+        "kind": "command-backed"
+      },
+      {
+        "command": "yarn",
+        "path": "custom-completions/yarn/yarn-v4-completions.nu",
+        "kind": "command-backed"
+      },
+      {
+        "command": "zellij",
+        "path": "custom-completions/zellij/zellij-completions.nu",
+        "kind": "command-backed"
+      }
+    ]
   }
 }

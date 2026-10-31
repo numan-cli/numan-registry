@@ -1,7 +1,7 @@
 {
   "owner": "SuaveIV",
   "name": "nu_script_gh_status",
-  "description": "Check GitHub service health from Nushell. Registry-hosted mirror of upstream commit 81756dc. Install-only: script activation is deferred in Numan.",
+  "description": "Check GitHub service health from Nushell. Registry-hosted mirror of upstream commit 81756dc. Script activation is not offered for this package: gh_status.nu only exports commands (gh-status, gh-watch) for use as a module and defines no script entry point, so running it as a script does nothing.",
   "repo": "https://github.com/SuaveIV/nu_script_gh_status",
   "type": "script",
   "tags": ["script", "github", "mirror", "install-only"],

@@ -45,7 +45,6 @@ VERSION_TAG_RE = re.compile(
 )
 PACKAGE_TYPES = frozenset({"plugin", "module", "script", "completion"})
 ARTIFACT_KINDS = frozenset({"binary", "archive", "source"})
-ACTIVATABLE_TYPES = frozenset({"plugin", "module"})
 
 
 def load_json(path: Path) -> object:
@@ -294,6 +293,247 @@ def _tags_claim_activation(tags: object) -> bool:
     return any(isinstance(tag, str) and "activat" in tag.lower() for tag in tags)
 
 
+COMPLETION_COMMAND_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_-]*$")
+COMPLETION_TARGET_KINDS = frozenset({"static", "command-backed"})
+COMPLETION_TARGET_KEYS = frozenset({"command", "path", "kind"})
+NU_RESERVED_KEYWORDS = frozenset(
+    {
+        "alias", "and", "break", "catch", "const", "continue", "def",
+        "def-env", "else", "export", "export-env", "extern", "false", "for",
+        "hide", "if", "in", "let", "loop", "match", "module", "mut", "not",
+        "null", "or", "overlay", "return", "source", "source-env", "true",
+        "try", "use", "while", "xor",
+    }
+)
+
+
+def _completion_target_path_ok(path: object) -> bool:
+    """Return whether a completion target path is a safe relative .nu path."""
+    if not isinstance(path, str) or not path:
+        return False
+    if path.startswith("/") or path.startswith("\\"):
+        return False
+    if re.match(r"^[A-Za-z]:", path):
+        return False
+    parts = re.split(r"[/\\]", path)
+    if any(part in ("", "..") for part in parts):
+        return False
+    return Path(path).suffix == ".nu"
+
+
+def _lint_completion_target(
+    target_index: int,
+    target: object,
+    seen_commands: set[str],
+    seen_paths: set[str],
+    errors: list[str],
+    *,
+    label: str,
+) -> None:
+    """Validate a single completion target and track duplicate bookkeeping."""
+    if not isinstance(target, dict):
+        errors.append(
+            f"{label}: activation.targets[{target_index}] must be an object"
+        )
+        return
+    if set(target) != COMPLETION_TARGET_KEYS:
+        errors.append(
+            f"{label}: activation.targets[{target_index}] must declare "
+            "exactly the keys command, path, kind"
+        )
+    command = target.get("command")
+    if not isinstance(command, str) or COMPLETION_COMMAND_RE.fullmatch(command) is None:
+        errors.append(
+            f"{label}: activation.targets[{target_index}] command "
+            f"{command!r} is not a valid command name"
+        )
+    elif command in NU_RESERVED_KEYWORDS:
+        errors.append(
+            f"{label}: activation.targets[{target_index}] command "
+            f"{command!r} is a Nushell reserved keyword"
+        )
+    if isinstance(command, str):
+        if command in seen_commands:
+            errors.append(
+                f"{label}: duplicate activation target command {command!r}"
+            )
+        else:
+            seen_commands.add(command)
+    path = target.get("path")
+    if not _completion_target_path_ok(path):
+        errors.append(
+            f"{label}: activation.targets[{target_index}] path {path!r} "
+            "must be a safe relative path ending in .nu"
+        )
+    if isinstance(path, str):
+        normalized = _normalized_target_path(path)
+        if normalized in seen_paths:
+            errors.append(
+                f"{label}: duplicate activation target path {path!r}"
+            )
+        else:
+            seen_paths.add(normalized)
+    target_kind = target.get("kind")
+    if target_kind not in COMPLETION_TARGET_KINDS:
+        errors.append(
+            f"{label}: activation.targets[{target_index}] kind must be "
+            f"'static' or 'command-backed', got {target_kind!r}"
+        )
+
+
+def _lint_completion_activation(
+    pkg: dict,
+    activation: object,
+    errors: list[str],
+    *,
+    label: str,
+) -> None:
+    """Validate the activation block for completion packages.
+
+    Install-only completions (no activation block) are allowed; only flag
+    them when tags claim activation. A declared block must use kind
+    'nu-completion' with well-formed, duplicate-free targets, mirroring
+    the client-side target validation in the numan client.
+    """
+    if not isinstance(activation, dict):
+        if _tags_claim_activation(pkg.get("tags")):
+            errors.append(
+                f"{label}: completion tagged for activation is missing "
+                "activation declaration"
+            )
+        return
+
+    kind = activation.get("kind")
+    if kind != "nu-completion":
+        errors.append(
+            f"{label}: completion activation.kind must be 'nu-completion', "
+            f"got {kind!r}"
+        )
+
+    targets = activation.get("targets")
+    if not isinstance(targets, list) or not targets:
+        errors.append(
+            f"{label}: activation.targets must be a non-empty list for "
+            "completion activation"
+        )
+        return
+
+    seen_commands: set[str] = set()
+    seen_paths: set[str] = set()
+    for target_index, target in enumerate(targets):
+        _lint_completion_target(
+            target_index, target, seen_commands, seen_paths, errors, label=label
+        )
+
+
+SCRIPT_ENTRY_POINT_KEYS = frozenset({"name", "path"})
+
+
+def _normalized_target_path(path: str) -> str:
+    """Drop CurDir components so './x.nu' and 'x.nu' dedupe together."""
+    return "/".join(part for part in path.split("/") if part != ".")
+
+
+def _lint_script_entry_point(
+    entry_index: int,
+    entry_point: object,
+    seen_names: set[str],
+    seen_paths: set[str],
+    errors: list[str],
+    *,
+    label: str,
+) -> None:
+    """Validate a single script entry point and track duplicate bookkeeping."""
+    if not isinstance(entry_point, dict):
+        errors.append(
+            f"{label}: activation.entry_points[{entry_index}] must be "
+            "an object"
+        )
+        return
+    if set(entry_point) != SCRIPT_ENTRY_POINT_KEYS:
+        errors.append(
+            f"{label}: activation.entry_points[{entry_index}] must "
+            "declare exactly the keys name, path"
+        )
+    name = entry_point.get("name")
+    if not isinstance(name, str) or COMPLETION_COMMAND_RE.fullmatch(name) is None:
+        errors.append(
+            f"{label}: activation.entry_points[{entry_index}] name "
+            f"{name!r} is not a valid command name"
+        )
+    elif name in NU_RESERVED_KEYWORDS:
+        errors.append(
+            f"{label}: activation.entry_points[{entry_index}] name "
+            f"{name!r} is a Nushell reserved keyword"
+        )
+    if isinstance(name, str):
+        if name in seen_names:
+            errors.append(
+                f"{label}: duplicate script entry point name {name!r}"
+            )
+        else:
+            seen_names.add(name)
+    path = entry_point.get("path")
+    if not _completion_target_path_ok(path):
+        errors.append(
+            f"{label}: activation.entry_points[{entry_index}] path "
+            f"{path!r} must be a safe relative path ending in .nu"
+        )
+    if isinstance(path, str):
+        normalized = _normalized_target_path(path)
+        if normalized in seen_paths:
+            errors.append(
+                f"{label}: duplicate script entry point path {path!r}"
+            )
+        else:
+            seen_paths.add(normalized)
+
+
+def _lint_script_activation(
+    pkg: dict,
+    activation: object,
+    errors: list[str],
+    *,
+    label: str,
+) -> None:
+    """Validate the activation block for script packages.
+
+    Install-only scripts (no activation block) are allowed; only flag
+    them when tags claim activation. A declared block must use kind
+    'nu-script' with well-formed, duplicate-free entry points, mirroring
+    the client's validate_script_entry_points.
+    """
+    if not isinstance(activation, dict):
+        if _tags_claim_activation(pkg.get("tags")):
+            errors.append(
+                f"{label}: script tagged for activation is missing "
+                "activation declaration"
+            )
+        return
+
+    kind = activation.get("kind")
+    if kind != "nu-script":
+        errors.append(
+            f"{label}: script activation.kind must be 'nu-script', "
+            f"got {kind!r}"
+        )
+
+    entry_points = activation.get("entry_points")
+    if not isinstance(entry_points, list) or not entry_points:
+        errors.append(
+            f"{label}: activation.entry_points must be a non-empty list "
+            "for script activation"
+        )
+        return
+
+    seen_names: set[str] = set()
+    seen_paths: set[str] = set()
+    for entry_index, entry_point in enumerate(entry_points):
+        _lint_script_entry_point(
+            entry_index, entry_point, seen_names, seen_paths, errors, label=label
+        )
+
+
 def _lint_activation(
     pkg: dict,
     version: dict,
@@ -301,14 +541,27 @@ def _lint_activation(
     *,
     label: str,
 ) -> None:
-    """Validate the activation block for module packages.
+    """Validate the activation block for module, completion, and script packages.
 
-    Plugins activate via plugin add (activation is optional); scripts and
-    completions are not activatable. Only modules get checked, and only when
-    they declare an activation block or are tagged as activatable.
+    Plugins activate via plugin add (activation is optional). Modules,
+    completions, and scripts get checked, and only when they declare an
+    activation block or are tagged as activatable.
     """
     pkg_type = pkg.get("type")
     activation = version.get("activation")
+    if isinstance(activation, dict) and pkg_type not in ("completion", "script"):
+        for _field in ("targets", "entry_points"):
+            if _field in activation:
+                errors.append(
+                    f"{label}: activation.{_field} is only valid for "
+                    "completion/script packages"
+                )
+    if pkg_type == "completion":
+        _lint_completion_activation(pkg, activation, errors, label=label)
+        return
+    if pkg_type == "script":
+        _lint_script_activation(pkg, activation, errors, label=label)
+        return
     if pkg_type != "module":
         return
 
@@ -477,6 +730,64 @@ def lint_version(
     )
 
 
+def _lint_cross_package_activation_ownership(
+    packages: list, errors: list[str]
+) -> None:
+    """Reject an activation command claimed by more than one package.
+
+    The client enforces exclusive ownership when it renders the managed
+    activation file: two installed packages declaring the same completion
+    target (or the same script entry point) make a plain activate fail.
+    Ownership is per package id, not per version: one package may declare
+    the same command in several of its versions, since only one version is
+    installed at a time. Completion targets and script entry points are
+    separate lanes in the client, so they are checked separately.
+    """
+    lanes: dict[str, dict[str, set[str]]] = {
+        "completion target": {},
+        "script entry point": {},
+    }
+    for pkg in packages:
+        if not isinstance(pkg, dict):
+            continue
+        label = package_label(pkg)
+        versions = pkg.get("versions")
+        if not isinstance(versions, list):
+            continue
+        for version in versions:
+            if not isinstance(version, dict):
+                continue
+            activation = version.get("activation")
+            if not isinstance(activation, dict):
+                continue
+            targets = activation.get("targets")
+            if isinstance(targets, list):
+                for target in targets:
+                    if isinstance(target, dict) and isinstance(
+                        target.get("command"), str
+                    ):
+                        lanes["completion target"].setdefault(
+                            target["command"], set()
+                        ).add(label)
+            entry_points = activation.get("entry_points")
+            if isinstance(entry_points, list):
+                for entry_point in entry_points:
+                    if isinstance(entry_point, dict) and isinstance(
+                        entry_point.get("name"), str
+                    ):
+                        lanes["script entry point"].setdefault(
+                            entry_point["name"], set()
+                        ).add(label)
+    for lane, claims in lanes.items():
+        for command in sorted(claims):
+            owners = sorted(claims[command])
+            if len(owners) > 1:
+                errors.append(
+                    f"activation ownership: {lane} {command!r} is declared by "
+                    f"multiple packages: {', '.join(owners)}"
+                )
+
+
 def lint_index(index: dict) -> list[str]:
     errors: list[str] = []
     packages = index.get("packages")
@@ -514,6 +825,7 @@ def lint_index(index: dict) -> list[str]:
                 entry_index=entry_index,
                 version_index=version_index,
             )
+    _lint_cross_package_activation_ownership(packages, errors)
     return errors
 
 

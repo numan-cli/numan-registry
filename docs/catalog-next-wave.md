@@ -117,9 +117,9 @@ Intake steps per package: `scripts/discover.py` → `build-mirror-zip.py` → re
 
 ### Wave 3C: Client honesty (same timeframe, separate PRs)
 
-- [ ] Document in README / search UX that scripts & completions are install-only (path printed; no silent activate)
+- [ ] Document in README / search UX which scripts & completions declare activation and which stay install-only (path printed; no silent activate)
 - [ ] Consider adding one **install-only** starter path to `numan try` docs (or a follow-up `try` fallback) now that Wave 3A is live: e.g. wttr or nufetch on any Nu
-- [ ] Do **not** invent script/completion activation in the catalog wave (roadmap: still deferred)
+- [x] Do **not** invent script/completion activation in the catalog wave (roadmap: still deferred at Wave 3 time; contracts landed later, see Tracking debt note 3)
 
 ### Explicit non-goals for Wave 3 (now unblocked for Wave 4+)
 
@@ -187,7 +187,7 @@ Evaluated for `numan-maintained` distribution per ADR 0001 stewardship criteria:
 
 1. **`numan-registry/docs/non-plugin-backlog.json`** (or extend intake-state): plugin backlog does not cover scripts/modules/completions.
 2. **`numan try` starter diversity**: add at least one Nu-agnostic script now that Wave 3A mirrors are live.
-3. **Activation contracts** for scripts/completions remain on the consolidated roadmap; catalog growth must stay install-only until those land.
+3. **Activation contracts** for scripts/completions have since landed (client nu-script in numan #14, nu-completion in numan #15; registry declarations followed). Catalog growth is no longer required to stay install-only, though packages whose payloads cannot honestly declare an entry point or target stay install-only.
 
 ## Success criteria
 

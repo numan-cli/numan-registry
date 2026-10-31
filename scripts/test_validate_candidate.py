@@ -64,6 +64,29 @@ class TestLoadSpec(unittest.TestCase):
                     validate_candidate._load_spec(path)
 
 
+class TestIsActivatable(unittest.TestCase):
+    def test_plugin_always(self):
+        self.assertTrue(validate_candidate._is_activatable({"type": "plugin"}))
+
+    def test_module_requires_activation(self):
+        self.assertFalse(validate_candidate._is_activatable({"type": "module"}))
+        self.assertTrue(validate_candidate._is_activatable(
+            {"type": "module", "activation": {"kind": "nu-module"}}
+        ))
+
+    def test_completion_requires_activation(self):
+        self.assertFalse(validate_candidate._is_activatable({"type": "completion"}))
+        self.assertTrue(validate_candidate._is_activatable(
+            {"type": "completion", "activation": {"kind": "nu-completion"}}
+        ))
+
+    def test_script_requires_activation(self):
+        self.assertFalse(validate_candidate._is_activatable({"type": "script"}))
+        self.assertTrue(validate_candidate._is_activatable(
+            {"type": "script", "activation": {"kind": "nu-script"}}
+        ))
+
+
 class TestSeedWorkdir(unittest.TestCase):
     def test_writes_spec_and_index(self):
         with tempfile.TemporaryDirectory() as tmp:

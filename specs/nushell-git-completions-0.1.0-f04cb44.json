@@ -1,16 +1,26 @@
 {
   "owner": "nushell",
   "name": "git-completions",
-  "description": "Git custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/git @ f04cb44. Install-only: completion activation is deferred in Numan.",
+  "description": "Git custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/git @ f04cb44. Declares a completion target for git for activation with `numan activate`.",
   "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/git",
   "type": "completion",
-  "tags": ["completion", "git", "mirror", "install-only"],
+  "tags": ["completion", "git", "mirror"],
   "version": "0.1.0-f04cb44",
   "nu_version": "*",
-  "verified_with": ["0.113.1"],
+  "verified_with": ["0.113.1", "0.116.1"],
   "artifact": {
     "kind": "archive",
     "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-git-completions-f04cb44/git-completions-f04cb44.zip",
     "archive_root": "git-completions-f04cb44"
+  },
+  "activation": {
+    "kind": "nu-completion",
+    "targets": [
+      {
+        "command": "git",
+        "path": "custom-completions/git/git-completions.nu",
+        "kind": "command-backed"
+      }
+    ]
   }
 }

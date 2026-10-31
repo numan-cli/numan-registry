@@ -1,21 +1,31 @@
 {
   "owner": "nushell",
   "name": "rg-completions",
-  "description": "Ripgrep custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/rg @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+  "description": "Ripgrep custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/rg @ 44f8f25. Declares a completion target for rg for activation with `numan activate`.",
   "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/rg",
   "type": "completion",
   "tags": [
     "completion",
     "rg",
     "ripgrep",
-    "mirror",
-    "install-only"
+    "mirror"
   ],
   "version": "0.1.0-44f8f25",
   "nu_version": "*",
+  "verified_with": ["0.116.1"],
   "artifact": {
     "kind": "archive",
     "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-rg-completions-44f8f25/rg-completions-44f8f25.zip",
     "archive_root": "rg-completions-44f8f25"
+  },
+  "activation": {
+    "kind": "nu-completion",
+    "targets": [
+      {
+        "command": "rg",
+        "path": "custom-completions/rg/rg-completions.nu",
+        "kind": "command-backed"
+      }
+    ]
   }
 }

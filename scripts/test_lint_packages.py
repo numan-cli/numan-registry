@@ -215,11 +215,35 @@ class TestLintActivation(unittest.TestCase):
         self.lint._lint_activation(pkg, version, errors, label="p@1")
         self.assertEqual(errors, [])
 
-    def test_script_activation_ignored(self):
+    def test_plugin_activation_targets_rejected(self):
+        pkg, version = self._pkg("plugin", activation={
+            "kind": "nu-completion",
+            "targets": [{"command": "git", "path": "git.nu", "kind": "command-backed"}],
+        })
+        errors: list[str] = []
+        self.lint._lint_activation(pkg, version, errors, label="p@1")
+        self.assertTrue(
+            any("activation.targets is only valid for completion/script" in e for e in errors),
+            errors,
+        )
+
+    def test_module_activation_entry_points_rejected(self):
+        pkg, version = self._pkg("module", activation={
+            "kind": "nu-script",
+            "entry_points": [{"name": "run", "path": "run.nu"}],
+        })
+        errors: list[str] = []
+        self.lint._lint_activation(pkg, version, errors, label="p@1")
+        self.assertTrue(
+            any("activation.entry_points is only valid for completion/script" in e for e in errors),
+            errors,
+        )
+
+    def test_script_activation_wrong_kind_is_error(self):
         pkg, version = self._pkg("script", activation={"kind": "bogus"})
         errors: list[str] = []
         self.lint._lint_activation(pkg, version, errors, label="p@1")
-        self.assertEqual(errors, [])
+        self.assertTrue(any("must be 'nu-script'" in e for e in errors), errors)
 
     def test_module_missing_activation_tagged_activatable(self):
         pkg, version = self._pkg("module", tags=["module", "activatable"])
@@ -254,6 +278,326 @@ class TestLintActivation(unittest.TestCase):
         errors: list[str] = []
         self.lint._lint_activation(pkg, version, errors, label="p@1")
         self.assertEqual(errors, [])
+
+
+class TestLintCompletionActivation(unittest.TestCase):
+    """Unit tests for completion activation lint in _lint_activation."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.lint = load_lint()
+
+    @staticmethod
+    def _target(command="git", path="custom-completions/git/git-completions.nu",
+                kind="command-backed"):
+        return {"command": command, "path": path, "kind": kind}
+
+    @classmethod
+    def _pkg(cls, *, tags=None, activation="valid"):
+        pkg = {"type": "completion", "tags": tags if tags is not None else ["completion"]}
+        version = {}
+        if activation == "valid":
+            version["activation"] = {
+                "kind": "nu-completion",
+                "targets": [cls._target()],
+            }
+        elif activation is not None:
+            version["activation"] = activation
+        return pkg, version
+
+    def _errors(self, pkg, version):
+        errors: list[str] = []
+        self.lint._lint_activation(pkg, version, errors, label="p@1")
+        return errors
+
+    def test_valid_declaration_passes(self):
+        pkg, version = self._pkg()
+        self.assertEqual(self._errors(pkg, version), [])
+
+    def test_valid_static_target_passes(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [self._target(kind="static")],
+        })
+        self.assertEqual(self._errors(pkg, version), [])
+
+    def test_install_only_completion_ok(self):
+        pkg, version = self._pkg(activation=None)
+        self.assertEqual(self._errors(pkg, version), [])
+
+    def test_install_only_completion_tagged_activatable_is_error(self):
+        pkg, version = self._pkg(tags=["completion", "activatable"], activation=None)
+        self.assertEqual(
+            self._errors(pkg, version),
+            ["p@1: completion tagged for activation is missing activation declaration"],
+        )
+
+    def test_wrong_kind_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-module",
+            "targets": [self._target()],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("must be 'nu-completion'" in e for e in errors), errors)
+
+    def test_missing_targets_is_error(self):
+        pkg, version = self._pkg(activation={"kind": "nu-completion"})
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("non-empty list" in e for e in errors), errors)
+
+    def test_empty_targets_is_error(self):
+        pkg, version = self._pkg(activation={"kind": "nu-completion", "targets": []})
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("non-empty list" in e for e in errors), errors)
+
+    def test_duplicate_command_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [
+                self._target(),
+                self._target(path="custom-completions/git/other.nu"),
+            ],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("duplicate activation target command 'git'" in e for e in errors), errors)
+
+    def test_duplicate_path_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [
+                self._target(),
+                self._target(command="git2"),
+            ],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("duplicate activation target path" in e for e in errors), errors)
+
+    def test_reserved_keyword_command_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [self._target(command="export")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("reserved keyword" in e for e in errors), errors)
+
+    def test_invalid_command_name_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [self._target(command="9git")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("not a valid command name" in e for e in errors), errors)
+
+    def test_traversal_path_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [self._target(path="../outside.nu")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("safe relative path" in e for e in errors), errors)
+
+    def test_absolute_path_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [self._target(path="/abs/git.nu")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("safe relative path" in e for e in errors), errors)
+
+    def test_backslash_traversal_path_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [self._target(path=r"..\outside.nu")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("safe relative path" in e for e in errors), errors)
+
+    def test_windows_drive_path_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [self._target(path=r"C:\outside.nu")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("safe relative path" in e for e in errors), errors)
+
+    def test_dotfile_nu_path_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [self._target(path="custom-completions/git/.nu")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("safe relative path" in e for e in errors), errors)
+
+    def test_non_nu_path_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [self._target(path="custom-completions/git/git.txt")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("safe relative path" in e for e in errors), errors)
+
+    def test_bad_target_kind_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [self._target(kind="dynamic")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("must be 'static' or 'command-backed'" in e for e in errors), errors)
+
+    def test_extra_target_key_is_error(self):
+        target = self._target()
+        target["extra"] = "x"
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [target],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("exactly the keys command, path, kind" in e for e in errors), errors)
+
+    def test_non_object_target_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": ["git"],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("must be an object" in e for e in errors), errors)
+
+
+class TestLintScriptActivation(unittest.TestCase):
+    """Unit tests for script activation lint in _lint_activation."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.lint = load_lint()
+
+    @staticmethod
+    def _ep(name="wttr", path="wttr.nu"):
+        return {"name": name, "path": path}
+
+    @classmethod
+    def _pkg(cls, *, tags=None, activation="valid"):
+        pkg = {"type": "script", "tags": tags if tags is not None else ["script"]}
+        version = {}
+        if activation == "valid":
+            version["activation"] = {
+                "kind": "nu-script",
+                "entry_points": [cls._ep()],
+            }
+        elif activation is not None:
+            version["activation"] = activation
+        return pkg, version
+
+    def _errors(self, pkg, version):
+        errors: list[str] = []
+        self.lint._lint_activation(pkg, version, errors, label="p@1")
+        return errors
+
+    def test_valid_declaration_passes(self):
+        pkg, version = self._pkg()
+        self.assertEqual(self._errors(pkg, version), [])
+
+    def test_install_only_script_ok(self):
+        pkg, version = self._pkg(activation=None)
+        self.assertEqual(self._errors(pkg, version), [])
+
+    def test_install_only_script_tagged_activatable_is_error(self):
+        pkg, version = self._pkg(tags=["script", "activatable"], activation=None)
+        self.assertEqual(
+            self._errors(pkg, version),
+            ["p@1: script tagged for activation is missing activation declaration"],
+        )
+
+    def test_wrong_kind_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-module",
+            "entry_points": [self._ep()],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("must be 'nu-script'" in e for e in errors), errors)
+
+    def test_missing_entry_points_is_error(self):
+        pkg, version = self._pkg(activation={"kind": "nu-script"})
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("non-empty list" in e for e in errors), errors)
+
+    def test_empty_entry_points_is_error(self):
+        pkg, version = self._pkg(activation={"kind": "nu-script", "entry_points": []})
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("non-empty list" in e for e in errors), errors)
+
+    def test_duplicate_name_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-script",
+            "entry_points": [self._ep(), self._ep(path="other.nu")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("duplicate script entry point name 'wttr'" in e for e in errors), errors)
+
+    def test_duplicate_path_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-script",
+            "entry_points": [self._ep(), self._ep(name="wttr2")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("duplicate script entry point path" in e for e in errors), errors)
+
+    def test_duplicate_path_curdir_normalized_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-script",
+            "entry_points": [self._ep(), self._ep(name="wttr2", path="./wttr.nu")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("duplicate script entry point path" in e for e in errors), errors)
+
+    def test_reserved_keyword_name_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-script",
+            "entry_points": [self._ep(name="if")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("reserved keyword" in e for e in errors), errors)
+
+    def test_invalid_name_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-script",
+            "entry_points": [self._ep(name="9wttr")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("not a valid command name" in e for e in errors), errors)
+
+    def test_traversal_path_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-script",
+            "entry_points": [self._ep(path="../escape.nu")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("safe relative path" in e for e in errors), errors)
+
+    def test_non_nu_path_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-script",
+            "entry_points": [self._ep(path="wttr.txt")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("safe relative path" in e for e in errors), errors)
+
+    def test_extra_entry_point_key_is_error(self):
+        ep = self._ep()
+        ep["kind"] = "static"
+        pkg, version = self._pkg(activation={
+            "kind": "nu-script",
+            "entry_points": [ep],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("exactly the keys name, path" in e for e in errors), errors)
+
+    def test_non_object_entry_point_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-script",
+            "entry_points": ["wttr"],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("must be an object" in e for e in errors), errors)
 
 
 class TestLintSourceProvenance(unittest.TestCase):
@@ -714,6 +1058,95 @@ class ProvisionalDeferralWarningsTests(unittest.TestCase):
         del pkg["versions"][0]["verified_with"]
         pkg["versions"][0]["evidence_tier"] = "provisional"
         errors = self.lint.lint_index({"packages": [pkg]})
+        self.assertEqual(errors, [])
+
+
+class CrossPackageOwnershipTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.lint = load_lint()
+
+    @staticmethod
+    def _completion_pkg(owner, name, command):
+        pkg = base_package(
+            id={"owner": owner, "name": name},
+            type="completion",
+            tags=["completion"],
+        )
+        pkg["versions"][0]["activation"] = {
+            "kind": "nu-completion",
+            "targets": [
+                {
+                    "command": command,
+                    "path": f"custom-completions/{command}/{command}-completions.nu",
+                    "kind": "command-backed",
+                }
+            ],
+        }
+        return pkg
+
+    @staticmethod
+    def _script_pkg(owner, name, entry_name):
+        pkg = base_package(
+            id={"owner": owner, "name": name},
+            type="script",
+            tags=["script"],
+        )
+        pkg["versions"][0]["activation"] = {
+            "kind": "nu-script",
+            "entry_points": [{"name": entry_name, "path": f"{entry_name}.nu"}],
+        }
+        return pkg
+
+    def _ownership_errors(self, packages):
+        errors = self.lint.lint_index({"packages": packages})
+        return [e for e in errors if e.startswith("activation ownership:")]
+
+    def test_duplicate_completion_target_across_packages_is_error(self):
+        errors = self._ownership_errors(
+            [
+                self._completion_pkg("nushell", "custom-completions", "git"),
+                self._completion_pkg("nushell", "git-completions", "git"),
+            ]
+        )
+        self.assertEqual(len(errors), 1)
+        self.assertIn("'git'", errors[0])
+        self.assertIn("nushell/custom-completions", errors[0])
+        self.assertIn("nushell/git-completions", errors[0])
+
+    def test_distinct_completion_targets_pass(self):
+        errors = self._ownership_errors(
+            [
+                self._completion_pkg("nushell", "git-completions", "git"),
+                self._completion_pkg("nushell", "cargo-completions", "cargo"),
+            ]
+        )
+        self.assertEqual(errors, [])
+
+    def test_same_package_two_versions_same_target_passes(self):
+        pkg = self._completion_pkg("nushell", "git-completions", "git")
+        second = json.loads(json.dumps(pkg["versions"][0]))
+        second["version"] = "1.0.1"
+        pkg["versions"].append(second)
+        self.assertEqual(self._ownership_errors([pkg]), [])
+
+    def test_duplicate_script_entry_point_across_packages_is_error(self):
+        errors = self._ownership_errors(
+            [
+                self._script_pkg("acme", "weather-a", "weather"),
+                self._script_pkg("acme", "weather-b", "weather"),
+            ]
+        )
+        self.assertEqual(len(errors), 1)
+        self.assertIn("script entry point", errors[0])
+
+    def test_completion_and_script_same_name_are_separate_lanes(self):
+        errors = self._ownership_errors(
+            [
+                self._completion_pkg("acme", "weather-completions", "weather"),
+                self._script_pkg("acme", "weather-script", "weather"),
+            ]
+        )
         self.assertEqual(errors, [])
 
 

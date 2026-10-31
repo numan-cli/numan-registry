@@ -1,7 +1,7 @@
 {
   "owner": "nushell",
   "name": "winget-completions",
-  "description": "winget custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/winget @ f04cb44. Install-only: completion activation is deferred in Numan.",
+  "description": "winget custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/winget @ f04cb44. Completion activation is not offered for this package: its completions file does not load on current Nushell versions.",
   "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/winget",
   "type": "completion",
   "tags": ["completion", "winget", "mirror", "install-only"],

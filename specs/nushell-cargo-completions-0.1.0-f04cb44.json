@@ -1,16 +1,26 @@
 {
   "owner": "nushell",
   "name": "cargo-completions",
-  "description": "Cargo custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/cargo @ f04cb44. Install-only: completion activation is deferred in Numan.",
+  "description": "Cargo custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/cargo @ f04cb44. Declares a completion target for cargo for activation with `numan activate`.",
   "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/cargo",
   "type": "completion",
-  "tags": ["completion", "cargo", "mirror", "install-only"],
+  "tags": ["completion", "cargo", "mirror"],
   "version": "0.1.0-f04cb44",
   "nu_version": "*",
-  "verified_with": ["0.113.1"],
+  "verified_with": ["0.113.1", "0.116.1"],
   "artifact": {
     "kind": "archive",
     "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-cargo-completions-f04cb44/cargo-completions-f04cb44.zip",
     "archive_root": "cargo-completions-f04cb44"
+  },
+  "activation": {
+    "kind": "nu-completion",
+    "targets": [
+      {
+        "command": "cargo",
+        "path": "custom-completions/cargo/cargo-completions.nu",
+        "kind": "command-backed"
+      }
+    ]
   }
 }

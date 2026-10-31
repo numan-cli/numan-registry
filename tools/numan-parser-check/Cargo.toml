@@ -8,4 +8,4 @@ publish = false
 [dependencies]
 # Keep this revision explicit: registry CI must parse candidates with the
 # production parser that Numan ships, rather than a look-alike schema.
-numan-cli = { git = "https://github.com/numan-cli/numan.git", rev = "6e93c27307a5a256fa6e6dcab602edf1707ed7d1" }
+numan-cli = { git = "https://github.com/numan-cli/numan.git", rev = "c954a7ff2b0c04512261d16199eea7a093d13999" }

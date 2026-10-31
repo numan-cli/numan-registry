@@ -90,13 +90,13 @@ def _run_script(args: list[str], *, label: str) -> tuple[bool, str]:
 def _is_activatable(spec_data: dict) -> bool:
     """Return True if the package requires lifecycle evidence before promotion.
 
-    Plugins are always activatable; modules are activatable only when they
-    declare an `activation` section. Scripts and completions are not.
+    Plugins are always activatable; modules, completions, and scripts are
+    activatable only when they declare an `activation` section.
     """
     pkg_type = spec_data.get("type", "plugin")
     if pkg_type == "plugin":
         return True
-    return pkg_type == "module" and "activation" in spec_data
+    return pkg_type in ("module", "completion", "script") and "activation" in spec_data
 
 
 def _load_spec(spec_path: Path) -> dict:

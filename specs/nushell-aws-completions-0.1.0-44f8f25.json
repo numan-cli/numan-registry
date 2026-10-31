@@ -1,20 +1,30 @@
 {
   "owner": "nushell",
   "name": "aws-completions",
-  "description": "AWS custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/aws @ 44f8f25. Install-only: completion activation is deferred in Numan.",
+  "description": "AWS custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/aws @ 44f8f25. Declares a completion target for aws for activation with `numan activate`.",
   "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/aws",
   "type": "completion",
   "tags": [
     "completion",
     "aws",
-    "mirror",
-    "install-only"
+    "mirror"
   ],
   "version": "0.1.0-44f8f25",
   "nu_version": "*",
+  "verified_with": ["0.116.1"],
   "artifact": {
     "kind": "archive",
     "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-aws-completions-44f8f25/aws-completions-44f8f25.zip",
     "archive_root": "aws-completions-44f8f25"
+  },
+  "activation": {
+    "kind": "nu-completion",
+    "targets": [
+      {
+        "command": "aws",
+        "path": "custom-completions/aws/aws-completions.nu",
+        "kind": "command-backed"
+      }
+    ]
   }
 }
