@@ -215,6 +215,30 @@ class TestLintActivation(unittest.TestCase):
         self.lint._lint_activation(pkg, version, errors, label="p@1")
         self.assertEqual(errors, [])
 
+    def test_plugin_activation_targets_rejected(self):
+        pkg, version = self._pkg("plugin", activation={
+            "kind": "nu-completion",
+            "targets": [{"command": "git", "path": "git.nu", "kind": "command-backed"}],
+        })
+        errors: list[str] = []
+        self.lint._lint_activation(pkg, version, errors, label="p@1")
+        self.assertTrue(
+            any("activation.targets is only valid for completion/script" in e for e in errors),
+            errors,
+        )
+
+    def test_module_activation_entry_points_rejected(self):
+        pkg, version = self._pkg("module", activation={
+            "kind": "nu-script",
+            "entry_points": [{"name": "run", "path": "run.nu"}],
+        })
+        errors: list[str] = []
+        self.lint._lint_activation(pkg, version, errors, label="p@1")
+        self.assertTrue(
+            any("activation.entry_points is only valid for completion/script" in e for e in errors),
+            errors,
+        )
+
     def test_script_activation_wrong_kind_is_error(self):
         pkg, version = self._pkg("script", activation={"kind": "bogus"})
         errors: list[str] = []
@@ -376,6 +400,30 @@ class TestLintCompletionActivation(unittest.TestCase):
         pkg, version = self._pkg(activation={
             "kind": "nu-completion",
             "targets": [self._target(path="/abs/git.nu")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("safe relative path" in e for e in errors), errors)
+
+    def test_backslash_traversal_path_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [self._target(path=r"..\outside.nu")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("safe relative path" in e for e in errors), errors)
+
+    def test_windows_drive_path_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [self._target(path=r"C:\outside.nu")],
+        })
+        errors = self._errors(pkg, version)
+        self.assertTrue(any("safe relative path" in e for e in errors), errors)
+
+    def test_dotfile_nu_path_is_error(self):
+        pkg, version = self._pkg(activation={
+            "kind": "nu-completion",
+            "targets": [self._target(path="custom-completions/git/.nu")],
         })
         errors = self._errors(pkg, version)
         self.assertTrue(any("safe relative path" in e for e in errors), errors)

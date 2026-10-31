@@ -11,6 +11,7 @@
   ],
   "version": "0.1.0-44f8f25",
   "nu_version": "*",
+  "verified_with": ["0.116.1"],
   "artifact": {
     "kind": "archive",
     "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-nushell-uv-completions-44f8f25/uv-completions-44f8f25.zip",

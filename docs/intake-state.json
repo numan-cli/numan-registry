@@ -558,7 +558,7 @@
       "type": "completion",
       "version": "0.1.0-f04cb44",
       "source": "commit f04cb44",
-      "note": "install-only",
+      "note": "nu-completion activation declared",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions",
       "spec": "specs/nushell-custom-completions-0.1.0-f04cb44.json",
       "pr": 12,
@@ -579,7 +579,7 @@
       "type": "script",
       "version": "0.1.0-main",
       "source": "branch main",
-      "note": "install-only",
+      "note": "nu-script activation declared (weather)",
       "repo": "https://github.com/SuaveIV/nu_script_wttr",
       "spec": "specs/SuaveIV-nu_script_wttr-0.1.0-main.json"
     },
@@ -612,7 +612,7 @@
       "type": "script",
       "version": "0.1.0-15e0645",
       "source": "commit 15e0645a489f538e582fa09d6deda047e710185e",
-      "note": "install-only; Wave 3A; upstream has no LICENSE at pin",
+      "note": "nu-script activation declared; Wave 3A; upstream has no LICENSE at pin",
       "repo": "https://github.com/Sanceilaks/nufetch",
       "spec": "specs/Sanceilaks-nufetch-0.1.0-15e0645.json"
     },
@@ -643,7 +643,7 @@
       "type": "completion",
       "version": "0.1.0-f04cb44",
       "source": "commit f04cb44",
-      "note": "install-only",
+      "note": "nu-completion activation declared",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/git",
       "spec": "specs/nushell-git-completions-0.1.0-f04cb44.json",
       "outreach": {
@@ -663,7 +663,7 @@
       "type": "completion",
       "version": "0.1.0-f04cb44",
       "source": "commit f04cb445e4f5e02daf2c7e96d3dcd41e48453346",
-      "note": "install-only; Wave 3B",
+      "note": "nu-completion activation declared; Wave 3B",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/cargo",
       "spec": "specs/nushell-cargo-completions-0.1.0-f04cb44.json",
       "outreach": {
@@ -683,7 +683,7 @@
       "type": "completion",
       "version": "0.1.0-f04cb44",
       "source": "commit f04cb445e4f5e02daf2c7e96d3dcd41e48453346",
-      "note": "install-only; Wave 3B",
+      "note": "nu-completion activation declared; Wave 3B",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/npm",
       "spec": "specs/nushell-npm-completions-0.1.0-f04cb44.json",
       "outreach": {
@@ -703,7 +703,7 @@
       "type": "completion",
       "version": "0.1.0-f04cb44",
       "source": "commit f04cb445e4f5e02daf2c7e96d3dcd41e48453346",
-      "note": "install-only; Wave 3B",
+      "note": "nu-completion activation declared; Wave 3B",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/make",
       "spec": "specs/nushell-make-completions-0.1.0-f04cb44.json",
       "outreach": {
@@ -723,7 +723,7 @@
       "type": "completion",
       "version": "0.1.0-f04cb44",
       "source": "commit f04cb445e4f5e02daf2c7e96d3dcd41e48453346",
-      "note": "install-only; Wave 3B",
+      "note": "install-only (completions file does not load on current Nu); Wave 3B",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/winget",
       "spec": "specs/nushell-winget-completions-0.1.0-f04cb44.json",
       "outreach": {
@@ -820,7 +820,7 @@
       "type": "script",
       "version": "0.1.0-6602c6a",
       "source": "commit 6602c6a2f7c6c576313c1dd8473d62740e2de17e",
-      "note": "archive intake; Wave 4 Lane 2",
+      "note": "archive intake; Wave 4 Lane 2 nu-script activation declared (digital-rain)",
       "repo": "https://github.com/ArmoredPony/nu-digital-rain",
       "spec": "specs/ArmoredPony-nu-digital-rain-0.1.0-6602c6a.json"
     },
@@ -842,7 +842,7 @@
       "type": "completion",
       "version": "0.1.0-44f8f25",
       "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
-      "note": "install-only; Wave 5 completions",
+      "note": "nu-completion activation declared; Wave 5 completions",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/docker",
       "spec": "specs/nushell-docker-completions-0.1.0-44f8f25.json",
       "outreach": {
@@ -862,7 +862,7 @@
       "type": "completion",
       "version": "0.1.0-44f8f25",
       "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
-      "note": "install-only; Wave 5 completions",
+      "note": "nu-completion activation declared; Wave 5 completions",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/gh",
       "spec": "specs/nushell-gh-completions-0.1.0-44f8f25.json",
       "outreach": {
@@ -882,7 +882,7 @@
       "type": "completion",
       "version": "0.1.0-44f8f25",
       "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
-      "note": "install-only; Wave 5 completions",
+      "note": "nu-completion activation declared; Wave 5 completions",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/dotnet",
       "spec": "specs/nushell-dotnet-completions-0.1.0-44f8f25.json",
       "outreach": {
@@ -902,7 +902,7 @@
       "type": "completion",
       "version": "0.1.0-44f8f25",
       "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
-      "note": "install-only; Wave 5 completions",
+      "note": "nu-completion activation declared; Wave 5 completions",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/uv",
       "spec": "specs/nushell-uv-completions-0.1.0-44f8f25.json",
       "outreach": {
@@ -922,7 +922,7 @@
       "type": "completion",
       "version": "0.1.0-44f8f25",
       "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
-      "note": "install-only; Wave 5 completions",
+      "note": "nu-completion activation declared; Wave 5 completions",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/pnpm",
       "spec": "specs/nushell-pnpm-completions-0.1.0-44f8f25.json",
       "outreach": {
@@ -942,7 +942,7 @@
       "type": "completion",
       "version": "0.1.0-44f8f25",
       "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
-      "note": "install-only; Wave 5 completions",
+      "note": "nu-completion activation declared; Wave 5 completions",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/ssh",
       "spec": "specs/nushell-ssh-completions-0.1.0-44f8f25.json",
       "outreach": {
@@ -973,7 +973,7 @@
       "type": "completion",
       "version": "0.1.0-44f8f25",
       "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
-      "note": "install-only; Wave 6 completions",
+      "note": "nu-completion activation declared; Wave 6 completions",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/bat",
       "spec": "specs/nushell-bat-completions-0.1.0-44f8f25.json",
       "outreach": {
@@ -993,7 +993,7 @@
       "type": "completion",
       "version": "0.1.0-44f8f25",
       "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
-      "note": "install-only; Wave 6 completions",
+      "note": "nu-completion activation declared; Wave 6 completions",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/aws",
       "spec": "specs/nushell-aws-completions-0.1.0-44f8f25.json",
       "outreach": {
@@ -1013,7 +1013,7 @@
       "type": "completion",
       "version": "0.1.0-44f8f25",
       "source": "commit 44f8f25bd56c01cc765495bc4b704e564e3bd6e3",
-      "note": "install-only; Wave 6 completions",
+      "note": "nu-completion activation declared; Wave 6 completions",
       "repo": "https://github.com/nushell/nu_scripts/tree/main/custom-completions/rg",
       "spec": "specs/nushell-rg-completions-0.1.0-44f8f25.json",
       "outreach": {

@@ -550,7 +550,8 @@
           "version": "0.1.0-f04cb44",
           "nu_version": "*",
           "verified_with": [
-            "0.113.1"
+            "0.113.1",
+            "0.116.1"
           ],
           "artifact": {
             "kind": "archive",
@@ -858,7 +859,8 @@
           "version": "0.1.0-main",
           "nu_version": "*",
           "verified_with": [
-            "0.113.1"
+            "0.113.1",
+            "0.116.1"
           ],
           "artifact": {
             "kind": "archive",
@@ -932,7 +934,8 @@
           "version": "0.1.0-f04cb44",
           "nu_version": "*",
           "verified_with": [
-            "0.113.1"
+            "0.113.1",
+            "0.116.1"
           ],
           "artifact": {
             "kind": "archive",
@@ -2652,7 +2655,8 @@
           "version": "0.1.0-15e0645",
           "nu_version": "*",
           "verified_with": [
-            "0.113.1"
+            "0.113.1",
+            "0.116.1"
           ],
           "artifact": {
             "kind": "archive",
@@ -2691,7 +2695,8 @@
           "version": "0.1.0-f04cb44",
           "nu_version": "*",
           "verified_with": [
-            "0.113.1"
+            "0.113.1",
+            "0.116.1"
           ],
           "artifact": {
             "kind": "archive",
@@ -2730,7 +2735,8 @@
           "version": "0.1.0-f04cb44",
           "nu_version": "*",
           "verified_with": [
-            "0.113.1"
+            "0.113.1",
+            "0.116.1"
           ],
           "artifact": {
             "kind": "archive",
@@ -2769,7 +2775,8 @@
           "version": "0.1.0-f04cb44",
           "nu_version": "*",
           "verified_with": [
-            "0.113.1"
+            "0.113.1",
+            "0.116.1"
           ],
           "artifact": {
             "kind": "archive",

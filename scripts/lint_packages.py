@@ -45,7 +45,6 @@ VERSION_TAG_RE = re.compile(
 )
 PACKAGE_TYPES = frozenset({"plugin", "module", "script", "completion"})
 ARTIFACT_KINDS = frozenset({"binary", "archive", "source"})
-ACTIVATABLE_TYPES = frozenset({"plugin", "module"})
 
 
 def load_json(path: Path) -> object:
@@ -312,12 +311,74 @@ def _completion_target_path_ok(path: object) -> bool:
     """Return whether a completion target path is a safe relative .nu path."""
     if not isinstance(path, str) or not path:
         return False
-    if path.startswith("/"):
+    if path.startswith("/") or path.startswith("\\"):
         return False
-    parts = path.split("/")
+    if re.match(r"^[A-Za-z]:", path):
+        return False
+    parts = re.split(r"[/\\]", path)
     if any(part in ("", "..") for part in parts):
         return False
-    return path.endswith(".nu")
+    return Path(path).suffix == ".nu"
+
+
+def _lint_completion_target(
+    target_index: int,
+    target: object,
+    seen_commands: set[str],
+    seen_paths: set[str],
+    errors: list[str],
+    *,
+    label: str,
+) -> None:
+    """Validate a single completion target and track duplicate bookkeeping."""
+    if not isinstance(target, dict):
+        errors.append(
+            f"{label}: activation.targets[{target_index}] must be an object"
+        )
+        return
+    if set(target) != COMPLETION_TARGET_KEYS:
+        errors.append(
+            f"{label}: activation.targets[{target_index}] must declare "
+            "exactly the keys command, path, kind"
+        )
+    command = target.get("command")
+    if not isinstance(command, str) or COMPLETION_COMMAND_RE.fullmatch(command) is None:
+        errors.append(
+            f"{label}: activation.targets[{target_index}] command "
+            f"{command!r} is not a valid command name"
+        )
+    elif command in NU_RESERVED_KEYWORDS:
+        errors.append(
+            f"{label}: activation.targets[{target_index}] command "
+            f"{command!r} is a Nushell reserved keyword"
+        )
+    if isinstance(command, str):
+        if command in seen_commands:
+            errors.append(
+                f"{label}: duplicate activation target command {command!r}"
+            )
+        else:
+            seen_commands.add(command)
+    path = target.get("path")
+    if not _completion_target_path_ok(path):
+        errors.append(
+            f"{label}: activation.targets[{target_index}] path {path!r} "
+            "must be a safe relative path ending in .nu"
+        )
+    if isinstance(path, str):
+        normalized = _normalized_target_path(path)
+        if normalized in seen_paths:
+            errors.append(
+                f"{label}: duplicate activation target path {path!r}"
+            )
+        else:
+            seen_paths.add(normalized)
+    target_kind = target.get("kind")
+    if target_kind not in COMPLETION_TARGET_KINDS:
+        errors.append(
+            f"{label}: activation.targets[{target_index}] kind must be "
+            f"'static' or 'command-backed', got {target_kind!r}"
+        )
 
 
 def _lint_completion_activation(
@@ -360,54 +421,9 @@ def _lint_completion_activation(
     seen_commands: set[str] = set()
     seen_paths: set[str] = set()
     for target_index, target in enumerate(targets):
-        if not isinstance(target, dict):
-            errors.append(
-                f"{label}: activation.targets[{target_index}] must be an object"
-            )
-            continue
-        if set(target) != COMPLETION_TARGET_KEYS:
-            errors.append(
-                f"{label}: activation.targets[{target_index}] must declare "
-                "exactly the keys command, path, kind"
-            )
-        command = target.get("command")
-        if not isinstance(command, str) or COMPLETION_COMMAND_RE.fullmatch(command) is None:
-            errors.append(
-                f"{label}: activation.targets[{target_index}] command "
-                f"{command!r} is not a valid command name"
-            )
-        elif command in NU_RESERVED_KEYWORDS:
-            errors.append(
-                f"{label}: activation.targets[{target_index}] command "
-                f"{command!r} is a Nushell reserved keyword"
-            )
-        if isinstance(command, str):
-            if command in seen_commands:
-                errors.append(
-                    f"{label}: duplicate activation target command {command!r}"
-                )
-            else:
-                seen_commands.add(command)
-        path = target.get("path")
-        if not _completion_target_path_ok(path):
-            errors.append(
-                f"{label}: activation.targets[{target_index}] path {path!r} "
-                "must be a safe relative path ending in .nu"
-            )
-        if isinstance(path, str):
-            normalized = _normalized_target_path(path)
-            if normalized in seen_paths:
-                errors.append(
-                    f"{label}: duplicate activation target path {path!r}"
-                )
-            else:
-                seen_paths.add(normalized)
-        target_kind = target.get("kind")
-        if target_kind not in COMPLETION_TARGET_KINDS:
-            errors.append(
-                f"{label}: activation.targets[{target_index}] kind must be "
-                f"'static' or 'command-backed', got {target_kind!r}"
-            )
+        _lint_completion_target(
+            target_index, target, seen_commands, seen_paths, errors, label=label
+        )
 
 
 SCRIPT_ENTRY_POINT_KEYS = frozenset({"name", "path"})
@@ -416,6 +432,61 @@ SCRIPT_ENTRY_POINT_KEYS = frozenset({"name", "path"})
 def _normalized_target_path(path: str) -> str:
     """Drop CurDir components so './x.nu' and 'x.nu' dedupe together."""
     return "/".join(part for part in path.split("/") if part != ".")
+
+
+def _lint_script_entry_point(
+    entry_index: int,
+    entry_point: object,
+    seen_names: set[str],
+    seen_paths: set[str],
+    errors: list[str],
+    *,
+    label: str,
+) -> None:
+    """Validate a single script entry point and track duplicate bookkeeping."""
+    if not isinstance(entry_point, dict):
+        errors.append(
+            f"{label}: activation.entry_points[{entry_index}] must be "
+            "an object"
+        )
+        return
+    if set(entry_point) != SCRIPT_ENTRY_POINT_KEYS:
+        errors.append(
+            f"{label}: activation.entry_points[{entry_index}] must "
+            "declare exactly the keys name, path"
+        )
+    name = entry_point.get("name")
+    if not isinstance(name, str) or COMPLETION_COMMAND_RE.fullmatch(name) is None:
+        errors.append(
+            f"{label}: activation.entry_points[{entry_index}] name "
+            f"{name!r} is not a valid command name"
+        )
+    elif name in NU_RESERVED_KEYWORDS:
+        errors.append(
+            f"{label}: activation.entry_points[{entry_index}] name "
+            f"{name!r} is a Nushell reserved keyword"
+        )
+    if isinstance(name, str):
+        if name in seen_names:
+            errors.append(
+                f"{label}: duplicate script entry point name {name!r}"
+            )
+        else:
+            seen_names.add(name)
+    path = entry_point.get("path")
+    if not _completion_target_path_ok(path):
+        errors.append(
+            f"{label}: activation.entry_points[{entry_index}] path "
+            f"{path!r} must be a safe relative path ending in .nu"
+        )
+    if isinstance(path, str):
+        normalized = _normalized_target_path(path)
+        if normalized in seen_paths:
+            errors.append(
+                f"{label}: duplicate script entry point path {path!r}"
+            )
+        else:
+            seen_paths.add(normalized)
 
 
 def _lint_script_activation(
@@ -458,49 +529,9 @@ def _lint_script_activation(
     seen_names: set[str] = set()
     seen_paths: set[str] = set()
     for entry_index, entry_point in enumerate(entry_points):
-        if not isinstance(entry_point, dict):
-            errors.append(
-                f"{label}: activation.entry_points[{entry_index}] must be "
-                "an object"
-            )
-            continue
-        if set(entry_point) != SCRIPT_ENTRY_POINT_KEYS:
-            errors.append(
-                f"{label}: activation.entry_points[{entry_index}] must "
-                "declare exactly the keys name, path"
-            )
-        name = entry_point.get("name")
-        if not isinstance(name, str) or COMPLETION_COMMAND_RE.fullmatch(name) is None:
-            errors.append(
-                f"{label}: activation.entry_points[{entry_index}] name "
-                f"{name!r} is not a valid command name"
-            )
-        elif name in NU_RESERVED_KEYWORDS:
-            errors.append(
-                f"{label}: activation.entry_points[{entry_index}] name "
-                f"{name!r} is a Nushell reserved keyword"
-            )
-        if isinstance(name, str):
-            if name in seen_names:
-                errors.append(
-                    f"{label}: duplicate script entry point name {name!r}"
-                )
-            else:
-                seen_names.add(name)
-        path = entry_point.get("path")
-        if not _completion_target_path_ok(path):
-            errors.append(
-                f"{label}: activation.entry_points[{entry_index}] path "
-                f"{path!r} must be a safe relative path ending in .nu"
-            )
-        if isinstance(path, str):
-            normalized = _normalized_target_path(path)
-            if normalized in seen_paths:
-                errors.append(
-                    f"{label}: duplicate script entry point path {path!r}"
-                )
-            else:
-                seen_paths.add(normalized)
+        _lint_script_entry_point(
+            entry_index, entry_point, seen_names, seen_paths, errors, label=label
+        )
 
 
 def _lint_activation(
@@ -518,6 +549,13 @@ def _lint_activation(
     """
     pkg_type = pkg.get("type")
     activation = version.get("activation")
+    if isinstance(activation, dict) and pkg_type not in ("completion", "script"):
+        for _field in ("targets", "entry_points"):
+            if _field in activation:
+                errors.append(
+                    f"{label}: activation.{_field} is only valid for "
+                    "completion/script packages"
+                )
     if pkg_type == "completion":
         _lint_completion_activation(pkg, activation, errors, label=label)
         return

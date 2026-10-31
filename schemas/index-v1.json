@@ -218,6 +218,14 @@
                     {
                       "if": { "required": ["entry_points"] },
                       "then": { "properties": { "kind": { "const": "nu-script" } } }
+                    },
+                    {
+                      "if": { "properties": { "kind": { "const": "nu-completion" } } },
+                      "then": { "required": ["targets"] }
+                    },
+                    {
+                      "if": { "properties": { "kind": { "const": "nu-script" } } },
+                      "then": { "required": ["entry_points"] }
                     }
                   ]
                 }
