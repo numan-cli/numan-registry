@@ -76,7 +76,7 @@ Nu band is a coarse label from the constraint **lower bound** (`>=0.114` / `>0.1
 | `oderwat/nu_plugin_logfmt` | plugin | 0.0.0-snapshot.20260816.892c4f9 | `>=0.101.0 <0.102.0` | other | mac,linux,win | ci-built | 1 |
 | `rhino-linux/nu_plugin_nutext` | plugin | 0.6.2 | `>=0.114.0 <0.115.0` | 0.114 | mac,linux,win | ci-built | 1 |
 | `Sanceilaks/nufetch` | script | 0.1.0-15e0645 | `*` | * | — | mirror | 1 |
-| `SuaveIV/nu_plugin_audio` | plugin | 0.2.10 | `>=0.114.0 <0.115.0` | 0.114 | mac,linux,win | upstream | 2 |
+| `SuaveIV/nu_plugin_audio` | plugin | 0.2.13 | `>=0.116.0 <0.117.0` | other | mac,linux,win | upstream | 3 |
 | `SuaveIV/nu_script_gh_status` | script | 0.1.0-81756dc | `*` | * | — | mirror | 1 |
 | `SuaveIV/nu_script_hnews` | script | 0.1.0-6cd8aef | `>=0.97.0` | other | — | mirror | 1 |
 | `SuaveIV/nu_script_wttr` | script | 0.1.0-main | `*` | * | — | mirror | 1 |
