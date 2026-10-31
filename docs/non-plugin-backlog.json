@@ -10,7 +10,7 @@
     "entry": "Entry file or module root a package would ship",
     "license": "License identified from the repo's license file, or null when none was found",
     "last_activity": "Date of the latest upstream commit at verification, or the listing source when not applicable",
-    "status": "CANDIDATE | NEEDS_LICENSE | STALE",
+    "status": "CANDIDATE | NEEDS_LICENSE | STALE | EXCLUDED",
     "note": "Verification findings and intake caveats"
   },
   "candidates": [
@@ -325,6 +325,66 @@
       "last_activity": "2024-07-10",
       "status": "STALE",
       "note": "Windows-only PATH refresh, a single plain def with no export and no main, so it fits neither module nor script activation as-is; it would ship install-only. No license file, dormant since 2024-07. Author has nufetch in the registry."
+    },
+    {
+      "repo": "nushell/nu_scripts",
+      "name": "cargo_search",
+      "type": "script",
+      "awesome_nu_section": "Scripts",
+      "description": "Perform a cargo search.",
+      "entry": "sourced/cool-oneliners/cargo_search.nu",
+      "license": "MIT",
+      "last_activity": "awesome-nu listing",
+      "status": "EXCLUDED",
+      "note": "Excluded: a sourced one-liner snippet inside nu_scripts, below package granularity. The registry's smallest packages are still whole tools."
+    },
+    {
+      "repo": "nushell/nu_scripts",
+      "name": "git_gone",
+      "type": "script",
+      "awesome_nu_section": "Scripts",
+      "description": "Gently try to delete merged branches, excluding the checked out one.",
+      "entry": "sourced/cool-oneliners/git_gone.nu",
+      "license": "MIT",
+      "last_activity": "awesome-nu listing",
+      "status": "EXCLUDED",
+      "note": "Excluded: a sourced one-liner snippet inside nu_scripts, below package granularity."
+    },
+    {
+      "repo": "nushell/nu_scripts",
+      "name": "nuschiit",
+      "type": "script",
+      "awesome_nu_section": "Scripts",
+      "description": "Web scraping example for the schiit.co.uk website.",
+      "entry": "sourced/webscraping/nuschiit.nu",
+      "license": "MIT",
+      "last_activity": "awesome-nu listing",
+      "status": "EXCLUDED",
+      "note": "Excluded: a single-site web scraping example inside nu_scripts, not a general tool."
+    },
+    {
+      "repo": "nushell/nu_scripts",
+      "name": "wolframalpha",
+      "type": "script",
+      "awesome_nu_section": "Scripts",
+      "description": "WolframAlpha API wrapper.",
+      "entry": "sourced/api_wrappers/wolframalpha.nu",
+      "license": "MIT",
+      "last_activity": "awesome-nu listing",
+      "status": "EXCLUDED",
+      "note": "Excluded: a thin sourced API wrapper snippet inside nu_scripts, below package granularity, and it needs a WolframAlpha API key for any use."
+    },
+    {
+      "repo": "Jan9103/webserver.nu",
+      "name": "webserver",
+      "type": "module",
+      "awesome_nu_section": "Scripts",
+      "description": "A library for creating webservers.",
+      "entry": "webserver.nu",
+      "license": null,
+      "last_activity": "awesome-nu listing",
+      "status": "EXCLUDED",
+      "note": "Excluded: upstream repo Jan9103/webserver.nu returns 404 as of 2026-10-31, so there is nothing to package. Revisit if the repo reappears."
     }
   ]
 }
