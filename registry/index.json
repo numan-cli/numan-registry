@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-25T02:53:11Z",
+  "updated_at": "2026-11-01T02:44:30Z",
   "registry_revision": "seed-2026-07-02",
   "packages": [
     {
@@ -3993,6 +3993,43 @@
           "verified_with": [
             "0.116.1"
           ]
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "amasialabs",
+        "name": "nushell-modules"
+      },
+      "description": "Snippet manager with Git-based version control, plus a reminder module, for Nushell",
+      "repo": "https://github.com/amasialabs/nushell-modules",
+      "type": "module",
+      "tags": [
+        "module",
+        "snippets",
+        "reminders"
+      ],
+      "versions": [
+        {
+          "version": "0.5.24",
+          "nu_version": ">=0.116.0 <0.117.0",
+          "verified_with": [
+            "0.116.1"
+          ],
+          "source": {
+            "git": "https://github.com/amasialabs/nushell-modules",
+            "rev": "4c6f3ce3c1a5fea1c5327d541556f096259cb699"
+          },
+          "artifact": {
+            "kind": "archive",
+            "url": "https://github.com/numan-cli/numan-plugins/releases/download/archive-amasialabs-nushell-modules-0.5.24/amasialabs-nushell-modules-0.5.24.tar.gz",
+            "sha256": "56a22050bee44365352c6e5085410211030aec34bb79480ae4b96afbe9d1e527",
+            "entry": "amasia/mod.nu"
+          },
+          "activation": {
+            "kind": "nu-module",
+            "import": "all"
+          }
         }
       ]
     }
