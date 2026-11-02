@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-01T02:44:30Z",
+  "updated_at": "2026-11-02T07:51:19Z",
   "registry_revision": "seed-2026-07-02",
   "packages": [
     {
@@ -4060,6 +4060,60 @@
           "activation": {
             "kind": "nu-module",
             "import": "all"
+          }
+        }
+      ]
+    },
+    {
+      "id": {
+        "owner": "wangjiawen2013",
+        "name": "nu_plugin_charton"
+      },
+      "description": "Turn Nushell pipeline tables into charts, rendered inline in the terminal or saved as SVG/PNG. CI-built from wangjiawen2013/charton@v0.9.0 and pinned + hash-verified + signed downstream in numan-registry.",
+      "repo": "https://github.com/wangjiawen2013/charton",
+      "type": "plugin",
+      "tags": [
+        "plugin",
+        "charts",
+        "visualization",
+        "ci-built"
+      ],
+      "versions": [
+        {
+          "version": "0.9.0",
+          "nu_version": ">=0.116.0 <0.117.0",
+          "verified_with": [
+            "0.116.1"
+          ],
+          "source": {
+            "git": "https://github.com/wangjiawen2013/charton",
+            "rev": "c36e794a3c5b03c53b033352b432daf0ad80e962",
+            "cargo_name": "nu_plugin_charton"
+          },
+          "artifact": {
+            "kind": "binary",
+            "targets": {
+              "aarch64-apple-darwin": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_charton-0.9.0/nu_plugin_charton-0.9.0-aarch64-apple-darwin.tar.gz",
+                "sha256": "9a7bdbd0ffd46e1986578088eaf7821871767fe66d94bd0c04ad3a74c6dc78ee",
+                "executable_path": "nu_plugin_charton"
+              },
+              "aarch64-unknown-linux-gnu": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_charton-0.9.0/nu_plugin_charton-0.9.0-aarch64-unknown-linux-gnu.tar.gz",
+                "sha256": "115f3e872f5ab583977b80905300dc8b19f55a5ec97c136097a6ec87be98f72b",
+                "executable_path": "nu_plugin_charton"
+              },
+              "x86_64-pc-windows-msvc": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_charton-0.9.0/nu_plugin_charton-0.9.0-x86_64-pc-windows-msvc.zip",
+                "sha256": "f40b2ca0b2534a26c47965c869fc9c95dbd84412b6788b9f186bc4db6532222b",
+                "executable_path": "nu_plugin_charton.exe"
+              },
+              "x86_64-unknown-linux-gnu": {
+                "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_charton-0.9.0/nu_plugin_charton-0.9.0-x86_64-unknown-linux-gnu.tar.gz",
+                "sha256": "9f8ad0fa90c426606cdba39a41cec15404d424c1c29c64382a877efe18ad4143",
+                "executable_path": "nu_plugin_charton"
+              }
+            }
           }
         }
       ]
