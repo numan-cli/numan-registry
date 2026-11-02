@@ -2,15 +2,15 @@
 
 _Auto-generated from `registry/index.json`. Do not hand-edit._
 
-Generated: `2026-10-25T02:53:11Z` · Index `updated_at`: `2026-10-25T02:53:11Z` · `registry_revision`: `seed-2026-07-02`
+Generated: `2026-11-01T02:46:05Z` · Index `updated_at`: `2026-11-01T02:46:05Z` · `registry_revision`: `seed-2026-07-02`
 
 This is the **master list** of packages in the committed `registry/index.json` (in-tree; the public CDN updates after production signing/publish) and the Nu constraint on each package's **latest** version. For demand-ranked *plugin candidates* not yet in the registry, see [`numan-plugins/docs/backlog.json`](https://github.com/numan-cli/numan-plugins/blob/main/docs/backlog.json). For intake workflow status, see [`intake-candidates.md`](intake-candidates.md).
 
 ## Summary
 
-- **68** packages total
-- By type: `completion` 15, `module` 10, `plugin` 37, `script` 6
-- Latest version Nu band: `0.114` 12, `0.113` 3, `other` 30, `*` 23
+- **69** packages total
+- By type: `completion` 15, `module` 10, `plugin` 38, `script` 6
+- Latest version Nu band: `0.114` 12, `0.113` 3, `other` 31, `*` 23
 
 Nu band is a coarse label from the constraint **lower bound** (`>=0.114` / `>0.113` → `0.114` / `0.113`, etc.; else `*` or `other`). Exact constraints are in the table and in the signed index.
 
@@ -83,6 +83,7 @@ Nu band is a coarse label from the constraint **lower bound** (`>=0.114` / `>0.1
 | `tesujimath/bash-env-nushell` | module | 0.19.0 | `*` | * | — | upstream | 1 |
 | `Trivernis/nu-plugin-dialog` | plugin | 0.1.0 | `>=0.107.0 <0.108.0` | other | mac,win,linux | upstream | 1 |
 | `vyadh/nutest` | module | 1.2.0 | `>=0.114.0` | 0.114 | — | upstream | 2 |
+| `wangjiawen2013/nu_plugin_charton` | plugin | 0.9.0 | `>=0.116.0 <0.117.0` | other | mac,linux,win | ci-built | 1 |
 | `WindSoilder/nu_plugin_mongo` | plugin | 0.0.0-snapshot.20260816.47854d9 | `>=0.114.0 <0.115.0` | 0.114 | mac,linux,win | ci-built | 1 |
 | `Yethal/nu_plugin_hcl` | plugin | 0.114.1 | `>=0.114.0 <0.115.0` | 0.114 | mac,linux,win | ci-built | 1 |
 | `yybit/nu_plugin_x509` | plugin | 0.0.0-snapshot.20260816.15518dd | `>=0.109.0 <0.110.0` | other | mac,linux,win | ci-built | 1 |
