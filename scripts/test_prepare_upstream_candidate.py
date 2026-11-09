@@ -191,7 +191,7 @@ class PrepareUpstreamCandidateTests(unittest.TestCase):
         self.assertEqual(spec["version"], "1.3.0")
         self.assertEqual(spec["artifact"]["url"], new_url)
         self.assertEqual(spec["artifact"]["entry"], "nutest/mod.nu")
-        self.assertEqual(spec["artifact"]["archive_root"], "nutest-1.2.0")
+        self.assertEqual(spec["artifact"]["archive_root"], "nutest-1.3.0")
         self.assertEqual(spec["activation"], {"kind": "nu-module", "import": "all"})
 
     def test_module_without_upstream_asset_invokes_intake_archive(self):
