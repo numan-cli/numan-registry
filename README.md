@@ -21,6 +21,7 @@ This `main` branch is the catalog source. Its committed `registry/index.json.sig
 │   ├── production-cutover-checklist.md # Step-by-step cutover runbook with rollback steps
 │   ├── key-rotation-checklist.md      # Rotation runbook: successor-key ordering, propagation wait, rollback
 │   ├── incident-response.md            # Yank, rollback, compromise, and user-remediation policy
+│   ├── update-watch.md                # Architecture and contract for automated upstream update watching
 │   ├── intake-candidates.md           # Running intake list (auto-synced; edit intake-state.json)
 │   ├── intake-state.json              # Machine-readable intake catalog (source for sync)
 │   ├── catalog-compat.md              # Master catalog × Nu compat table (from index.json)
@@ -48,6 +49,9 @@ This `main` branch is the catalog source. Its committed `registry/index.json.sig
 │   ├── lifecycle-prove.py             # Stage 1 acceptance: prove a package on a clean root + real Nu
 │   ├── lint-manifest-index.py         # Fail if numan-plugins manifest Nu range ≠ index (when both known)
 │   ├── build-mirror-zip.py            # Build registry-hosted mirror zips from git tags/commits
+│   ├── watch_indexed.py               # Check upstreams for new releases across indexed packages
+│   ├── prepare_upstream_candidate.py  # Synthesize candidate specs from upstream assets/Cargo.toml
+│   ├── open_intake_pr.py              # Open automated intake PRs with proven candidates
 │   ├── sync-intake-candidates.py      # Regenerate intake-candidates.md from state + gh
 │   └── render_catalog_compat.py       # Regenerate docs/catalog-compat.md from index.json
 ├── tools/
@@ -88,10 +92,11 @@ The registry private key is **never** committed, printed, or handled by coding a
 - **Staging**: the default branch is signed with an ephemeral CI key after a
   read-only validation job; only the separate staging publication job receives
   `contents: write`. Staging does not assert production trust.
-- **Production signing**: manual dispatch first reruns all no-secret validation,
-  including artifact digests. Only after it succeeds can the protected
-  `production` environment expose `NUMAN_REGISTRY_PRIVATE_KEY` to the signing
-  and publication job.
+- **Production signing**: triggers automatically on pushes to `main` (and supports
+  manual dispatch). Runs secret scanning, preflight, and index validation before
+  the protected `production` environment signs the index with
+  `NUMAN_REGISTRY_PRIVATE_KEY` and publishes the updated index and detached
+  signature to GitHub Pages.
 
 ## Validation
 
@@ -103,6 +108,15 @@ CI validates the JSON schema, verifies the signed production candidate, download
 
 For the remaining registry intake, catalog growth, and production publication
 plan, see [docs/roadmap.md](docs/roadmap.md).
+
+## Automated Upstream Candidate Pipeline (Type A)
+
+This repository includes an automated pipeline that continuously monitors upstream releases for indexed packages:
+
+- **Schedule**: `.github/workflows/watch-indexed-updates.yml` runs daily to check GitHub and crates.io upstreams for all indexed plugins and modules (`scripts/watch_indexed.py`).
+- **Spec Synthesis**: When an upstream publishes a new release matching an existing package's asset naming conventions, `scripts/prepare_upstream_candidate.py` downloads release assets, computes SHA-256 hashes, extracts Nushell version constraints from upstream `Cargo.toml`, and creates candidate specs.
+- **Cross-Platform Lifecycle Proving**: Candidates are proven through real-Nu lifecycle tests on Linux and Windows runners (`scripts/lifecycle-prove.py`).
+- **Intake PRs & Issues**: Proven candidates generate automated intake PRs (`scripts/open_intake_pr.py`), while candidates requiring manual intervention (e.g. upstream naming shifts or missing assets) file deduplicated tracking issues for maintainer review. See [`docs/update-watch.md`](docs/update-watch.md).
 
 ## Intake prove (Stage 1)
 
