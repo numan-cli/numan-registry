@@ -56,7 +56,6 @@ class CandidateContext:
     latest: dict
     hit: dict
     release_repo: str = "numan-cli/numan-registry"
-    manifest_archives: Path | None = None
 
     @property
     def owner(self) -> str:
@@ -274,8 +273,6 @@ def _build_intake_archive_argv(ctx: CandidateContext, out_file: Path) -> list[st
         "--release-repo", ctx.release_repo,
         "--out", str(out_file),
     ]
-    if ctx.manifest_archives is not None:
-        argv.extend(["--manifest-archives", str(ctx.manifest_archives)])
     activation = ctx.latest.get("activation")
     if isinstance(activation, dict) and activation.get("kind") == "nu-module":
         argv.extend([
