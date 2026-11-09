@@ -17,6 +17,9 @@ def load_mod():
     spec = importlib.util.spec_from_file_location("prepare_upstream_candidate", SCRIPT)
     mod = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
+    import sys
+
+    sys.modules[spec.name] = mod
     spec.loader.exec_module(mod)
     return mod
 
