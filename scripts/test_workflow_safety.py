@@ -9,8 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 WORKFLOWS = ROOT / ".github" / "workflows"
-SHA_USE = re.compile(r"^\s*-\s+uses:\s+[^@\s]+@[0-9a-f]{40}(?:\s+#.*)?$", re.MULTILINE)
-ANY_USE = re.compile(r"^\s*-\s+uses:\s+\S+", re.MULTILINE)
+SHA_USE = re.compile(r"^\s*(?:-\s+)?uses:\s+[^@\s]+@[0-9a-f]{40}(?:\s+#.*)?$", re.MULTILINE)
+ANY_USE = re.compile(r"^\s*(?:-\s+)?uses:\s+\S+", re.MULTILINE)
 
 
 def job_block(text: str, name: str, next_name: str | None = None) -> str:

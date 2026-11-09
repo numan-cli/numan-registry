@@ -65,7 +65,9 @@ shape, or any changed artifact bytes refuses and stays human-gated.
   next run queues every entry that excludes it.
 - `workflow_dispatch` accepts `target_nu` and `packages` to scope a live
   run, plus `dry_run: true` for detect-only (skips proof, PRs, issues).
-- The PR lane needs a repo-scoped PAT in the `WATCH_PAT` actions secret:
+- The PR lanes need a repo-scoped PAT in the `WATCH_PAT` actions secret:
   PRs opened with `GITHUB_TOKEN` do not trigger checks, so auto-merge
-  would stall. Without the secret the workflow still opens the PR, but a
-  human must merge it.
+  would stall. Without `WATCH_PAT`, the Nu-gap PR lane (`open-pr`) still
+  opens the PR for human merge, whereas the upstream intake lane
+  (`open-upstream-prs`) skips automated PR creation and falls back to
+  `upstream-issues` filing tracking issues.

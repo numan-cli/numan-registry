@@ -592,15 +592,28 @@ def resolve_target_nu(explicit: str | None) -> str:
     raise ValueError(f"no --target-nu and no readable {DEFAULT_TARGET_FILE}")
 
 
-def process(index_path: Path, target_nu: str, write: bool,
-            report_json: Path, report_md: Path,
-            package_filter: list[str] | None = None) -> int:
-    parse_exact_nu_version(target_nu)
-    index = json.loads(Path(index_path).read_text(encoding="utf-8"))
-    packages = [p for p in index.get("packages", []) if isinstance(p, dict)]
-    if package_filter:
-        wanted = set(package_filter)
-        packages = [p for p in packages if split_scoped(p) in wanted]
+def _lookup_ci_release_if_needed(
+    package: dict, latest: dict, rel: dict, scoped: str
+) -> dict | None:
+    """Fetch matching numan-plugins CI release when a CI-built plugin has a newer upstream tag."""
+    if package.get("type") != "plugin" or not is_ci_built_plugin(package, latest):
+        return None
+    indexed_ver = str(latest.get("version", "0.0.0"))
+    if not is_newer(str(rel.get("tag_name", "")), indexed_ver):
+        return None
+    pkg_name = str((package.get("id") or {}).get("name", ""))
+    clean_ver = str(rel["tag_name"]).strip().lstrip("vV").split("+")[0]
+    try:
+        return fetch_release_by_tag(NUMAN_PLUGINS_REPO, f"{pkg_name}-{clean_ver}")
+    except Exception as exc:
+        print(f"warning: {scoped}: ci-release lookup failed: {exc}", file=sys.stderr)
+        return None
+
+
+def _collect_package_releases(
+    packages: list[dict],
+) -> tuple[dict[str, dict], dict[str, dict]]:
+    """Collect latest upstream releases and optional CI releases for active watched packages."""
     releases: dict[str, dict] = {}
     ci_releases: dict[str, dict] = {}
     stable_by_repo: dict[str, list[dict]] = {}
@@ -611,30 +624,35 @@ def process(index_path: Path, target_nu: str, write: bool,
         if key is None:
             continue
         scoped = split_scoped(package)
+        latest = latest_entry(package) or {}
         try:
             if key not in stable_by_repo:
                 stable_by_repo[key] = fetch_stable_releases(key)
-            latest = latest_entry(package) or {}
             rel = select_latest_release(
-                stable_by_repo[key], str(latest.get("version", "0.0.0")))
+                stable_by_repo[key], str(latest.get("version", "0.0.0"))
+            )
         except Exception as exc:  # one bad repo must not sink the whole run
             print(f"warning: {scoped}: release lookup failed: {exc}", file=sys.stderr)
             continue
-        if rel is not None:
-            releases[scoped] = rel
-            if package.get("type") == "plugin" and is_ci_built_plugin(package, latest):
-                indexed_ver = str(latest.get("version", "0.0.0"))
-                if is_newer(str(rel.get("tag_name", "")), indexed_ver):
-                    pkg_name = str((package.get("id") or {}).get("name", ""))
-                    clean_ver = str(rel["tag_name"]).strip().lstrip("vV").split("+")[0]
-                    try:
-                        ci_rel = fetch_release_by_tag(
-                            NUMAN_PLUGINS_REPO, f"{pkg_name}-{clean_ver}")
-                        if ci_rel is not None:
-                            ci_releases[scoped] = ci_rel
-                    except Exception as exc:
-                        print(f"warning: {scoped}: ci-release lookup failed: {exc}",
-                              file=sys.stderr)
+        if rel is None:
+            continue
+        releases[scoped] = rel
+        ci_rel = _lookup_ci_release_if_needed(package, latest, rel, scoped)
+        if ci_rel is not None:
+            ci_releases[scoped] = ci_rel
+    return releases, ci_releases
+
+
+def process(index_path: Path, target_nu: str, write: bool,
+            report_json: Path, report_md: Path,
+            package_filter: list[str] | None = None) -> int:
+    parse_exact_nu_version(target_nu)
+    index = json.loads(Path(index_path).read_text(encoding="utf-8"))
+    packages = [p for p in index.get("packages", []) if isinstance(p, dict)]
+    if package_filter:
+        wanted = set(package_filter)
+        packages = [p for p in packages if split_scoped(p) in wanted]
+    releases, ci_releases = _collect_package_releases(packages)
     by_package = {split_scoped(p): p for p in packages if isinstance(p, dict)}
     gaps = attach_verdicts(detect(packages, releases, target_nu, ci_releases), by_package)
     report = format_markdown(gaps, target_nu)
