@@ -427,6 +427,118 @@ class WatchIndexedTests(unittest.TestCase):
         self.assertEqual(rel["tag_name"], "nightly")
         self.assertIsNone(self.mod.select_latest_release([], "1.0.0"))
 
+    def test_is_ci_built_plugin(self):
+        pkg_tagged = pkg("fdncred", "nu_plugin_regex", "plugin",
+                         "https://github.com/fdncred/nu_plugin_regex",
+                         [ver("0.25.0")], tags=["plugin", "ci-built"])
+        self.assertTrue(self.mod.is_ci_built_plugin(pkg_tagged, ver("0.25.0")))
+
+        latest_url = ver("0.25.0")
+        latest_url["artifact"] = {
+            "kind": "binary",
+            "targets": {
+                "x86_64-unknown-linux-gnu": {
+                    "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.25.0/a.tar.gz",
+                    "executable_path": "nu_plugin_regex",
+                }
+            },
+        }
+        pkg_untagged = pkg("fdncred", "nu_plugin_regex", "plugin",
+                           "https://github.com/fdncred/nu_plugin_regex",
+                           [latest_url], tags=["plugin"])
+        self.assertTrue(self.mod.is_ci_built_plugin(pkg_untagged, latest_url))
+
+        latest_up = ver("0.2.10")
+        latest_up["artifact"] = {
+            "kind": "binary",
+            "targets": {
+                "x86_64-unknown-linux-gnu": {
+                    "url": "https://github.com/SuaveIV/nu_plugin_audio/releases/download/v0.2.10/a.tar.gz",
+                    "executable_path": "nu_plugin_audio",
+                }
+            },
+        }
+        pkg_up = pkg("SuaveIV", "nu_plugin_audio", "plugin",
+                     "https://github.com/SuaveIV/nu_plugin_audio",
+                     [latest_up], tags=["plugin"])
+        self.assertFalse(self.mod.is_ci_built_plugin(pkg_up, latest_up))
+
+    def test_upstream_asset_plugin_with_target_parity_is_eligible(self):
+        latest = ver("0.2.10")
+        latest["artifact"] = {
+            "kind": "binary",
+            "targets": {
+                "x86_64-unknown-linux-gnu": {
+                    "url": "https://github.com/SuaveIV/nu_plugin_audio/releases/download/v0.2.10/nu_plugin_audio-x86_64-unknown-linux-gnu.tar.gz",
+                    "executable_path": "nu_plugin_audio",
+                },
+                "x86_64-pc-windows-msvc": {
+                    "url": "https://github.com/SuaveIV/nu_plugin_audio/releases/download/v0.2.10/nu_plugin_audio-x86_64-pc-windows-msvc.zip",
+                    "executable_path": "nu_plugin_audio.exe",
+                },
+            },
+        }
+        hit = {
+            "kind": "upstream",
+            "package": "SuaveIV/nu_plugin_audio",
+            "type": "plugin",
+            "indexed": "0.2.10",
+            "upstream": "v0.2.13",
+            "plugin_source": "upstream-asset",
+            "assets": [
+                {"name": "nu_plugin_audio-x86_64-unknown-linux-gnu.tar.gz", "url": "https://e/l.tar.gz"},
+                {"name": "nu_plugin_audio-x86_64-pc-windows-msvc.zip", "url": "https://e/w.zip"},
+            ],
+        }
+        d = self.mod.decide(hit, latest)
+        self.assertEqual(d["verdict"], "auto-merge-eligible")
+
+        # Missing Windows target -> needs-review
+        hit_partial = dict(hit, assets=[hit["assets"][0]])
+        d_partial = self.mod.decide(hit_partial, latest)
+        self.assertEqual(d_partial["verdict"], "needs-review")
+
+    def test_ci_built_plugin_ready_on_numan_plugins_is_eligible(self):
+        latest = ver("0.25.0")
+        latest["artifact"] = {
+            "kind": "binary",
+            "targets": {
+                "x86_64-unknown-linux-gnu": {
+                    "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.25.0/a.tar.gz",
+                    "executable_path": "nu_plugin_regex",
+                }
+            },
+        }
+        packages = [
+            pkg("fdncred", "nu_plugin_regex", "plugin",
+                "https://github.com/fdncred/nu_plugin_regex",
+                [latest], tags=["plugin", "ci-built"])
+        ]
+        releases = {
+            "fdncred/nu_plugin_regex": {
+                "tag_name": "v0.26.0",
+                "html_url": "https://github.com/fdncred/nu_plugin_regex/releases/tag/v0.26.0",
+                "assets": [],
+            }
+        }
+        ci_releases = {
+            "fdncred/nu_plugin_regex": {
+                "tag_name": "nu_plugin_regex-0.26.0",
+                "html_url": "https://github.com/numan-cli/numan-plugins/releases/tag/nu_plugin_regex-0.26.0",
+                "assets": [
+                    {
+                        "name": "nu_plugin_regex-0.26.0-x86_64-unknown-linux-gnu.tar.gz",
+                        "browser_download_url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_regex-0.26.0/a.tar.gz",
+                    }
+                ],
+            }
+        }
+        gaps = self.mod.detect(packages, releases, "0.116.1", ci_releases=ci_releases)
+        by_pkg = {"fdncred/nu_plugin_regex": packages[0]}
+        self.mod.attach_verdicts(gaps, by_pkg)
+        self.assertEqual(gaps["upstream_updates"][0]["plugin_source"], "ci-built-ready")
+        self.assertEqual(gaps["upstream_updates"][0]["verdict"], "auto-merge-eligible")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -28,12 +28,12 @@ from lint_packages import KNOWN_TRIPLES
 
 # Ordered patterns: first match wins for each asset filename.
 _TARGET_PATTERNS: list[tuple[str, list[str]]] = [
-    ("x86_64-pc-windows-msvc", ["x86_64-pc-windows-msvc", "x86_64-windows", "windows-x86_64", "win-x64", "windows.zip"]),
     ("aarch64-pc-windows-msvc", ["aarch64-pc-windows-msvc", "aarch64-windows", "windows-aarch64", "win-arm64"]),
-    ("x86_64-unknown-linux-gnu", ["x86_64-unknown-linux-gnu", "x86_64-linux", "linux-x86_64", "linux-gnu", "linux.tar"]),
-    ("aarch64-unknown-linux-gnu", ["aarch64-unknown-linux-gnu", "aarch64-linux", "linux-aarch64", "linux-arm64"]),
-    ("x86_64-apple-darwin", ["x86_64-apple-darwin", "x86_64-macos", "macos-x86_64", "darwin-x86_64", "apple-x86_64"]),
+    ("x86_64-pc-windows-msvc", ["x86_64-pc-windows-msvc", "x86_64-windows", "windows-x86_64", "win-x64", "windows.zip"]),
+    ("aarch64-unknown-linux-gnu", ["aarch64-unknown-linux-gnu", "aarch64-unknown-linux-musl", "aarch64-linux", "linux-aarch64", "linux-arm64"]),
+    ("x86_64-unknown-linux-gnu", ["x86_64-unknown-linux-gnu", "x86_64-unknown-linux-musl", "x86_64-linux", "linux-x86_64", "linux-gnu", "linux.tar"]),
     ("aarch64-apple-darwin", ["aarch64-apple-darwin", "aarch64-macos", "macos-aarch64", "darwin-aarch64", "apple-aarch64"]),
+    ("x86_64-apple-darwin", ["x86_64-apple-darwin", "x86_64-macos", "macos-x86_64", "darwin-x86_64", "apple-x86_64"]),
 ]
 
 

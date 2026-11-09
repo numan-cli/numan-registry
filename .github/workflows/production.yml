@@ -1,6 +1,10 @@
 name: Production registry
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'registry/index.json'
   workflow_dispatch:
     inputs:
       reason:
@@ -32,6 +36,8 @@ jobs:
         run: |
           python scripts/scan_for_secrets.py
           python scripts/preflight.py
+          python scripts/materialize_candidate.py --index registry/index.json --out "${RUNNER_TEMP}/materialized-index.json"
+          cp "${RUNNER_TEMP}/materialized-index.json" registry/index.json
           python scripts/validate.py --index registry/index.json --schema schemas/index-v1.json --skip-signature
       - uses: dtolnay/rust-toolchain@39b0b3842c7e8bbf6904c0bfc3d9006fdd4dc4e0 # 1.88
       - name: Parse candidate with Numan's production parser
@@ -100,6 +106,10 @@ jobs:
             echo "FAIL: production key id has an invalid format"
             exit 1
           fi
+          python scripts/scan_for_secrets.py
+          python scripts/preflight.py
+          python scripts/materialize_candidate.py --index registry/index.json --out "${RUNNER_TEMP}/materialized-index.json"
+          cp "${RUNNER_TEMP}/materialized-index.json" registry/index.json
           python scripts/ci-sign.py --index registry/index.json --sig registry/index.json.sig --key-id "${PRODUCTION_KEY_ID}" --priv-b64 "${NUMAN_REGISTRY_PRIVATE_KEY}"
           python scripts/validate.py --index registry/index.json --sig registry/index.json.sig --pub keys/official.pub --schema schemas/index-v1.json
       - name: Record public site publication metadata

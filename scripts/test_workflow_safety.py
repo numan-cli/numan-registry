@@ -9,8 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 WORKFLOWS = ROOT / ".github" / "workflows"
-SHA_USE = re.compile(r"^\s*-\s+uses:\s+[^@\s]+@[0-9a-f]{40}(?:\s+#.*)?$", re.MULTILINE)
-ANY_USE = re.compile(r"^\s*-\s+uses:\s+\S+", re.MULTILINE)
+SHA_USE = re.compile(r"^\s*(?:-\s+)?uses:\s+[^@\s]+@[0-9a-f]{40}(?:\s+#.*)?$", re.MULTILINE)
+ANY_USE = re.compile(r"^\s*(?:-\s+)?uses:\s+\S+", re.MULTILINE)
 
 
 def job_block(text: str, name: str, next_name: str | None = None) -> str:
@@ -36,7 +36,7 @@ def job_block(text: str, name: str, next_name: str | None = None) -> str:
 class WorkflowSafetyTests(unittest.TestCase):
     def test_every_action_is_pinned_to_full_commit(self):
         """Verify that every GitHub Actions workflow action references a full commit SHA."""
-        for name in ("repo-safety.yml", "staging.yml", "production.yml"):
+        for name in ("repo-safety.yml", "staging.yml", "production.yml", "watch-indexed-updates.yml"):
             text = (WORKFLOWS / name).read_text(encoding="utf-8")
             self.assertEqual(
                 len(ANY_USE.findall(text)),
@@ -111,6 +111,25 @@ class WorkflowSafetyTests(unittest.TestCase):
         for name in ("repo-safety.yml", "production.yml"):
             text = (WORKFLOWS / name).read_text(encoding="utf-8")
             self.assertIn(f"ref: {sha}", text)
+
+    def test_production_materializes_candidate_before_validate_and_sign(self):
+        text = (WORKFLOWS / "production.yml").read_text(encoding="utf-8")
+        validate = job_block(text, "validate", "sign-and-publish")
+        publish = job_block(text, "sign-and-publish")
+        self.assertIn("materialize_candidate.py", validate)
+        self.assertIn("materialize_candidate.py", publish)
+        self.assertLess(validate.index("materialize_candidate.py"), validate.index("validate.py"))
+        self.assertLess(
+            validate.index('cp "${RUNNER_TEMP}/materialized-index.json"'),
+            validate.index("validate.py"),
+        )
+        self.assertLess(publish.index("materialize_candidate.py"), publish.index("ci-sign.py"))
+        self.assertLess(
+            publish.index('cp "${RUNNER_TEMP}/materialized-index.json"'),
+            publish.index("ci-sign.py"),
+        )
+        self.assertIn("branches: [main]", text)
+        self.assertIn("- 'registry/index.json'", text)
 
 
 if __name__ == "__main__":
