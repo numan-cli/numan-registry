@@ -382,18 +382,31 @@ def _map_assets_by_triple(assets: list) -> dict[str, str]:
     return asset_by_triple
 
 
-def _build_plugin_targets(ctx: CandidateContext) -> dict[str, dict]:
-    """Build target map for a binary plugin update after verifying 100% target parity."""
-    prev_targets = (ctx.latest.get("artifact") or {}).get("targets") or {}
-    if not isinstance(prev_targets, dict) or not prev_targets:
-        raise ValueError(f"{ctx.owner}/{ctx.name}: latest entry has no binary targets")
+def _extract_prev_targets(latest: dict, owner: str, name: str) -> dict[str, dict]:
+    artifact = latest.get("artifact")
+    targets = artifact.get("targets") if isinstance(artifact, dict) else None
+    if not isinstance(targets, dict) or not targets:
+        raise ValueError(f"{owner}/{name}: latest entry has no binary targets")
+    return targets
 
-    asset_by_triple = _map_assets_by_triple(ctx.hit.get("assets") or [])
+
+def _verify_target_parity(
+    prev_targets: dict[str, dict],
+    asset_by_triple: dict[str, str],
+    ctx: CandidateContext,
+) -> None:
     missing = sorted(set(prev_targets.keys()) - set(asset_by_triple.keys()))
     if missing:
         raise ValueError(
             f"{ctx.owner}/{ctx.name}@{ctx.upstream_tag}: missing target asset(s) for: {', '.join(missing)}"
         )
+
+
+def _build_plugin_targets(ctx: CandidateContext) -> dict[str, dict]:
+    """Build target map for a binary plugin update after verifying 100% target parity."""
+    prev_targets = _extract_prev_targets(ctx.latest, ctx.owner, ctx.name)
+    asset_by_triple = _map_assets_by_triple(ctx.hit.get("assets") or [])
+    _verify_target_parity(prev_targets, asset_by_triple, ctx)
 
     new_targets: dict[str, dict] = {}
     for triple, prev_target in prev_targets.items():

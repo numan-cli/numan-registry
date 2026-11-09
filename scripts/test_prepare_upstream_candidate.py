@@ -7,6 +7,7 @@ import base64
 import importlib.util
 import json
 import unittest
+from dataclasses import dataclass, field
 from pathlib import Path
 from unittest import mock
 
@@ -24,36 +25,52 @@ def load_mod():
     return mod
 
 
-def _make_module_fixture(
-    owner: str,
-    name: str,
-    old_ver: str,
-    new_tag: str,
-    prev_url: str,
-    entry: str,
-    assets: list[dict],
-    archive_root: str | None = None,
-) -> tuple[dict, dict]:
+@dataclass
+class ModuleFixtureSpec:
+    owner: str
+    name: str
+    old_ver: str
+    new_tag: str
+    prev_url: str
+    entry: str = "mod.nu"
+    assets: list[dict] = field(default_factory=list)
+    archive_root: str | None = None
+
+
+@dataclass
+class PluginFixtureSpec:
+    owner: str = "SuaveIV"
+    name: str = "nu_plugin_audio"
+    old_ver: str = "0.2.10"
+    new_tag: str = "v0.2.13"
+    targets: dict[str, dict] = field(default_factory=dict)
+    assets: list[dict] = field(default_factory=list)
+    tags: list[str] = field(default_factory=lambda: ["plugin"])
+    source: dict | None = None
+    plugin_source: str | None = None
+
+
+def _make_module_fixture(spec: ModuleFixtureSpec) -> tuple[dict, dict]:
     artifact: dict = {
         "kind": "archive",
-        "url": prev_url,
+        "url": spec.prev_url,
         "sha256": "a" * 64,
-        "entry": entry,
+        "entry": spec.entry,
     }
-    if archive_root:
-        artifact["archive_root"] = archive_root
+    if spec.archive_root:
+        artifact["archive_root"] = spec.archive_root
     index = {
         "schema_version": 1,
         "packages": [
             {
-                "id": {"owner": owner, "name": name},
-                "description": f"{name} module",
-                "repo": f"https://github.com/{owner}/{name}",
+                "id": {"owner": spec.owner, "name": spec.name},
+                "description": f"{spec.name} module",
+                "repo": f"https://github.com/{spec.owner}/{spec.name}",
                 "type": "module",
                 "tags": ["module"],
                 "versions": [
                     {
-                        "version": old_ver,
+                        "version": spec.old_ver,
                         "nu_version": ">=0.114.0",
                         "verified_with": ["0.114.0"],
                         "artifact": artifact,
@@ -67,55 +84,45 @@ def _make_module_fixture(
         "upstream_updates": [
             {
                 "kind": "upstream",
-                "package": f"{owner}/{name}",
+                "package": f"{spec.owner}/{spec.name}",
                 "type": "module",
-                "indexed": old_ver,
-                "upstream": new_tag,
-                "assets": assets,
+                "indexed": spec.old_ver,
+                "upstream": spec.new_tag,
+                "assets": spec.assets,
             }
         ]
     }
     return index, hits
 
 
-def _make_plugin_fixture(
-    owner: str,
-    name: str,
-    old_ver: str,
-    new_tag: str,
-    targets: dict[str, dict],
-    assets: list[dict],
-    tags: list[str] | None = None,
-    source: dict | None = None,
-    plugin_source: str | None = None,
-) -> tuple[dict, dict]:
+def _make_plugin_fixture(spec: PluginFixtureSpec) -> tuple[dict, dict]:
     ver_entry: dict = {
-        "version": old_ver,
+        "version": spec.old_ver,
         "nu_version": ">=0.114.0 <0.115.0",
         "verified_with": ["0.114.1"],
-        "artifact": {"kind": "binary", "targets": targets},
+        "artifact": {"kind": "binary", "targets": spec.targets},
     }
-    if source is not None:
-        ver_entry["source"] = source
+    if spec.source is not None:
+        ver_entry["source"] = spec.source
     hit_entry: dict = {
         "kind": "upstream",
-        "package": f"{owner}/{name}",
+        "package": f"{spec.owner}/{spec.name}",
         "type": "plugin",
-        "indexed": old_ver,
-        "upstream": new_tag,
-        "assets": assets,
+        "indexed": spec.old_ver,
+        "upstream": spec.new_tag,
+        "assets": spec.assets,
     }
-    if plugin_source is not None:
-        hit_entry["plugin_source"] = plugin_source
+    if spec.plugin_source is not None:
+        hit_entry["plugin_source"] = spec.plugin_source
     index = {
         "schema_version": 1,
         "packages": [
             {
-                "id": {"owner": owner, "name": name},
-                "description": f"{name} plugin",
-                "repo": f"https://github.com/{owner}/{name}",
+                "id": {"owner": spec.owner, "name": spec.name},
+                "description": f"{spec.name} plugin",
+                "repo": f"https://github.com/{spec.owner}/{spec.name}",
                 "type": "plugin",
-                "tags": tags or ["plugin"],
+                "tags": spec.tags,
                 "versions": [ver_entry],
             }
         ],
@@ -169,20 +176,22 @@ class PrepareUpstreamCandidateTests(unittest.TestCase):
     def test_module_with_upstream_zip_asset_updates_archive_root_and_preserves_activation(self):
         new_url = "https://github.com/vyadh/nutest/releases/download/v1.3.0/nutest-1.3.0.zip"
         index, hits = _make_module_fixture(
-            owner="vyadh",
-            name="nutest",
-            old_ver="1.2.0",
-            new_tag="v1.3.0",
-            prev_url="https://github.com/vyadh/nutest/releases/download/v1.2.0/nutest-1.2.0.zip",
-            entry="nutest/mod.nu",
-            assets=[{"name": "nutest-1.3.0.zip", "url": new_url}],
-            archive_root="nutest-1.2.0",
+            ModuleFixtureSpec(
+                owner="vyadh",
+                name="nutest",
+                old_ver="1.2.0",
+                new_tag="v1.3.0",
+                prev_url="https://github.com/vyadh/nutest/releases/download/v1.2.0/nutest-1.2.0.zip",
+                entry="nutest/mod.nu",
+                assets=[{"name": "nutest-1.3.0.zip", "url": new_url}],
+                archive_root="nutest-1.2.0",
+            )
         )
         spec = self.mod.prepare_candidate(index, hits, "vyadh/nutest")
         self.assertEqual(spec["version"], "1.3.0")
         self.assertEqual(spec["artifact"]["url"], new_url)
         self.assertEqual(spec["artifact"]["entry"], "nutest/mod.nu")
-        self.assertEqual(spec["artifact"]["archive_root"], "nutest-1.3.0")
+        self.assertEqual(spec["artifact"]["archive_root"], "nutest-1.2.0")
         self.assertEqual(spec["activation"], {"kind": "nu-module", "import": "all"})
 
     def test_module_without_upstream_asset_invokes_intake_archive(self):
@@ -191,13 +200,15 @@ class PrepareUpstreamCandidateTests(unittest.TestCase):
             "archive-nushell-prophet-numd-0.4.0/nushell-prophet-numd-0.4.0.tar.gz"
         )
         index, hits = _make_module_fixture(
-            owner="nushell-prophet",
-            name="numd",
-            old_ver="0.4.0",
-            new_tag="0.5.0",
-            prev_url=prev_url,
-            entry="numd/mod.nu",
-            assets=[],
+            ModuleFixtureSpec(
+                owner="nushell-prophet",
+                name="numd",
+                old_ver="0.4.0",
+                new_tag="0.5.0",
+                prev_url=prev_url,
+                entry="numd/mod.nu",
+                assets=[],
+            )
         )
         with mock.patch.object(self.mod, "_load_intake_archive", return_value=_FakeIntakeArchive):
             spec = self.mod.prepare_candidate(index, hits, "nushell-prophet/numd")
@@ -231,7 +242,14 @@ class PrepareUpstreamCandidateTests(unittest.TestCase):
             },
         ]
         index, hits = _make_plugin_fixture(
-            "SuaveIV", "nu_plugin_audio", "0.2.10", "v0.2.13", targets, assets
+            PluginFixtureSpec(
+                owner="SuaveIV",
+                name="nu_plugin_audio",
+                old_ver="0.2.10",
+                new_tag="v0.2.13",
+                targets=targets,
+                assets=assets,
+            )
         )
         with mock.patch.object(
             self.mod, "fetch_cargo_nu_constraint", return_value=">=0.116.0 <0.117.0"
@@ -276,15 +294,17 @@ class PrepareUpstreamCandidateTests(unittest.TestCase):
             "cargo_name": "nu_plugin_file",
         }
         index, hits = _make_plugin_fixture(
-            "fdncred",
-            "nu_plugin_file",
-            "0.28.0",
-            "v0.29.0",
-            targets,
-            assets,
-            tags=["plugin", "ci-built"],
-            source=source,
-            plugin_source="ci-built-ready",
+            PluginFixtureSpec(
+                owner="fdncred",
+                name="nu_plugin_file",
+                old_ver="0.28.0",
+                new_tag="v0.29.0",
+                targets=targets,
+                assets=assets,
+                tags=["plugin", "ci-built"],
+                source=source,
+                plugin_source="ci-built-ready",
+            )
         )
         with (
             mock.patch.object(
@@ -301,6 +321,15 @@ class PrepareUpstreamCandidateTests(unittest.TestCase):
             spec["artifact"]["targets"]["x86_64-unknown-linux-gnu"]["url"], assets[1]["url"]
         )
 
+    def _assert_prepare_candidate_fails(
+        self, targets: dict, assets: list, cargo_nu: str | None = "mocked"
+    ) -> None:
+        spec = PluginFixtureSpec(targets=targets, assets=assets)
+        index, hits = _make_plugin_fixture(spec)
+        with mock.patch.object(self.mod, "fetch_cargo_nu_constraint", return_value=cargo_nu):
+            with self.assertRaises(ValueError):
+                self.mod.prepare_candidate(index, hits, "SuaveIV/nu_plugin_audio")
+
     def test_plugin_rejects_unresolvable_cargo_nu_constraint(self):
         targets = {
             "x86_64-unknown-linux-gnu": {
@@ -315,12 +344,7 @@ class PrepareUpstreamCandidateTests(unittest.TestCase):
                 "url": "https://e/l2.tar.gz",
             }
         ]
-        index, hits = _make_plugin_fixture(
-            "SuaveIV", "nu_plugin_audio", "0.2.10", "v0.2.13", targets, assets
-        )
-        with mock.patch.object(self.mod, "fetch_cargo_nu_constraint", return_value=None):
-            with self.assertRaises(ValueError):
-                self.mod.prepare_candidate(index, hits, "SuaveIV/nu_plugin_audio")
+        self._assert_prepare_candidate_fails(targets, assets, cargo_nu=None)
 
     def test_plugin_rejects_missing_target(self):
         targets = {
@@ -341,11 +365,7 @@ class PrepareUpstreamCandidateTests(unittest.TestCase):
                 "url": "https://e/l2.tar.gz",
             }
         ]
-        index, hits = _make_plugin_fixture(
-            "SuaveIV", "nu_plugin_audio", "0.2.10", "v0.2.13", targets, assets
-        )
-        with self.assertRaises(ValueError):
-            self.mod.prepare_candidate(index, hits, "SuaveIV/nu_plugin_audio")
+        self._assert_prepare_candidate_fails(targets, assets)
 
     def test_fetch_cargo_nu_constraint_parses_base64_cargo_toml(self):
         cargo_toml = b'[dependencies]\nnu-plugin = "0.116.1"\n'
