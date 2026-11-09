@@ -23,7 +23,7 @@ new Nushell minor leave an indexed entry behind?
 - `auto-merge-eligible`:
   - Module/script/completion minor-or-patch bump (non-provisional).
   - Upstream-asset plugin minor-or-patch bump with full target parity.
-  - CI-built plugin minor-or-patch bump whose rebuilt release (`{name}-v{version}`) is already published on `numan-cli/numan-plugins` with full target parity.
+  - CI-built plugin minor-or-patch bump whose rebuilt release (`{name}-{version}`) is already published on `numan-cli/numan-plugins` with full target parity.
   - Nu gap on the same artifact, with no provisional tier.
 - `needs-review`: CI-built plugins awaiting `numan-plugins` rebuild, plugins missing indexed target assets, major bumps, unparsable versions, and anything provisional.
 
@@ -44,8 +44,9 @@ lane lives only in the uploaded report.
    PRs via `scripts/open_intake_pr.py`.
 3. Upstream-tag hits that are `needs-review` or fail dual-OS proof open
    one tracking issue per package with the exact five promotion commands.
-4. Production signing runs automatically via `production.yml` once `main`
-   updates `registry/index.json`, materializing only proven entries
+4. `production.yml` starts automatically once `main` updates
+   `registry/index.json`. Production signing requires reviewer approval,
+   then materializes only proven entries
    (stripping any `provisional` entries before signing).
 
 ## Nu-gap reconciliation

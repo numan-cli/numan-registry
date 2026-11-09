@@ -125,6 +125,12 @@ class PrepareUpstreamCandidateTests(unittest.TestCase):
         class FakeIntakeArchive:
             @staticmethod
             def main(argv: list[str]) -> int:
+                assert argv[argv.index("--git-url") + 1] == "https://github.com/nushell-prophet/numd"
+                assert argv[argv.index("--ref") + 1] == "0.5.0"
+                assert argv[argv.index("--version") + 1] == "0.5.0"
+                assert argv[argv.index("--entry") + 1] == "numd/mod.nu"
+                assert argv[argv.index("--activation-kind") + 1] == "nu-module"
+                assert argv[argv.index("--activation-import") + 1] == "all"
                 out_idx = argv.index("--out") + 1
                 out_path = Path(argv[out_idx])
                 out_path.write_text(
@@ -224,13 +230,156 @@ class PrepareUpstreamCandidateTests(unittest.TestCase):
         self.assertEqual(spec["version"], "0.2.13")
         self.assertEqual(spec["nu_version"], ">=0.116.0 <0.117.0")
         self.assertEqual(
+            spec["artifact"]["targets"]["x86_64-unknown-linux-gnu"]["url"],
+            "https://github.com/SuaveIV/nu_plugin_audio/releases/download/v0.2.13/nu_plugin_audio-0.2.13-x86_64-unknown-linux-gnu.tar.gz",
+        )
+        self.assertEqual(
             spec["artifact"]["targets"]["x86_64-unknown-linux-gnu"]["executable_path"],
             "nu_plugin_audio-0.2.13/nu_plugin_audio",
+        )
+        self.assertEqual(
+            spec["artifact"]["targets"]["x86_64-pc-windows-msvc"]["url"],
+            "https://github.com/SuaveIV/nu_plugin_audio/releases/download/v0.2.13/nu_plugin_audio-0.2.13-x86_64-pc-windows-msvc.zip",
         )
         self.assertEqual(
             spec["artifact"]["targets"]["x86_64-pc-windows-msvc"]["executable_path"],
             "nu_plugin_audio.exe",
         )
+
+    def test_ci_built_plugin_preserves_and_resolves_source_provenance(self):
+        index = {
+            "schema_version": 1,
+            "packages": [
+                {
+                    "id": {"owner": "fdncred", "name": "nu_plugin_file"},
+                    "description": "File plugin",
+                    "repo": "https://github.com/fdncred/nu_plugin_file",
+                    "type": "plugin",
+                    "tags": ["plugin", "ci-built"],
+                    "versions": [
+                        {
+                            "version": "0.28.0",
+                            "nu_version": ">=0.116.0 <0.117.0",
+                            "source": {
+                                "git": "https://github.com/fdncred/nu_plugin_file",
+                                "rev": "a" * 40,
+                                "cargo_name": "nu_plugin_file",
+                            },
+                            "artifact": {
+                                "kind": "binary",
+                                "targets": {
+                                    "aarch64-unknown-linux-gnu": {
+                                        "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_file-0.28.0/nu_plugin_file-0.28.0-aarch64-linux.tar.gz",
+                                        "sha256": "1" * 64,
+                                        "executable_path": "nu_plugin_file",
+                                    },
+                                    "x86_64-unknown-linux-gnu": {
+                                        "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_file-0.28.0/nu_plugin_file-0.28.0-linux.tar.gz",
+                                        "sha256": "2" * 64,
+                                        "executable_path": "nu_plugin_file",
+                                    },
+                                },
+                            },
+                        }
+                    ],
+                }
+            ],
+        }
+        hits = {
+            "upstream_updates": [
+                {
+                    "kind": "upstream",
+                    "package": "fdncred/nu_plugin_file",
+                    "type": "plugin",
+                    "plugin_source": "ci-built-ready",
+                    "indexed": "0.28.0",
+                    "upstream": "v0.29.0",
+                    "assets": [
+                        {
+                            "name": "nu_plugin_file-0.29.0-aarch64-linux.tar.gz",
+                            "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_file-0.29.0/nu_plugin_file-0.29.0-aarch64-linux.tar.gz",
+                        },
+                        {
+                            "name": "nu_plugin_file-0.29.0-linux.tar.gz",
+                            "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_file-0.29.0/nu_plugin_file-0.29.0-linux.tar.gz",
+                        },
+                    ],
+                }
+            ]
+        }
+        with (
+            mock.patch.object(
+                self.mod, "fetch_cargo_nu_constraint", return_value=">=0.116.0 <0.117.0"
+            ),
+            mock.patch.object(self.mod, "resolve_tag_commit_sha", return_value="b" * 40),
+        ):
+            spec = self.mod.prepare_candidate(index, hits, "fdncred/nu_plugin_file")
+        self.assertEqual(
+            spec["source"],
+            {
+                "git": "https://github.com/fdncred/nu_plugin_file",
+                "rev": "b" * 40,
+                "cargo_name": "nu_plugin_file",
+            },
+        )
+        self.assertEqual(
+            spec["artifact"]["targets"]["aarch64-unknown-linux-gnu"]["url"],
+            "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_file-0.29.0/nu_plugin_file-0.29.0-aarch64-linux.tar.gz",
+        )
+        self.assertEqual(
+            spec["artifact"]["targets"]["x86_64-unknown-linux-gnu"]["url"],
+            "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_file-0.29.0/nu_plugin_file-0.29.0-linux.tar.gz",
+        )
+
+    def test_plugin_rejects_unresolvable_cargo_nu_constraint(self):
+        index = {
+            "schema_version": 1,
+            "packages": [
+                {
+                    "id": {"owner": "SuaveIV", "name": "nu_plugin_audio"},
+                    "description": "Audio plugin",
+                    "repo": "https://github.com/SuaveIV/nu_plugin_audio",
+                    "type": "plugin",
+                    "tags": ["plugin"],
+                    "versions": [
+                        {
+                            "version": "0.2.10",
+                            "nu_version": ">=0.114.0 <0.115.0",
+                            "artifact": {
+                                "kind": "binary",
+                                "targets": {
+                                    "x86_64-unknown-linux-gnu": {
+                                        "url": "https://e/l.tar.gz",
+                                        "sha256": "1" * 64,
+                                        "executable_path": "nu_plugin_audio",
+                                    }
+                                },
+                            },
+                        }
+                    ],
+                }
+            ],
+        }
+        hits = {
+            "upstream_updates": [
+                {
+                    "kind": "upstream",
+                    "package": "SuaveIV/nu_plugin_audio",
+                    "type": "plugin",
+                    "indexed": "0.2.10",
+                    "upstream": "v0.2.13",
+                    "assets": [
+                        {
+                            "name": "nu_plugin_audio-x86_64-unknown-linux-gnu.tar.gz",
+                            "url": "https://e/l2.tar.gz",
+                        }
+                    ],
+                }
+            ]
+        }
+        with mock.patch.object(self.mod, "fetch_cargo_nu_constraint", return_value=None):
+            with self.assertRaises(ValueError):
+                self.mod.prepare_candidate(index, hits, "SuaveIV/nu_plugin_audio")
 
     def test_plugin_rejects_missing_target(self):
         index = {

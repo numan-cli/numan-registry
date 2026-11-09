@@ -304,6 +304,69 @@ def _asset_briefs(release: dict, limit: int = 20) -> list[dict]:
     return briefs
 
 
+def _build_upstream_hit(
+    package: dict,
+    latest: dict,
+    scoped: str,
+    ptype: str,
+    indexed: str,
+    rel: dict,
+    ci_releases: dict[str, dict],
+) -> dict | None:
+    """Build an upstream or upstream-unparsed hit dict if a release tag differs."""
+    if not rel or not rel.get("tag_name"):
+        return None
+    newer = is_newer(str(rel["tag_name"]), indexed)
+    if newer is False:
+        return None
+    base_hit: dict = {
+        "kind": "upstream" if newer else "upstream-unparsed",
+        "package": scoped,
+        "type": ptype,
+        "indexed": indexed,
+        "upstream": str(rel["tag_name"]),
+        "url": str(rel.get("html_url", "")),
+        "assets": _asset_briefs(rel),
+        "artifact_id": artifact_id(latest),
+    }
+    if not newer or ptype != "plugin":
+        return base_hit
+    if is_ci_built_plugin(package, latest):
+        ci_rel = ci_releases.get(scoped)
+        if ci_rel:
+            base_hit["plugin_source"] = "ci-built-ready"
+            base_hit["assets"] = _asset_briefs(ci_rel)
+            base_hit["ci_release_url"] = str(ci_rel.get("html_url", ""))
+        else:
+            base_hit["plugin_source"] = "ci-built"
+    else:
+        base_hit["plugin_source"] = "upstream-asset"
+    return base_hit
+
+
+def _build_nu_gap_hit(
+    latest: dict, scoped: str, ptype: str, indexed: str, target_nu: str
+) -> dict | None:
+    """Build a nu-gap hit dict when `target_nu` is excluded by `nu_version` and unverified."""
+    constraint = str(latest.get("nu_version", "*"))
+    verified = [str(v) for v in (latest.get("verified_with") or [])]
+    try:
+        excluded = not matches_nu_constraint(target_nu, constraint)
+    except ValueError:
+        excluded = True
+    if not (excluded and target_nu not in verified):
+        return None
+    return {
+        "kind": "nu-gap",
+        "package": scoped,
+        "type": ptype,
+        "indexed": indexed,
+        "constraint": constraint,
+        "target_nu": target_nu,
+        "artifact_id": artifact_id(latest),
+    }
+
+
 def detect(packages: list[dict], releases: dict[str, dict], target_nu: str,
            ci_releases: dict[str, dict] | None = None) -> dict:
     """Type A: newer upstream tag. Type B: indexed constraint excludes target Nu."""
@@ -319,59 +382,14 @@ def detect(packages: list[dict], releases: dict[str, dict], target_nu: str,
             continue
         indexed = str(latest.get("version", "0.0.0"))
         ptype = str(package.get("type", ""))
-        rel = releases.get(scoped)
-        if rel and rel.get("tag_name"):
-            newer = is_newer(str(rel["tag_name"]), indexed)
-            if newer:
-                hit: dict = {
-                    "kind": "upstream",
-                    "package": scoped,
-                    "type": ptype,
-                    "indexed": indexed,
-                    "upstream": str(rel["tag_name"]),
-                    "url": str(rel.get("html_url", "")),
-                    "assets": _asset_briefs(rel),
-                    "artifact_id": artifact_id(latest),
-                }
-                if ptype == "plugin":
-                    if is_ci_built_plugin(package, latest):
-                        ci_rel = ci_releases.get(scoped)
-                        if ci_rel:
-                            hit["plugin_source"] = "ci-built-ready"
-                            hit["assets"] = _asset_briefs(ci_rel)
-                            hit["ci_release_url"] = str(ci_rel.get("html_url", ""))
-                        else:
-                            hit["plugin_source"] = "ci-built"
-                    else:
-                        hit["plugin_source"] = "upstream-asset"
-                upstream_updates.append(hit)
-            elif newer is None:
-                upstream_updates.append({
-                    "kind": "upstream-unparsed",
-                    "package": scoped,
-                    "type": ptype,
-                    "indexed": indexed,
-                    "upstream": str(rel["tag_name"]),
-                    "url": str(rel.get("html_url", "")),
-                    "assets": _asset_briefs(rel),
-                    "artifact_id": artifact_id(latest),
-                })
-        constraint = str(latest.get("nu_version", "*"))
-        verified = [str(v) for v in (latest.get("verified_with") or [])]
-        try:
-            excluded = not matches_nu_constraint(target_nu, constraint)
-        except ValueError:
-            excluded = True
-        if excluded and target_nu not in verified:
-            nu_gaps.append({
-                "kind": "nu-gap",
-                "package": scoped,
-                "type": ptype,
-                "indexed": indexed,
-                "constraint": constraint,
-                "target_nu": target_nu,
-                "artifact_id": artifact_id(latest),
-            })
+        up_hit = _build_upstream_hit(
+            package, latest, scoped, ptype, indexed, releases.get(scoped) or {}, ci_releases
+        )
+        if up_hit is not None:
+            upstream_updates.append(up_hit)
+        gap_hit = _build_nu_gap_hit(latest, scoped, ptype, indexed, target_nu)
+        if gap_hit is not None:
+            nu_gaps.append(gap_hit)
     upstream_updates.sort(key=lambda h: h["package"])
     nu_gaps.sort(key=lambda h: h["package"])
     return {"upstream_updates": upstream_updates, "nu_gaps": nu_gaps}

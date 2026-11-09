@@ -415,6 +415,8 @@ jobs:
     if: needs.detect.outputs.upstream_eligible_count != '0' && !inputs.dry_run
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: write
     outputs:
       prepared: ${{ steps.prep.outputs.prepared }}
     steps:
@@ -670,16 +672,22 @@ jobs:
         id: open
         env:
           GH_TOKEN: ${{ secrets.WATCH_PAT || secrets.GITHUB_TOKEN }}
+          WATCH_PAT_SET: ${{ secrets.WATCH_PAT != '' && '1' || '' }}
           TARGET_NU: ${{ needs.detect.outputs.target_nu }}
           LINUX: ${{ needs.prove-upstream-linux.outputs.proven }}
           WINDOWS: ${{ needs.prove-upstream-windows.outputs.proven }}
         run: |
           set -euo pipefail
+          if [ -z "${WATCH_PAT_SET}" ]; then
+            echo "WATCH_PAT is not configured; falling back to tracking issues so PR checks do not stall."
+            echo "proven_prs=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           mapfile -t PICKED < <(python -c "import os;l=set(filter(None,os.environ.get('LINUX','').split(',')));w=set(filter(None,os.environ.get('WINDOWS','').split(',')));print('\n'.join(sorted(l&w)))")
           EVIDENCE="${RUNNER_TEMP}/upstream/evidence.json"
-          python -c 'import json,os,sys;json.dump({"overall":"pass","checks":[{"name":"lifecycle","status":"pass"}],"human_summary":f"Dual-OS lifecycle-prove passed on Linux and Windows for Nu {os.environ[\"TARGET_NU\"]}."},open(sys.argv[1],"w"),indent=2)' "$EVIDENCE"
+          python -c 'import json,os,sys;json.dump({"overall":"pass","checks":[{"name":"lifecycle","status":"pass"}],"human_summary":"Dual-OS lifecycle-prove passed on Linux and Windows for Nu "+os.environ["TARGET_NU"]+"."},open(sys.argv[1],"w"),indent=2)' "$EVIDENCE"
           OPENED=""
           for pkg in "${PICKED[@]}"; do
             [ -n "$pkg" ] || continue
@@ -689,7 +697,7 @@ jobs:
               echo "Spec file missing for $pkg; skipping"
               continue
             fi
-            BRANCH=$(python -c 'import json,re,sys;d=json.load(open(sys.argv[1]));s=d.get("spec",d);clean=lambda v:re.sub(r"[^a-zA-Z0-9._-]","-",v).strip("-") or "unknown";print(f"intake/{clean(s[\"owner\"])}-{clean(s[\"name\"])}-{clean(s[\"version\"])}")' "$spec_file")
+            BRANCH=$(python -c 'import json,re,sys;d=json.load(open(sys.argv[1]));s=d.get("spec",d);clean=lambda v:re.sub(r"[^a-zA-Z0-9._-]","-",v).strip("-") or "unknown";print("intake/"+clean(s["owner"])+"-"+clean(s["name"])+"-"+clean(s["version"]))' "$spec_file")
             if [ "$(gh pr list --state open --head "$BRANCH" --json number --jq 'length')" != "0" ]; then
               echo "Open intake PR already exists for $pkg ($BRANCH)"
               OPENED="${OPENED}${OPENED:+,}${pkg}"
@@ -718,7 +726,7 @@ jobs:
   upstream-issues:
     name: File tracking issues for upstream releases
     needs: [detect, prepare-upstream, open-upstream-prs]
-    if: always() && needs.detect.outputs.upstream_count != '0' && !inputs.dry_run
+    if: always() && needs.detect.result == 'success' && needs.open-upstream-prs.result != 'failure' && needs.detect.outputs.upstream_count != '0' && !inputs.dry_run
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -771,7 +779,7 @@ jobs:
           import json, os, subprocess
           issues = json.load(open(os.environ["RUNNER_TEMP"] + "/issues.json"))
           known = subprocess.run(
-              ["gh", "issue", "list", "--state", "open", "--limit", "100",
+              ["gh", "issue", "list", "--state", "open", "--label", "watch", "--limit", "200",
                "--json", "number,title,body"],
               capture_output=True, text=True, check=True)
           by_title = {item["title"]: item
