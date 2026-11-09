@@ -20,14 +20,17 @@ new Nushell minor leave an indexed entry behind?
 
 `scripts/watch_indexed.py` attaches one verdict per hit:
 
-- `auto-merge-eligible`: module/script/completion minor-or-patch bump,
-  or a Nu gap on the same artifact, with no provisional tier.
-- `needs-review`: plugins (rebuild via `numan-plugins` first), major
-  bumps, unparsable versions, and anything provisional.
+- `auto-merge-eligible`:
+  - Module/script/completion minor-or-patch bump (non-provisional).
+  - Upstream-asset plugin minor-or-patch bump with full target parity.
+  - CI-built plugin minor-or-patch bump whose rebuilt release (`{name}-v{version}`) is already published on `numan-cli/numan-plugins` with full target parity.
+  - Nu gap on the same artifact, with no provisional tier.
+- `needs-review`: CI-built plugins awaiting `numan-plugins` rebuild, plugins missing indexed target assets, major bumps, unparsable versions, and anything provisional.
 
 Eligible merges only when lifecycle proof passed on **both** Linux and
-Windows. Everything else stays human-gated: upstream hits get a tracking
-issue, and anything unproven lives only in the uploaded report.
+Windows. Everything else stays human-gated: unproven or `needs-review`
+upstream hits get a tracking issue, and anything unproven in the Nu-gap
+lane lives only in the uploaded report.
 
 ## What runs automatically
 
@@ -35,11 +38,15 @@ issue, and anything unproven lives only in the uploaded report.
    (`lifecycle-prove.py` on Linux and Windows), then opens one
    `verified_with` PR and enables auto-merge when every package on it
    was eligible and green.
-2. Upstream-tag hits open one tracking issue per package with the exact
-   five promotion commands. Maintainers run intake; the bot never writes
-   `registry/index.json` for these.
-3. Production signing is untouched. It stays human-gated in
-   `production.yml` as before.
+2. Eligible Type A upstream hits are synthesized into candidate specs via
+   `scripts/prepare_upstream_candidate.py`, proven on both Linux and
+   Windows via `lifecycle-prove.py`, and opened as auto-merging intake
+   PRs via `scripts/open_intake_pr.py`.
+3. Upstream-tag hits that are `needs-review` or fail dual-OS proof open
+   one tracking issue per package with the exact five promotion commands.
+4. Production signing runs automatically via `production.yml` once `main`
+   updates `registry/index.json`, materializing only proven entries
+   (stripping any `provisional` entries before signing).
 
 ## Nu-gap reconciliation
 

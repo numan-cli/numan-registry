@@ -112,6 +112,15 @@ class WorkflowSafetyTests(unittest.TestCase):
             text = (WORKFLOWS / name).read_text(encoding="utf-8")
             self.assertIn(f"ref: {sha}", text)
 
+    def test_production_materializes_candidate_before_validate_and_sign(self):
+        text = (WORKFLOWS / "production.yml").read_text(encoding="utf-8")
+        validate = job_block(text, "validate", "sign-and-publish")
+        publish = job_block(text, "sign-and-publish")
+        self.assertIn("materialize_candidate.py", validate)
+        self.assertIn("materialize_candidate.py", publish)
+        self.assertIn("branches: [main]", text)
+        self.assertIn("- 'registry/index.json'", text)
+
 
 if __name__ == "__main__":
     unittest.main()

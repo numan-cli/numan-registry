@@ -27,6 +27,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlencode
 
+from gen_candidate import _match_target
 from nu_version_constraint import (
     matches_nu_constraint,
     parse_exact_nu_version,
@@ -37,6 +38,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_INDEX = REPO_ROOT / "registry" / "index.json"
 DEFAULT_TARGET_FILE = REPO_ROOT / "docs" / "watch-target-nu.json"
 GITHUB_API = "https://api.github.com"
+NUMAN_PLUGINS_REPO = "numan-cli/numan-plugins"
 USER_AGENT = "numan-registry-watch-indexed/1.0"
 HTTP_SCHEMES = frozenset({"https", "http"})
 WATCH_OFF_TAG = "watch-off"
@@ -239,6 +241,56 @@ def should_skip(package: dict) -> bool:
     return WATCH_OFF_TAG in (package.get("tags") or [])
 
 
+def is_ci_built_plugin(package: dict, latest: dict) -> bool:
+    """True when the plugin is built and hosted by numan-cli/numan-plugins."""
+    if "ci-built" in (package.get("tags") or []):
+        return True
+    targets = (latest.get("artifact") or {}).get("targets") or {}
+    if not isinstance(targets, dict):
+        return False
+    return any(
+        "numan-cli/numan-plugins/releases/download/" in str(t.get("url", ""))
+        for t in targets.values()
+        if isinstance(t, dict)
+    )
+
+
+def has_target_parity(latest: dict, assets: list[dict]) -> bool:
+    """True when assets cover 100% of the target triples in the latest entry."""
+    targets = (latest.get("artifact") or {}).get("targets") or {}
+    if not isinstance(targets, dict) or not targets or not assets:
+        return False
+    expected = set(targets.keys())
+    matched = set()
+    for asset in assets:
+        if not isinstance(asset, dict):
+            continue
+        triple = _match_target(str(asset.get("name", "")))
+        if triple:
+            matched.add(triple)
+    return expected.issubset(matched)
+
+
+def fetch_release_by_tag(owner_repo: str, tag: str) -> dict | None:
+    """Fetch a single release by tag name, returning None on 404 or draft."""
+    from urllib.error import HTTPError
+    from urllib.parse import quote
+
+    url = f"{GITHUB_API}/repos/{owner_repo}/releases/tags/{quote(tag, safe='')}"
+    ensure_http_url(url)
+    req = urllib.request.Request(url, headers=_github_headers())
+    try:
+        with http_opener().open(req, timeout=30) as resp:
+            rel = json.loads(resp.read().decode("utf-8"))
+    except HTTPError as exc:
+        if exc.code == 404:
+            return None
+        raise
+    if not isinstance(rel, dict) or rel.get("draft") or rel.get("prerelease"):
+        return None
+    return rel
+
+
 def _asset_briefs(release: dict, limit: int = 20) -> list[dict]:
     """Name + URL for release assets so issues carry the exact spec inputs."""
     briefs: list[dict] = []
@@ -252,10 +304,12 @@ def _asset_briefs(release: dict, limit: int = 20) -> list[dict]:
     return briefs
 
 
-def detect(packages: list[dict], releases: dict[str, dict], target_nu: str) -> dict:
+def detect(packages: list[dict], releases: dict[str, dict], target_nu: str,
+           ci_releases: dict[str, dict] | None = None) -> dict:
     """Type A: newer upstream tag. Type B: indexed constraint excludes target Nu."""
     upstream_updates: list[dict] = []
     nu_gaps: list[dict] = []
+    ci_releases = ci_releases or {}
     for package in packages:
         if not isinstance(package, dict) or should_skip(package):
             continue
@@ -269,7 +323,7 @@ def detect(packages: list[dict], releases: dict[str, dict], target_nu: str) -> d
         if rel and rel.get("tag_name"):
             newer = is_newer(str(rel["tag_name"]), indexed)
             if newer:
-                upstream_updates.append({
+                hit: dict = {
                     "kind": "upstream",
                     "package": scoped,
                     "type": ptype,
@@ -278,7 +332,19 @@ def detect(packages: list[dict], releases: dict[str, dict], target_nu: str) -> d
                     "url": str(rel.get("html_url", "")),
                     "assets": _asset_briefs(rel),
                     "artifact_id": artifact_id(latest),
-                })
+                }
+                if ptype == "plugin":
+                    if is_ci_built_plugin(package, latest):
+                        ci_rel = ci_releases.get(scoped)
+                        if ci_rel:
+                            hit["plugin_source"] = "ci-built-ready"
+                            hit["assets"] = _asset_briefs(ci_rel)
+                            hit["ci_release_url"] = str(ci_rel.get("html_url", ""))
+                        else:
+                            hit["plugin_source"] = "ci-built"
+                    else:
+                        hit["plugin_source"] = "upstream-asset"
+                upstream_updates.append(hit)
             elif newer is None:
                 upstream_updates.append({
                     "kind": "upstream-unparsed",
@@ -365,6 +431,30 @@ def _plugin_reasons(kind: str, reasons: list[str]) -> list[str]:
     return reasons or ["plugin gate"]
 
 
+def _decide_plugin_upstream(hit: dict, latest: dict, reasons: list[str]) -> dict:
+    newer = is_newer(str(hit.get("upstream", "")), str(hit.get("indexed", "")))
+    if newer is True and not _is_major_bump(hit) and not reasons:
+        psource = str(hit.get("plugin_source", ""))
+        parity = has_target_parity(latest, hit.get("assets") or [])
+        if psource == "ci-built-ready" and parity:
+            return {
+                "verdict": "auto-merge-eligible",
+                "reasons": [
+                    "ci-built plugin release ready on numan-plugins with full target parity; "
+                    "lifecycle proof required before merge"
+                ],
+            }
+        if psource == "upstream-asset" and parity:
+            return {
+                "verdict": "auto-merge-eligible",
+                "reasons": [
+                    "upstream-asset plugin minor/patch bump with full target parity; "
+                    "lifecycle proof required before merge"
+                ],
+            }
+    return {"verdict": "needs-review", "reasons": _plugin_reasons("upstream", reasons)}
+
+
 def decide(hit: dict, latest: dict, version_count: int = 0) -> dict:
     """Verdict for one hit. Proof still runs in CI; eligible merges only on green."""
     kind = hit.get("kind", "")
@@ -376,6 +466,8 @@ def decide(hit: dict, latest: dict, version_count: int = 0) -> dict:
     if (latest.get("evidence_tier") or "") == "provisional":
         reasons.append("evidence_tier is provisional; a human owns the deferral")
     if ptype == "plugin":
+        if kind == "upstream":
+            return _decide_plugin_upstream(hit, latest, reasons)
         return {"verdict": "needs-review", "reasons": _plugin_reasons(kind, reasons)}
     if kind == "upstream":
         return _decide_upstream(hit, ptype, reasons)
@@ -443,12 +535,14 @@ def write_outputs(gaps: dict, target_nu: str) -> None:
     nu_gaps = gaps.get("nu_gaps", [])
     hits = upstream_updates + nu_gaps
     eligible = [h for h in hits if h.get("verdict") == "auto-merge-eligible"]
+    upstream_eligible = [h for h in upstream_updates if h.get("verdict") == "auto-merge-eligible"]
     gh_output = os.environ.get("GITHUB_OUTPUT")
     if gh_output:
         with open(gh_output, "a", encoding="utf-8") as f:
             f.write(f"has_updates={'true' if hits else 'false'}\n")
             f.write(f"hit_count={len(hits)}\n")
             f.write(f"upstream_count={len(upstream_updates)}\n")
+            f.write(f"upstream_eligible_count={len(upstream_eligible)}\n")
             f.write(f"nu_gap_count={len(nu_gaps)}\n")
             f.write(f"eligible_count={len(eligible)}\n")
             f.write(f"target_nu={target_nu}\n")
@@ -490,6 +584,7 @@ def process(index_path: Path, target_nu: str, write: bool,
         wanted = set(package_filter)
         packages = [p for p in packages if split_scoped(p) in wanted]
     releases: dict[str, dict] = {}
+    ci_releases: dict[str, dict] = {}
     stable_by_repo: dict[str, list[dict]] = {}
     for package in packages:
         if should_skip(package):
@@ -509,8 +604,21 @@ def process(index_path: Path, target_nu: str, write: bool,
             continue
         if rel is not None:
             releases[scoped] = rel
+            if package.get("type") == "plugin" and is_ci_built_plugin(package, latest):
+                indexed_ver = str(latest.get("version", "0.0.0"))
+                if is_newer(str(rel.get("tag_name", "")), indexed_ver):
+                    pkg_name = str((package.get("id") or {}).get("name", ""))
+                    clean_ver = str(rel["tag_name"]).strip().lstrip("vV").split("+")[0]
+                    try:
+                        ci_rel = fetch_release_by_tag(
+                            NUMAN_PLUGINS_REPO, f"{pkg_name}-{clean_ver}")
+                        if ci_rel is not None:
+                            ci_releases[scoped] = ci_rel
+                    except Exception as exc:
+                        print(f"warning: {scoped}: ci-release lookup failed: {exc}",
+                              file=sys.stderr)
     by_package = {split_scoped(p): p for p in packages if isinstance(p, dict)}
-    gaps = attach_verdicts(detect(packages, releases, target_nu), by_package)
+    gaps = attach_verdicts(detect(packages, releases, target_nu, ci_releases), by_package)
     report = format_markdown(gaps, target_nu)
     print(report)
     if not write:
