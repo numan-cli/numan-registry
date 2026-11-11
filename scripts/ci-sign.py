@@ -54,54 +54,56 @@ def activation_source(package, version):
     return "version.activation present"
 
 
-def proof_coverage_error(version):
-    """Return why a version's proofs do not cover its Nu range, or None."""
-    proofs = version.get("proofs")
-    constraint = version.get("nu_version")
-    constraint_label = repr(constraint)
-    required = (
+def _proof_requirement(constraint):
+    return (
         "add a proof with result='passed' and proof.nu_version satisfying "
-        f"version.nu_version={constraint_label}"
+        f"version.nu_version={constraint!r}"
     )
 
-    if not isinstance(proofs, list) or not proofs:
-        return f"no lifecycle proofs: version.proofs is absent or empty; {required}"
 
-    successful = [
+def _successful_proofs(proofs):
+    return [
         proof
         for proof in proofs
         if isinstance(proof, dict) and proof.get("result") == "passed"
     ]
-    if not successful:
-        results = sorted(
-            {
-                repr(proof.get("result"))
-                for proof in proofs
-                if isinstance(proof, dict)
-            }
-        )
-        result_text = ", ".join(results) if results else "no usable proof records"
-        return (
-            "version.proofs has no successful proof: all proof.result values are "
-            f"{result_text}; {required}"
-        )
 
-    matching = []
-    unusable = []
-    for proof in successful:
-        proof_nu = proof.get("nu_version")
-        if not isinstance(proof_nu, str):
-            unusable.append(repr(proof_nu))
-            continue
-        try:
-            if matches_nu_constraint(proof_nu, constraint):
-                matching.append(proof_nu)
-        except ValueError as exc:
-            unusable.append(f"{proof_nu!r} ({exc})")
 
-    if matching:
-        return None
+def _no_successful_proof_error(proofs, required):
+    results = sorted(
+        {
+            repr(proof.get("result"))
+            for proof in proofs
+            if isinstance(proof, dict)
+        }
+    )
+    result_text = ", ".join(results) if results else "no usable proof records"
+    return (
+        "version.proofs has no successful proof: all proof.result values are "
+        f"{result_text}; {required}"
+    )
 
+
+def _proof_nu_match(proof, constraint):
+    proof_nu = proof.get("nu_version")
+    if not isinstance(proof_nu, str):
+        return None, repr(proof_nu)
+    try:
+        if matches_nu_constraint(proof_nu, constraint):
+            return proof_nu, None
+    except ValueError as exc:
+        return None, f"{proof_nu!r} ({exc})"
+    return None, None
+
+
+def _matching_proof_versions(successful, constraint):
+    results = [_proof_nu_match(proof, constraint) for proof in successful]
+    matching = [match for match, _ in results if match]
+    unusable = [issue for _, issue in results if issue]
+    return matching, unusable
+
+
+def _no_matching_proof_error(constraint, successful, unusable):
     successful_versions = ", ".join(
         repr(proof.get("nu_version")) for proof in successful
     )
@@ -110,8 +112,28 @@ def proof_coverage_error(version):
         detail += f"; unusable values: {', '.join(unusable)}"
     return (
         "successful proofs exist but none match the claimed Nu range "
-        f"version.nu_version={constraint_label}; {detail}"
+        f"version.nu_version={constraint!r}; {detail}"
     )
+
+
+def proof_coverage_error(version):
+    """Return why a version's proofs do not cover its Nu range, or None."""
+    proofs = version.get("proofs")
+    constraint = version.get("nu_version")
+    required = _proof_requirement(constraint)
+
+    if not isinstance(proofs, list) or not proofs:
+        return f"no lifecycle proofs: version.proofs is absent or empty; {required}"
+
+    successful = _successful_proofs(proofs)
+    if not successful:
+        return _no_successful_proof_error(proofs, required)
+
+    matching, unusable = _matching_proof_versions(successful, constraint)
+    if matching:
+        return None
+
+    return _no_matching_proof_error(constraint, successful, unusable)
 
 
 def lifecycle_proof_errors(index):
