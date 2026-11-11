@@ -106,6 +106,14 @@ Windows-only failures: `fennewald/nu_plugin_net@1.9.0` on Nu 0.103.0 and
 with Numan 0.4.0 and hash-verified Linux Nu releases. Their logs and per-run
 metadata are in
 [`evidence/2026-11-11-linux-lifecycle/`](evidence/2026-11-11-linux-lifecycle/).
+On the same day, GitHub-hosted runners completed the remaining published
+targets for both versions: macOS x86_64 and macOS arm64 for
+`fennewald/nu_plugin_net@1.9.0` on Nu 0.103.0, and macOS arm64 plus Linux arm64
+for `dead10ck/nu_plugin_dns@4.0.10` on Nu 0.113.1. The jobs built Numan 0.4.0
+from the `v0.4.0` tag, verified every Nu archive against the upstream
+`SHA256SUMS`, and ran the same loopback-signed candidate lifecycle. All four
+passed. Their logs and per-run metadata are in
+[`evidence/2026-11-11-cross-platform-lifecycle/`](evidence/2026-11-11-cross-platform-lifecycle/).
 
 
 The credential-gated `galuszkak/nu_plugin_bigquery@0.3.0` was proven separately
