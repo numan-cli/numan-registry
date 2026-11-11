@@ -72,6 +72,36 @@ class CandidateLifecycleTests(unittest.TestCase):
             with mock.patch.object(self.mod.subprocess, "run", return_value=mock.Mock(stdout=json.dumps({**good, "vendor": []}))):
                 self.assertEqual(self.mod.probe_isolated_nu(Path("nu"), home, {})["vendor"], [])
 
+    def test_only_explicit_environment_is_forwarded_for_nu_check(self):
+        with mock.patch.dict(
+            os.environ,
+            {
+                "GOOGLE_APPLICATION_CREDENTIALS": "caller-credential-path",
+                "GOOGLE_CLOUD_PROJECT": "caller-project",
+                "SERVICE_TOKEN": "not-a-real-token",
+            },
+        ):
+            forwarded = self.mod.forward_environment(
+                ["GOOGLE_APPLICATION_CREDENTIALS", "GOOGLE_CLOUD_PROJECT"]
+            )
+            self.assertEqual(
+                forwarded,
+                {
+                    "GOOGLE_APPLICATION_CREDENTIALS": "caller-credential-path",
+                    "GOOGLE_CLOUD_PROJECT": "caller-project",
+                },
+            )
+            self.assertNotIn("SERVICE_TOKEN", forwarded)
+
+    def test_forward_environment_rejects_reserved_or_missing_names(self):
+        with mock.patch.dict(os.environ, {"NUPM_HOME": "/caller/nupm"}, clear=True):
+            with self.assertRaisesRegex(ValueError, "reserved"):
+                self.mod.forward_environment(["NUPM_HOME"])
+            with self.assertRaisesRegex(ValueError, "not set"):
+                self.mod.forward_environment(["UNSET_CALLER_VARIABLE"])
+            with self.assertRaisesRegex(ValueError, "invalid"):
+                self.mod.forward_environment(["BAD-NAME"])
+
     def test_candidate_registry_signs_canonical_bytes_without_changing_source(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "index.json"

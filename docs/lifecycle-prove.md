@@ -19,6 +19,23 @@ python3 scripts/lifecycle-prove.py \
 
 Omit `--numan` / `--nu` to use whatever is on `PATH`.
 
+For a package that needs live credentials, add `--forward-env NAME` and an
+optional `--nu-check '…'`. Only explicitly named variables are forwarded, and
+only to the isolated post-activation Nu process; they are not passed to install,
+activation, doctor, deactivation, removal, cleanup, or the Nu probe, and their
+values are never printed. A nonzero Nu check fails the proof before doctor. The
+2026-11-11 BigQuery run used:
+
+```bash
+python3 scripts/lifecycle-prove.py \
+  --package galuszkak/nu_plugin_bigquery --package-version 0.3.0 \
+  --candidate-index registry/index.json \
+  --numan /path/to/numan --nu /path/to/nu/0.114.1/nu.exe \
+  --forward-env GOOGLE_APPLICATION_CREDENTIALS \
+  --forward-env GOOGLE_CLOUD_PROJECT \
+  --nu-check 'let rows = (bq query "SELECT 1 AS proof"); let proof = ($rows | get proof | first); if $proof != 1 { error make { msg: "BigQuery proof query returned an unexpected value" } }; $"bigquery proof: SELECT 1 returned ($proof)"'
+```
+
 For an unpublished local candidate, use a loopback registry with an ephemeral
 Ed25519 key. This exercises signature verification without production secrets,
 an unsigned bypass, or publishing to a shared registry:
@@ -40,7 +57,8 @@ production deployment.
 
 Child processes receive a private home, config, data, cache and temp directory
 under the test root. Inherited credentials, `NUPM_HOME` and unsigned-verification
-bypasses are not forwarded. A real-Nu preflight refuses plugin registry or data
+bypasses are not forwarded unless explicitly named with `--forward-env`, and
+then only to the Nu check process. A real-Nu preflight refuses plugin registry or data
 paths outside that home. Modules also require an isolated vendor-autoload target;
 plugins can be proved on older Nu versions without that module target. Each step
 has a five-minute timeout. Logs print executable hashes and the candidate file

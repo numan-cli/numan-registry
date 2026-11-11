@@ -209,6 +209,60 @@ class LifecycleProveTests(unittest.TestCase):
             ["init", "registry sync", "search", "info", "install"],
         )
 
+    def test_prove_runs_nu_check_after_activate_and_fails_before_doctor(self):
+        calls: list[str] = []
+
+        def fake_run(step, **_kwargs):
+            calls.append(step.name)
+            return mock.Mock(returncode=0)
+
+        def fake_check(_command, **_kwargs):
+            calls.append("nu check")
+            return mock.Mock(returncode=9)
+
+        with (
+            mock.patch.object(self.mod, "run_step", side_effect=fake_run),
+            mock.patch.object(self.mod, "run_nu_check", side_effect=fake_check),
+            mock.patch.object(
+                self.mod,
+                "prepare_nu_search_dir",
+                side_effect=lambda _nu, shim_dir: shim_dir,
+            ),
+            mock.patch.object(self.mod, "forward_environment", return_value={}),
+        ):
+            code = self.mod.prove(
+                "acme/pkg",
+                numan=Path("numan"),
+                nu=Path("nu"),
+                root=Path("root"),
+                keep_root=True,
+                nu_check="bq query \"SELECT 1 AS proof\"",
+            )
+        self.assertEqual(code, 9)
+        self.assertEqual(
+            calls,
+            [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "nu check",
+            ],
+        )
+
+    def test_nu_check_uses_exact_command_and_isolated_environment(self):
+        env = {"HOME": "isolated-home"}
+        with mock.patch.object(self.mod.subprocess, "run", return_value=mock.Mock(returncode=0)) as run:
+            result = self.mod.run_nu_check("bq query \"SELECT 1 AS proof\"", nu=Path("nu"), env=env)
+        self.assertEqual(result.returncode, 0)
+        run.assert_called_once()
+        args, kwargs = run.call_args
+        self.assertEqual(args[0], ["nu", "-c", 'bq query "SELECT 1 AS proof"'])
+        self.assertEqual(kwargs["env"], env)
+        self.assertFalse(kwargs["capture_output"])
+
     def test_prove_runs_complete_lifecycle_and_cleans_temporary_paths(self):
         calls: list[str] = []
         paths: list[str] = []
