@@ -6049,6 +6049,48 @@
               ],
               "timestamp": "2026-10-19T00:00:00Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/82b2ce7957d011a63320c8831e7dc34c8ebcfa9f/docs/evidence/2026-10-19-lifecycle/JosephTLyons__nu_plugin_units.log"
+            },
+            {
+              "os": "linux",
+              "arch": "aarch64",
+              "nu_version": "0.116.1",
+              "result": "passed",
+              "timestamp": "2026-11-11T12:07:33Z",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-reusable-lifecycle-proof/JosephTLyons__nu_plugin_units__0.1.9__nu-0.116.1__linux-aarch64.log"
+            },
+            {
+              "os": "macos",
+              "arch": "aarch64",
+              "nu_version": "0.116.1",
+              "result": "passed",
+              "timestamp": "2026-11-11T12:08:13Z",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-reusable-lifecycle-proof/JosephTLyons__nu_plugin_units__0.1.9__nu-0.116.1__macos-aarch64.log"
             }
           ]
         }
