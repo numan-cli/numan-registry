@@ -175,6 +175,35 @@ class BuildVersionEntryEvidenceTierTests(unittest.TestCase):
         self.assertNotIn("evidence_tier", version_entry)
         self.assertNotIn("deferral_reason", version_entry)
 
+    def test_passes_proofs_through_to_version_entry(self):
+        proofs = [
+            {
+                "os": "linux",
+                "arch": "x86_64",
+                "nu_version": "0.113.1",
+                "result": "passed",
+                "commands": ["install", "activate", "doctor"],
+                "timestamp": "2026-10-18T12:00:00Z",
+            }
+        ]
+        spec = {
+            "version": "1.0.0",
+            "nu_version": "*",
+            "proofs": proofs,
+            "artifact": {
+                "kind": "binary",
+                "targets": {
+                    "x86_64-unknown-linux-gnu": {
+                        "url": "https://example.invalid/a.tar.gz",
+                        "executable_path": "p",
+                    }
+                },
+            },
+        }
+        with mock.patch.object(self.ap, "download_and_hash", return_value="a" * 64):
+            version_entry = self.ap.build_version_entry(spec)
+        self.assertEqual(version_entry["proofs"], proofs)
+
 
 class SchemaProvisionalTierTests(unittest.TestCase):
     """Confirm the schema itself rejects a provisional entry missing deferral_reason."""

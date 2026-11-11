@@ -105,6 +105,42 @@
                     "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
                   }
                 },
+                "proofs": {
+                  "type": "array",
+                  "description": "Optional per-platform lifecycle proof records. Each record describes one real-Nu lifecycle run on a specific OS and architecture.",
+                  "items": {
+                    "type": "object",
+                    "required": ["os", "arch", "nu_version", "result", "timestamp"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "os": {
+                        "type": "string",
+                        "enum": ["windows", "linux", "macos"]
+                      },
+                      "arch": {
+                        "type": "string",
+                        "enum": ["x86_64", "aarch64"]
+                      },
+                      "nu_version": {
+                        "type": "string",
+                        "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+                      },
+                      "result": {
+                        "type": "string",
+                        "enum": ["passed", "failed"]
+                      },
+                      "commands": {
+                        "type": "array",
+                        "items": { "type": "string", "minLength": 1 }
+                      },
+                      "timestamp": {
+                        "type": "string",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$"
+                      },
+                      "evidence_url": { "type": "string", "format": "uri" }
+                    }
+                  }
+                },
                 "artifact": {
                   "type": "object",
                   "required": ["kind"],
@@ -161,8 +197,23 @@
                   "required": ["kind"],
                   "additionalProperties": false,
                   "properties": {
-                    "kind": { "type": "string" },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "nu-module",
+                        "nu-overlay",
+                        "nu-hook",
+                        "nu-script",
+                        "nu-completion"
+                      ]
+                    },
                     "import": { "type": "string", "enum": ["module", "all"] },
+                    "entry": { "type": "string", "minLength": 1 },
+                    "overlay_name": { "type": "string", "minLength": 1 },
+                    "exports": {
+                      "type": "array",
+                      "items": { "type": "string", "minLength": 1 }
+                    },
                     "bindings": {
                       "type": "array",
                       "minItems": 1,
@@ -226,6 +277,14 @@
                     {
                       "if": { "properties": { "kind": { "const": "nu-script" } } },
                       "then": { "required": ["entry_points"] }
+                    },
+                    {
+                      "if": { "properties": { "kind": { "const": "nu-hook" } } },
+                      "then": { "required": ["bindings"] }
+                    },
+                    {
+                      "if": { "properties": { "kind": { "const": "nu-overlay" } } },
+                      "then": { "required": ["entry"] }
                     }
                   ]
                 }
