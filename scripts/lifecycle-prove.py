@@ -49,6 +49,23 @@ class Step:
     args: list[str]
 
 
+@dataclass(frozen=True)
+class ProofRun:
+    """Resolved paths and environment for one lifecycle proof."""
+
+    package_id: str
+    package_version: str | None
+    candidate_index: Path | None
+    probe: dict
+    numan: Path
+    nu: Path
+    root: Path
+    env: dict[str, str]
+    check_env: dict[str, str]
+    nu_check: str | None
+    commands: tuple[str, ...] | None
+
+
 def which(name: str) -> Path | None:
     """Locate an executable by name on the system PATH.
     
@@ -434,6 +451,101 @@ def candidate_version(candidate_index, package_id, package_version, probe):
     return version
 
 
+def _parse_commands_input(raw: str | None) -> tuple[str, ...] | None:
+    """Parse the optional JSON command sequence from the CLI."""
+    if not raw:
+        return None
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"invalid JSON: {exc}") from exc
+    if not isinstance(parsed, list) or not parsed:
+        raise ValueError("commands must be a non-empty JSON array")
+    if not all(isinstance(command, str) and command for command in parsed):
+        raise ValueError("each lifecycle command must be a non-empty string")
+    return tuple(parsed)
+
+
+def _runtime_env(root: Path, forward_env: tuple[str, ...]) -> tuple[dict, dict, dict]:
+    env = isolated_environment(root / "lifecycle-home")
+    env["NUMAN_ROOT"] = str(root.resolve())
+    check_env = {**env, **forward_environment(forward_env)}
+    if forward_env:
+        print("forwarded to Nu check only: " + ", ".join(forward_env), flush=True)
+    probe = probe_isolated_nu(root / "lifecycle-home", env)
+    print("isolated Nu probe: " + json.dumps(probe), flush=True)
+    return env, check_env, probe
+
+
+def _configure_nu_shim(nu: Path, shim_dir: Path, is_windows: bool) -> Path:
+    shim_path = shim_dir / "nu"
+    if not is_windows:
+        shim_path.write_bytes(render_nu_shim(nu))
+        shim_path.chmod(0o755)
+    return prepare_nu_search_dir(nu, shim_dir)
+
+
+def _configure_candidate_root(root: Path) -> None:
+    (root / "config.toml").write_text(
+        '[general]\ndefault_registry = "lifecycle-candidate"\n',
+        encoding="utf-8",
+    )
+
+
+def _insert_registry_steps(steps: list[Step], url: str, public: str) -> None:
+    insert_at = next((i for i, step in enumerate(steps) if step.name == "init"), None)
+    if insert_at is None:
+        raise ValueError("commands must include init")
+    steps[insert_at + 1:insert_at + 1] = [
+        Step("remove official test-root registry", ["registry", "remove", "official"]),
+        Step("add signed candidate registry", ["registry", "add", "lifecycle-candidate", url, "--key", public]),
+    ]
+
+
+def _prepare_steps(run: ProofRun, stack: ExitStack) -> tuple[list[Step], dict | None]:
+    steps = build_steps(run.package_id, run.package_version, run.commands)
+    if run.candidate_index is None:
+        return steps, None
+    version = candidate_version(run.candidate_index, run.package_id, run.package_version, run.probe)
+    url, public = stack.enter_context(candidate_registry(run.candidate_index))
+    _configure_candidate_root(run.root)
+    steps = build_steps(run.package_id, version["version"], run.commands)
+    _insert_registry_steps(steps, url, public)
+    print(f"candidate package version: {version['version']}", flush=True)
+    print("candidate file SHA256: " + hashlib.sha256(run.candidate_index.read_bytes()).hexdigest(), flush=True)
+    return steps, version
+
+
+def _check_candidate_version(root: Path, package_id: str, version: dict) -> int:
+    lockfile = json.loads((root / "lockfile").read_text(encoding="utf-8"))
+    if lockfile["packages"][package_id]["version"] != version["version"]:
+        raise ValueError("installed version differs from requested candidate")
+    return 0
+
+
+def _post_step_failure(step: Step, run: ProofRun, version: dict | None) -> int:
+    if step.name == "activate" and run.nu_check:
+        check = run_nu_check(run.nu_check, nu=run.nu, env=run.check_env)
+        if check.returncode != 0:
+            print(f"FAILED at step 'nu check' (exit {check.returncode})", file=sys.stderr)
+            return check.returncode
+    if step.name == "install" and run.candidate_index is not None:
+        return _check_candidate_version(run.root, run.package_id, version)
+    return 0
+
+
+def _run_steps(steps: list[Step], run: ProofRun, version: dict | None) -> int:
+    for step in steps:
+        result = run_step(step, numan=run.numan, root=run.root, env=run.env)
+        if result.returncode != 0:
+            print(f"FAILED at step {step.name!r} (exit {result.returncode})", file=sys.stderr)
+            return result.returncode
+        failure = _post_step_failure(step, run, version)
+        if failure:
+            return failure
+    return 0
+
+
 def prove(
     package_id: str,
     *,
@@ -447,59 +559,36 @@ def prove(
     nu_check: str | None = None,
     commands: tuple[str, ...] | None = None,
 ) -> int:
-    # Prefer the requested Nu for `numan init` probing without mutating the
-    # caller's shell permanently: create a temporary shim that invokes the
-    # exact nu binary, ensuring numan doesn't find a different nu on PATH.
-    """
-    Run the complete lifecycle verification sequence for a package.
-    
-    Args:
-        package_id: Package identifier in ``owner/name`` format.
-        numan: Path to the Numan executable.
-        nu: Path to the Nu executable used during initialization.
-        root: Numan root directory for the verification.
-        keep_root: Whether to preserve the root directory after completion.
-        commands: Optional ordered lifecycle command names; defaults to the full sequence.
-    
-    Returns:
-        ``0`` if every lifecycle step succeeds, ``2`` if Nu isolation fails,
-        or the failing step's exit code otherwise.
-    
-    The temporary Nu shim is removed after execution. The root directory is
-    removed unless ``keep_root`` is true.
-    """
-    # Create a temporary directory for the nu shim
+    # Create a temporary directory for the nu shim.
     shim_dir = Path(tempfile.mkdtemp(prefix="numan-lifecycle-prove-shim-"))
     is_windows = sys.platform == "win32"
-    shim_path = shim_dir / "nu"
 
     try:
-        env = isolated_environment(root / "lifecycle-home")
-        env["NUMAN_ROOT"] = str(root.resolve())
-        check_env = {**env, **forward_environment(forward_env)}
-        if forward_env:
-            print("forwarded to Nu check only: " + ", ".join(forward_env), flush=True)
-        probe = probe_isolated_nu(nu, root / "lifecycle-home", env)
-        print("isolated Nu probe: " + json.dumps(probe), flush=True)
-        print("Nu SHA256: " + sha256_file(nu), flush=True)
-        print("Numan SHA256: " + sha256_file(numan), flush=True)
-        if not is_windows:
-            shim_path.write_bytes(render_nu_shim(nu))
-            shim_path.chmod(0o755)
-
+        env, check_env, probe = _runtime_env(root, forward_env)
         # Rust rejects some arguments when Command launches a batch file, so
         # Windows exposes an isolated nu.exe hardlink/copy of the exact binary.
         try:
-            nu_search_dir = prepare_nu_search_dir(nu, shim_dir)
+            nu_search_dir = _configure_nu_shim(nu, shim_dir, is_windows)
         except (OSError, ValueError) as exc:
             print(f"error: could not isolate selected Nu: {exc}", file=sys.stderr)
             return 2
+        env["PATH"] = str(nu_search_dir) + os.pathsep + env.get("PATH", "")
 
-        # Prepend the selected Nu location to PATH.
-        path_key = "PATH"
-        sep = os.pathsep
-        env[path_key] = str(nu_search_dir) + sep + env.get(path_key, "")
-
+        run = ProofRun(
+            package_id=package_id,
+            package_version=package_version,
+            candidate_index=candidate_index,
+            probe=probe,
+            numan=numan,
+            nu=nu,
+            root=root,
+            env=env,
+            check_env=check_env,
+            nu_check=nu_check,
+            commands=commands,
+        )
+        print("Nu SHA256: " + sha256_file(nu), flush=True)
+        print("Numan SHA256: " + sha256_file(numan), flush=True)
         print(f"package: {package_id}")
         print(f"numan:   {numan}")
         print(f"nu:      {nu}")
@@ -507,44 +596,18 @@ def prove(
         print(flush=True)
 
         with ExitStack() as stack:
-            steps = build_steps(package_id, package_version, commands)
-            if candidate_index is not None:
-                version = candidate_version(candidate_index, package_id, package_version, probe)
-                url, public = stack.enter_context(candidate_registry(candidate_index))
-                # This is a brand-new test root. Configure its default before init creates state.
-                (root / "config.toml").write_text('[general]\ndefault_registry = "lifecycle-candidate"\n', encoding="utf-8")
-                steps = build_steps(package_id, version["version"], commands)
-                insert_at = next((i for i, step in enumerate(steps) if step.name == "init"), None)
-                if insert_at is None:
-                    raise ValueError("commands must include init")
-                steps[insert_at + 1:insert_at + 1] = [Step("remove official test-root registry", ["registry", "remove", "official"]), Step("add signed candidate registry", ["registry", "add", "lifecycle-candidate", url, "--key", public])]
-                print(f"candidate package version: {version['version']}", flush=True)
-                print("candidate file SHA256: " + hashlib.sha256(candidate_index.read_bytes()).hexdigest(), flush=True)
-            for step in steps:
-                result = run_step(step, numan=numan, root=root, env=env)
-                if result.returncode != 0:
-                    print(f"FAILED at step {step.name!r} (exit {result.returncode})", file=sys.stderr)
-                    return result.returncode
-                if step.name == "activate" and nu_check:
-                    check = run_nu_check(nu_check, nu=nu, env=check_env)
-                    if check.returncode != 0:
-                        print(f"FAILED at step 'nu check' (exit {check.returncode})", file=sys.stderr)
-                        return check.returncode
-                if step.name == "install" and candidate_index is not None:
-                    lockfile = json.loads((root / "lockfile").read_text(encoding="utf-8"))
-                    if lockfile["packages"][package_id]["version"] != version["version"]:
-                        raise ValueError("installed version differs from requested candidate")
-        print("OK: lifecycle-prove passed.")
-        return 0
+            steps, version = _prepare_steps(run, stack)
+            result = _run_steps(steps, run, version)
+        if result == 0:
+            print("OK: lifecycle-prove passed.")
+        return result
     except (OSError, ValueError, KeyError, IndexError, subprocess.SubprocessError) as exc:
         print(f"FAILED lifecycle preflight/run: {exc}", file=sys.stderr)
         if isinstance(exc, subprocess.CalledProcessError) and exc.stderr:
             print(exc.stderr, file=sys.stderr)
         return 2
     finally:
-        # Clean up shim directory
         shutil.rmtree(shim_dir, ignore_errors=True)
-
         if keep_root:
             print(f"kept root at {root}")
         else:
@@ -614,18 +677,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    commands: tuple[str, ...] | None = None
-    if args.commands_json:
-        try:
-            parsed_commands = json.loads(args.commands_json)
-            if not isinstance(parsed_commands, list) or not parsed_commands:
-                raise ValueError("commands must be a non-empty JSON array")
-            if not all(isinstance(command, str) and command for command in parsed_commands):
-                raise ValueError("each lifecycle command must be a non-empty string")
-            commands = tuple(parsed_commands)
-        except (json.JSONDecodeError, ValueError) as exc:
-            print(f"error: invalid --commands-json: {exc}", file=sys.stderr)
-            return 2
+    try:
+        commands = _parse_commands_input(args.commands_json)
+    except ValueError as exc:
+        print(f"error: invalid --commands-json: {exc}", file=sys.stderr)
+        return 2
 
     try:
         validate_package_id(args.package.strip())

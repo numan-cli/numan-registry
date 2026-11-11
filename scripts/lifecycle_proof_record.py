@@ -7,6 +7,7 @@ import argparse
 import json
 import re
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 from nu_version_constraint import EXACT_NU_VERSION
@@ -32,10 +33,22 @@ HEADER_KEYS = {
 }
 OS_VALUES = {"windows", "linux", "macos"}
 ARCH_VALUES = {"x86_64", "aarch64"}
+REQUIRED_HEADERS = ("package", "package_version", "nu_version", "platform", "started_at", "exit_code")
 TIMESTAMP_RE = re.compile(
     r"^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}"
     r"(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$"
 )
+
+
+@dataclass(frozen=True)
+class ProofExpectation:
+    """Expected package metadata and commands for one proof log."""
+
+    commands: list[str]
+    package: str | None = None
+    package_version: str | None = None
+    nu_version: str | None = None
+    evidence_url: str | None = None
 
 
 def parse_header(text: str) -> dict[str, str]:
@@ -51,12 +64,14 @@ def parse_header(text: str) -> dict[str, str]:
     return fields
 
 
-def parse_commands(raw: str) -> list[str]:
-    """Parse and validate the command list passed to the proof."""
+def _decode_commands(raw: str) -> object:
     try:
-        commands = json.loads(raw)
+        return json.loads(raw)
     except json.JSONDecodeError as exc:
         raise ValueError(f"commands is not valid JSON: {exc}") from exc
+
+
+def _validate_commands(commands: object) -> list[str]:
     if not isinstance(commands, list) or not commands:
         raise ValueError("commands must be a non-empty JSON array")
     if not all(isinstance(command, str) and command.strip() for command in commands):
@@ -64,57 +79,79 @@ def parse_commands(raw: str) -> list[str]:
     return [command.strip() for command in commands]
 
 
-def build_proof(
-    text: str,
-    *,
-    commands: list[str],
-    package: str | None = None,
-    package_version: str | None = None,
-    nu_version: str | None = None,
-    evidence_url: str | None = None,
-) -> dict:
-    """Build the proof object consumed by the signed index."""
-    fields = parse_header(text)
-    required = ("package", "package_version", "nu_version", "platform", "started_at", "exit_code")
-    missing = [key for key in required if not fields.get(key)]
+def parse_commands(raw: str) -> list[str]:
+    """Parse and validate the command list passed to the proof."""
+    return _validate_commands(_decode_commands(raw))
+
+
+def _require_headers(fields: dict[str, str]) -> None:
+    missing = [key for key in REQUIRED_HEADERS if not fields.get(key)]
     if missing:
         raise ValueError(f"proof log is missing header field(s): {', '.join(missing)}")
+
+
+def _check_expected(fields: dict[str, str], expectation: ProofExpectation) -> None:
     expected = {
-        "package": package,
-        "package_version": package_version,
-        "nu_version": nu_version,
+        "package": expectation.package,
+        "package_version": expectation.package_version,
+        "nu_version": expectation.nu_version,
     }
     for key, value in expected.items():
         if value is not None and fields[key] != value:
             raise ValueError(f"proof log {key} {fields[key]!r} does not match expected {value!r}")
 
+
+def _parse_platform(fields: dict[str, str]) -> tuple[str, str]:
     platform = fields["platform"]
     if platform.count("/") != 1:
         raise ValueError(f"proof log platform must be os/arch, got {platform!r}")
     os_name, arch = platform.split("/", 1)
     if os_name not in OS_VALUES or arch not in ARCH_VALUES:
         raise ValueError(f"unsupported proof platform: {platform}")
-    if EXACT_NU_VERSION.fullmatch(fields["nu_version"]) is None:
-        raise ValueError(f"proof log Nu version is not exact: {fields['nu_version']!r}")
+    return os_name, arch
 
+
+def _parse_timestamp(fields: dict[str, str]) -> str:
     timestamp = fields.get("finished_at") or fields["started_at"]
     if TIMESTAMP_RE.fullmatch(timestamp) is None:
         raise ValueError(f"proof log timestamp is invalid: {timestamp!r}")
-    passed = fields["exit_code"] == "0" and "OK: lifecycle-prove passed." in text
-    result = "passed" if passed else "failed"
+    return timestamp
 
+
+def _is_passed(fields: dict[str, str], text: str) -> bool:
+    return fields["exit_code"] == "0" and "OK: lifecycle-prove passed." in text
+
+
+def _make_proof(
+    fields: dict[str, str],
+    platform: tuple[str, str],
+    passed: bool,
+    expectation: ProofExpectation,
+) -> dict:
+    os_name, arch = platform
     proof = {
         "os": os_name,
         "arch": arch,
         "nu_version": fields["nu_version"],
-        "result": result,
-        "timestamp": timestamp,
+        "result": "passed" if passed else "failed",
+        "timestamp": _parse_timestamp(fields),
     }
     if passed:
-        proof["commands"] = commands
-    if evidence_url:
-        proof["evidence_url"] = evidence_url
+        proof["commands"] = expectation.commands
+    if expectation.evidence_url:
+        proof["evidence_url"] = expectation.evidence_url
     return proof
+
+
+def build_proof(text: str, expectation: ProofExpectation) -> dict:
+    """Build the proof object consumed by the signed index."""
+    fields = parse_header(text)
+    _require_headers(fields)
+    _check_expected(fields, expectation)
+    os_name, arch = _parse_platform(fields)
+    if EXACT_NU_VERSION.fullmatch(fields["nu_version"]) is None:
+        raise ValueError(f"proof log Nu version is not exact: {fields['nu_version']!r}")
+    return _make_proof(fields, (os_name, arch), _is_passed(fields, text), expectation)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -135,15 +172,14 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         text = args.log.read_text(encoding="utf-8")
-        commands = parse_commands(args.commands_json)
-        proof = build_proof(
-            text,
-            commands=commands,
+        expectation = ProofExpectation(
+            commands=parse_commands(args.commands_json),
             package=args.package,
             package_version=args.package_version,
             nu_version=args.nu_version,
             evidence_url=args.evidence_url,
         )
+        proof = build_proof(text, expectation)
     except (OSError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
