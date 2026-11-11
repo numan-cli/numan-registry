@@ -104,8 +104,9 @@ class LifecycleProofPlanTests(unittest.TestCase):
             "numan_repo": "numan-cli/numan",
             "index_path": self.index_path,
         }
+        index_path = values.pop("index_path")
         values.update(overrides)
-        return plan_mod.build_plan(**values)
+        return plan_mod.build_plan(plan_mod.ProofRequest(**values), index_path)
 
     def test_resolves_real_runner_matrix_and_default_commands(self):
         plan = self.build()
@@ -171,10 +172,12 @@ class LifecycleProofRecordTests(unittest.TestCase):
     def test_creates_passed_record_with_commands(self):
         proof = record_mod.build_proof(
             PASS_LOG,
-            commands=["init", "install", "gc"],
-            package="acme/pkg",
-            package_version="1.2.3",
-            nu_version="0.116.1",
+            record_mod.ProofExpectation(
+                commands=["init", "install", "gc"],
+                package="acme/pkg",
+                package_version="1.2.3",
+                nu_version="0.116.1",
+            ),
         )
         self.assertEqual(
             proof,
@@ -192,17 +195,22 @@ class LifecycleProofRecordTests(unittest.TestCase):
         failed = PASS_LOG.replace("OK: lifecycle-prove passed.\n", "").replace(
             "exit_code=0", "exit_code=7"
         )
-        proof = record_mod.build_proof(failed, commands=["init", "install"])
+        proof = record_mod.build_proof(
+            failed, record_mod.ProofExpectation(commands=["init", "install"])
+        )
         self.assertEqual(proof["result"], "failed")
         self.assertNotIn("commands", proof)
 
     def test_rejects_mismatched_expected_package(self):
         with self.assertRaisesRegex(ValueError, "does not match expected"):
-            record_mod.build_proof(PASS_LOG, commands=["init"], package="other/pkg")
+            record_mod.build_proof(
+                PASS_LOG,
+                record_mod.ProofExpectation(commands=["init"], package="other/pkg"),
+            )
 
     def test_later_equals_lines_do_not_overwrite_header(self):
         text = PASS_LOG + "sha256=not-a-header\nnu_version=9.9.9\n"
-        proof = record_mod.build_proof(text, commands=["init"])
+        proof = record_mod.build_proof(text, record_mod.ProofExpectation(commands=["init"]))
         self.assertEqual(proof["nu_version"], "0.116.1")
 
 

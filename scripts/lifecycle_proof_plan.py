@@ -7,6 +7,7 @@ import argparse
 import json
 import re
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 from nu_version_constraint import EXACT_NU_VERSION, matches_nu_constraint
@@ -82,6 +83,21 @@ COMMANDS_BY_KIND = {
 SUPPORTED_COMMANDS = set(STANDARD_COMMANDS)
 PACKAGE_VERSION_RE = re.compile(r"^\S+$")
 REPO_RE = re.compile(r"^[^/\s]+/[^/\s]+$")
+PUBLISHED_ARTIFACT_KINDS = {"archive", "source"}
+
+
+@dataclass(frozen=True)
+class ProofRequest:
+    """Validated user inputs for one package proof plan."""
+
+    package: str
+    package_version: str
+    nu_version: str
+    targets: str
+    activation_kind: str = ""
+    commands: str | None = None
+    numan_version: str = "0.4.0"
+    numan_repo: str = "numan-cli/numan"
 
 
 def parse_json_list(raw: str, label: str) -> list:
@@ -97,6 +113,17 @@ def parse_json_list(raw: str, label: str) -> list:
     return value
 
 
+def _target_spec(value: object) -> tuple[str, dict]:
+    if not isinstance(value, str):
+        raise ValueError("each target must be an os/arch string")
+    target = value.strip()
+    spec = TARGETS.get(target)
+    if spec is None:
+        allowed = ", ".join(sorted(TARGETS))
+        raise ValueError(f"unsupported target {target!r}; choose from {allowed}")
+    return target, spec
+
+
 def parse_targets(raw: str) -> list[dict]:
     """Map target identifiers to real runner and Nu asset metadata."""
     values = parse_json_list(raw, "targets")
@@ -105,64 +132,79 @@ def parse_targets(raw: str) -> list[dict]:
     targets = []
     seen = set()
     for value in values:
-        if not isinstance(value, str):
-            raise ValueError("each target must be an os/arch string")
-        target = value.strip()
+        target, spec = _target_spec(value)
         if target in seen:
             raise ValueError(f"duplicate target: {target}")
-        spec = TARGETS.get(target)
-        if spec is None:
-            allowed = ", ".join(sorted(TARGETS))
-            raise ValueError(f"unsupported target {target!r}; choose from {allowed}")
         seen.add(target)
         targets.append({"target": target, **spec})
     return targets
 
 
+def _commands_for_kind(activation_kind: str) -> list[str]:
+    try:
+        return list(COMMANDS_BY_KIND[activation_kind])
+    except KeyError as exc:
+        raise ValueError(f"unsupported activation kind: {activation_kind}") from exc
+
+
+def _clean_commands(raw: str) -> list[str]:
+    commands = parse_json_list(raw, "commands")
+    if not commands:
+        raise ValueError("commands must be non-empty")
+    if not all(isinstance(command, str) and command.strip() for command in commands):
+        raise ValueError("each command must be a non-empty string")
+    cleaned = [command.strip() for command in commands]
+    if len(set(cleaned)) != len(cleaned):
+        raise ValueError("commands must not contain duplicates")
+    unknown = sorted(set(cleaned) - SUPPORTED_COMMANDS)
+    if unknown:
+        raise ValueError(f"unsupported lifecycle command(s): {', '.join(unknown)}")
+    return cleaned
+
+
 def parse_commands(raw: str | None, activation_kind: str) -> list[str]:
     """Return the declared command sequence for an activation kind."""
     if raw is None or not raw.strip():
-        try:
-            commands = list(COMMANDS_BY_KIND[activation_kind])
-        except KeyError as exc:
-            raise ValueError(f"unsupported activation kind: {activation_kind}") from exc
+        commands = _commands_for_kind(activation_kind)
     else:
-        commands = parse_json_list(raw, "commands")
-        if not commands:
-            raise ValueError("commands must be non-empty")
-        if not all(isinstance(command, str) and command.strip() for command in commands):
-            raise ValueError("each command must be a non-empty string")
-        commands = [command.strip() for command in commands]
-        if len(set(commands)) != len(commands):
-            raise ValueError("commands must not contain duplicates")
-        unknown = sorted(set(commands) - SUPPORTED_COMMANDS)
-        if unknown:
-            raise ValueError(f"unsupported lifecycle command(s): {', '.join(unknown)}")
+        commands = _clean_commands(raw)
     if "init" not in commands:
         raise ValueError("commands must include init")
     return commands
 
 
-def load_version(index_path: Path, package_id: str, package_version: str) -> tuple[dict, dict]:
-    """Load the package and exact version from the candidate index."""
+def _package_id(item: dict) -> str:
+    identity = item.get("id", {})
+    return identity.get("owner", "") + "/" + identity.get("name", "")
+
+
+def _load_index(index_path: Path) -> dict:
     try:
-        index = json.loads(index_path.read_text(encoding="utf-8"))
+        return json.loads(index_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise ValueError(f"cannot read candidate index {index_path}: {exc}") from exc
-    package = next(
-        (
-            item
-            for item in index.get("packages", [])
-            if item.get("id", {}).get("owner", "") + "/" + item.get("id", {}).get("name", "") == package_id
-        ),
+
+
+def _find_package(index: dict, package_id: str) -> dict | None:
+    return next(
+        (item for item in index.get("packages", []) if _package_id(item) == package_id),
         None,
     )
-    if package is None:
-        raise ValueError(f"package absent from candidate index: {package_id}")
-    version = next(
+
+
+def _find_version(package: dict, package_version: str) -> dict | None:
+    return next(
         (item for item in package.get("versions", []) if item.get("version") == package_version),
         None,
     )
+
+
+def load_version(index_path: Path, package_id: str, package_version: str) -> tuple[dict, dict]:
+    """Load the package and exact version from the candidate index."""
+    package = _find_package(_load_index(index_path), package_id)
+    if package is None:
+        raise ValueError(f"package absent from candidate index: {package_id}")
+    version = _find_version(package, package_version)
     if version is None:
         raise ValueError(f"version absent from candidate index: {package_id}@{package_version}")
     return package, version
@@ -180,79 +222,130 @@ def infer_activation_kind(package: dict, version: dict) -> str:
     return "install-only"
 
 
-def build_plan(
-    *,
-    package: str,
-    package_version: str,
-    nu_version: str,
-    targets: str,
-    activation_kind: str,
-    commands: str | None,
-    numan_version: str,
-    numan_repo: str,
-    index_path: Path,
-) -> dict:
-    """Validate inputs and return a workflow-ready proof plan."""
-    package = package.strip()
+def _validate_package(package: str) -> None:
     if package.count("/") != 1 or not all(package.split("/")):
         raise ValueError(f"package must be owner/name, got {package!r}")
-    if not PACKAGE_VERSION_RE.fullmatch(package_version):
-        raise ValueError(f"package version must not contain whitespace: {package_version!r}")
-    if EXACT_NU_VERSION.fullmatch(nu_version) is None:
-        raise ValueError(f"Nu version must be exact MAJOR.MINOR.PATCH, got {nu_version!r}")
-    if EXACT_NU_VERSION.fullmatch(numan_version) is None:
-        raise ValueError(f"Numan version must be exact MAJOR.MINOR.PATCH, got {numan_version!r}")
-    if REPO_RE.fullmatch(numan_repo) is None:
-        raise ValueError(f"Numan repo must be owner/name, got {numan_repo!r}")
 
-    package_entry, version_entry = load_version(index_path, package, package_version)
-    inferred = infer_activation_kind(package_entry, version_entry)
-    requested = activation_kind.strip()
-    if requested and requested not in COMMANDS_BY_KIND:
+
+def _validate_pattern(value: str, pattern: re.Pattern, message: str) -> None:
+    if pattern.fullmatch(value) is None:
+        raise ValueError(message)
+
+
+def validate_request(request: ProofRequest) -> None:
+    """Reject malformed workflow inputs before touching the candidate index."""
+    _validate_package(request.package.strip())
+    _validate_pattern(
+        request.package_version,
+        PACKAGE_VERSION_RE,
+        f"package version must not contain whitespace: {request.package_version!r}",
+    )
+    _validate_pattern(
+        request.nu_version,
+        EXACT_NU_VERSION,
+        f"Nu version must be exact MAJOR.MINOR.PATCH, got {request.nu_version!r}",
+    )
+    _validate_pattern(
+        request.numan_version,
+        EXACT_NU_VERSION,
+        f"Numan version must be exact MAJOR.MINOR.PATCH, got {request.numan_version!r}",
+    )
+    _validate_pattern(
+        request.numan_repo,
+        REPO_RE,
+        f"Numan repo must be owner/name, got {request.numan_repo!r}",
+    )
+
+
+def _validate_requested_kind(requested: str, inferred: str) -> None:
+    if not requested:
+        return
+    if requested not in COMMANDS_BY_KIND:
         raise ValueError(f"unsupported activation kind: {requested}")
-    if requested and requested != inferred:
+    if requested != inferred:
+        raise ValueError(f"activation kind {requested!r} does not match candidate {inferred!r}")
+
+
+def resolve_kind(requested: str, inferred: str) -> str:
+    """Use the explicit kind only when it agrees with the candidate."""
+    requested = requested.strip()
+    _validate_requested_kind(requested, inferred)
+    return requested or inferred
+
+
+def _validate_nu(
+    nu_version: str,
+    version: dict,
+    package: str,
+    package_version: str,
+) -> None:
+    if not matches_nu_constraint(nu_version, version["nu_version"]):
         raise ValueError(
-            f"activation kind {requested!r} does not match candidate {inferred!r}"
-        )
-    kind = requested or inferred
-    if kind not in COMMANDS_BY_KIND:
-        raise ValueError(f"unsupported activation kind: {kind}")
-    resolved_commands = parse_commands(commands, kind)
-    if not matches_nu_constraint(nu_version, version_entry["nu_version"]):
-        raise ValueError(
-            f"Nu {nu_version} does not satisfy {version_entry['nu_version']} for "
+            f"Nu {nu_version} does not satisfy {version['nu_version']} for "
             f"{package}@{package_version}"
         )
 
-    resolved_targets = parse_targets(targets)
-    available = version_entry.get("artifact", {}).get("targets")
-    for target in resolved_targets:
-        if isinstance(available, dict):
-            if target["triple"] not in available:
-                raise ValueError(
-                    f"no published artifact for {target['target']} "
-                    f"({target['triple']}) in {package}@{package_version}"
-                )
-            target["artifact_url"] = available[target["triple"]].get("url", "")
-            target["artifact_sha256"] = available[target["triple"]].get("sha256", "")
-        elif version_entry.get("artifact", {}).get("kind") not in {"archive", "source"}:
-            raise ValueError(
-                f"{package}@{package_version} has no target map; cannot select {target['target']}"
-            )
-        target["label"] = f"{target['os']}-{target['arch']}"
-        target["log_name"] = (
-            f"{package.replace('/', '__')}__{package_version}__nu-{nu_version}__"
-            f"{target['os']}-{target['arch']}.log"
-        )
 
+def _artifact_for_target(version: dict, package_version: str, target: dict) -> dict:
+    artifact = version.get("artifact", {})
+    available = artifact.get("targets")
+    if isinstance(available, dict):
+        if target["triple"] not in available:
+            raise ValueError(
+                f"no published artifact for {target['target']} "
+                f"({target['triple']}) in {package_version}"
+            )
+        return available[target["triple"]]
+    if artifact.get("kind") not in PUBLISHED_ARTIFACT_KINDS:
+        raise ValueError(
+            f"{package_version} has no target map; cannot select {target['target']}"
+        )
+    return {}
+
+
+def _target_entry(request: ProofRequest, target: dict, artifact: dict) -> dict:
+    package = request.package.strip()
+    return {
+        **target,
+        "artifact_url": artifact.get("url", ""),
+        "artifact_sha256": artifact.get("sha256", ""),
+        "label": f"{target['os']}-{target['arch']}",
+        "log_name": (
+            f"{package.replace('/', '__')}__{request.package_version}__nu-{request.nu_version}__"
+            f"{target['os']}-{target['arch']}.log"
+        ),
+    }
+
+
+def resolve_targets(request: ProofRequest, version_entry: dict) -> list[dict]:
+    """Attach artifact metadata and log names to each requested target."""
+    resolved = []
+    for target in parse_targets(request.targets):
+        artifact = _artifact_for_target(version_entry, request.package_version, target)
+        resolved.append(_target_entry(request, target, artifact))
+    return resolved
+
+
+def build_plan(request: ProofRequest, index_path: Path) -> dict:
+    """Validate inputs and return a workflow-ready proof plan."""
+    package = request.package.strip()
+    validate_request(request)
+    package_entry, version_entry = load_version(index_path, package, request.package_version)
+    kind = resolve_kind(
+        request.activation_kind,
+        infer_activation_kind(package_entry, version_entry),
+    )
+    resolved_commands = parse_commands(request.commands, kind)
+    _validate_nu(request.nu_version, version_entry, package, request.package_version)
+    resolved_targets = resolve_targets(request, version_entry)
     return {
         "package": package,
-        "package_version": package_version,
-        "nu_version": nu_version,
+        "package_version": request.package_version,
+        "nu_version": request.nu_version,
         "activation_kind": kind,
         "commands": resolved_commands,
-        "numan_version": numan_version,
-        "numan_repo": numan_repo,
+        "numan_version": request.numan_version,
+        "numan_repo": request.numan_repo,
         "matrix": {"include": resolved_targets},
     }
 
@@ -288,18 +381,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--github-output", type=Path)
     args = parser.parse_args(argv)
 
+    request = ProofRequest(
+        package=args.package,
+        package_version=args.package_version,
+        nu_version=args.nu_version,
+        targets=args.targets,
+        activation_kind=args.activation_kind,
+        commands=args.commands,
+        numan_version=args.numan_version,
+        numan_repo=args.numan_repo,
+    )
     try:
-        plan = build_plan(
-            package=args.package,
-            package_version=args.package_version,
-            nu_version=args.nu_version,
-            targets=args.targets,
-            activation_kind=args.activation_kind,
-            commands=args.commands,
-            numan_version=args.numan_version,
-            numan_repo=args.numan_repo,
-            index_path=args.index,
-        )
+        plan = build_plan(request, args.index)
     except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2

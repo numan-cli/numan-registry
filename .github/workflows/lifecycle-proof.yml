@@ -228,10 +228,12 @@ jobs:
             test -x "${NUMAN_PATH}"
             source="source-build"
           fi
-          echo "NUMAN_SOURCE=${source}" >> "${GITHUB_ENV}"
-          echo "NUMAN_ASSET_URL=${asset_url}" >> "${GITHUB_ENV}"
-          echo "NUMAN_SHA256=$(hash_file "${NUMAN_PATH}")" >> "${GITHUB_ENV}"
-          echo "NUMAN_PATH=${NUMAN_PATH}" >> "${GITHUB_ENV}"
+          {
+            echo "NUMAN_SOURCE=${source}"
+            echo "NUMAN_ASSET_URL=${asset_url}"
+            echo "NUMAN_SHA256=$(hash_file "${NUMAN_PATH}")"
+            echo "NUMAN_PATH=${NUMAN_PATH}"
+          } >> "${GITHUB_ENV}"
           echo "numan=$("${NUMAN_PATH}" --version) source=${source}"
 
       - name: Download and verify Nu
@@ -264,10 +266,12 @@ jobs:
           tar -xzf "${RUNNER_TEMP}/${archive}" -C "${RUNNER_TEMP}/nu"
           NU_PATH="${RUNNER_TEMP}/nu/nu-${NU_VERSION}-${NU_ASSET}/nu"
           test -x "${NU_PATH}"
-          echo "NU_PATH=${NU_PATH}" >> "${GITHUB_ENV}"
-          echo "NU_ARCHIVE_URL=${url}" >> "${GITHUB_ENV}"
-          echo "NU_ARCHIVE_SHA256=${actual}" >> "${GITHUB_ENV}"
-          echo "NU_SHA256=$(hash_file "${NU_PATH}")" >> "${GITHUB_ENV}"
+          {
+            echo "NU_PATH=${NU_PATH}"
+            echo "NU_ARCHIVE_URL=${url}"
+            echo "NU_ARCHIVE_SHA256=${actual}"
+            echo "NU_SHA256=$(hash_file "${NU_PATH}")"
+          } >> "${GITHUB_ENV}"
           echo "nu=${NU_VERSION} archive_sha256=${actual}"
 
       - name: Run lifecycle proof

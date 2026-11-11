@@ -16,15 +16,16 @@ OS_ORDER = {"windows": 0, "linux": 1, "macos": 2}
 ARCH_ORDER = {"x86_64": 0, "aarch64": 1}
 
 
-def _validate_proof(proof: object, source: Path) -> dict:
-    if not isinstance(proof, dict):
-        raise ValueError(f"{source}: proof must be a JSON object")
+def _check_fields(proof: dict, source: Path) -> None:
     missing = REQUIRED_KEYS - set(proof)
-    extra = set(proof) - PROOF_KEYS
     if missing:
         raise ValueError(f"{source}: missing proof field(s): {', '.join(sorted(missing))}")
+    extra = set(proof) - PROOF_KEYS
     if extra:
         raise ValueError(f"{source}: unsupported proof field(s): {', '.join(sorted(extra))}")
+
+
+def _check_values(proof: dict, source: Path) -> None:
     if proof["os"] not in OS_ORDER:
         raise ValueError(f"{source}: unsupported os {proof['os']!r}")
     if proof["arch"] not in ARCH_ORDER:
@@ -33,10 +34,22 @@ def _validate_proof(proof: object, source: Path) -> dict:
         raise ValueError(f"{source}: unsupported result {proof['result']!r}")
     if EXACT_NU_VERSION.fullmatch(str(proof["nu_version"])) is None:
         raise ValueError(f"{source}: nu_version is not exact")
-    if proof["result"] == "passed":
-        commands = proof.get("commands")
-        if not isinstance(commands, list) or not commands:
-            raise ValueError(f"{source}: passed proof requires commands")
+
+
+def _check_commands(proof: dict, source: Path) -> None:
+    if proof["result"] != "passed":
+        return
+    commands = proof.get("commands")
+    if not isinstance(commands, list) or not commands:
+        raise ValueError(f"{source}: passed proof requires commands")
+
+
+def _validate_proof(proof: object, source: Path) -> dict:
+    if not isinstance(proof, dict):
+        raise ValueError(f"{source}: proof must be a JSON object")
+    _check_fields(proof, source)
+    _check_values(proof, source)
+    _check_commands(proof, source)
     return proof
 
 
