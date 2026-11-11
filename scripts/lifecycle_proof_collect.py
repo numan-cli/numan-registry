@@ -65,22 +65,41 @@ def _validate_proof(proof: object, source: Path) -> dict:
     return proof
 
 
-def load_proofs(artifacts_dir: Path) -> list[dict]:
-    """Load proof.json files from downloaded workflow artifacts."""
+def _proof_files(artifacts_dir: Path) -> list[Path]:
     files = sorted(artifacts_dir.rglob("proof.json"))
     if not files:
         raise ValueError(f"no proof.json files under {artifacts_dir}")
-    proofs = [_validate_proof(json.loads(path.read_text(encoding="utf-8")), path) for path in files]
+    return files
+
+
+def _read_proofs(files: list[Path]) -> list[dict]:
+    return [
+        _validate_proof(json.loads(path.read_text(encoding="utf-8")), path)
+        for path in files
+    ]
+
+
+def _unique_proofs(proofs: list[dict]) -> list[dict]:
     seen = set()
     for proof in proofs:
         key = (proof["os"], proof["arch"])
         if key in seen:
             raise ValueError(f"duplicate proof for {key[0]}/{key[1]}")
         seen.add(key)
+    return proofs
+
+
+def _sorted_proofs(proofs: list[dict]) -> list[dict]:
     return sorted(
         proofs,
         key=lambda proof: (OS_ORDER[proof["os"]], ARCH_ORDER[proof["arch"]]),
     )
+
+
+def load_proofs(artifacts_dir: Path) -> list[dict]:
+    """Load proof.json files from downloaded workflow artifacts."""
+    proofs = _unique_proofs(_read_proofs(_proof_files(artifacts_dir)))
+    return _sorted_proofs(proofs)
 
 
 def render_summary(proofs: list[dict], package: str, package_version: str, nu_version: str) -> str:
@@ -97,6 +116,38 @@ def render_summary(proofs: list[dict], package: str, package_version: str, nu_ve
             f"| {proof['os']} | {proof['arch']} | {proof['result']} | {commands} |"
         )
     return "\n".join(lines) + "\n"
+
+
+def _write_batch(args: argparse.Namespace, proofs: list[dict]) -> None:
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(
+        json.dumps(proofs, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+
+
+def _write_summary(args: argparse.Namespace, proofs: list[dict]) -> None:
+    if args.summary is None:
+        return
+    args.summary.write_text(
+        render_summary(proofs, args.package, args.package_version, args.nu_version),
+        encoding="utf-8",
+        newline="\n",
+    )
+
+
+def _write_github_output(args: argparse.Namespace, proofs: list[dict]) -> None:
+    if args.github_output is None:
+        return
+    with args.github_output.open("a", encoding="utf-8", newline="\n") as output:
+        output.write(f"proofs={json.dumps(proofs, separators=(',', ':'))}\n")
+
+
+def _write_outputs(args: argparse.Namespace, proofs: list[dict]) -> None:
+    _write_batch(args, proofs)
+    _write_summary(args, proofs)
+    _write_github_output(args, proofs)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -117,22 +168,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(
-        json.dumps(proofs, indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
-        newline="\n",
-    )
-    if args.summary is not None:
-        args.summary.write_text(
-            render_summary(proofs, args.package, args.package_version, args.nu_version),
-            encoding="utf-8",
-            newline="\n",
-        )
-    if args.github_output is not None:
-        with args.github_output.open("a", encoding="utf-8", newline="\n") as output:
-            output.write(f"proofs={json.dumps(proofs, separators=(',', ':'))}\n")
-
+    _write_outputs(args, proofs)
     failed = [proof for proof in proofs if proof["result"] != "passed"]
     print(f"collected {len(proofs)} proof(s); {len(failed)} failed")
     if args.fail_on_failure and failed:
