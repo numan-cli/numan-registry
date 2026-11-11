@@ -143,9 +143,13 @@ def package_search_query(package_id: str) -> str:
     return package_id
 
 
-def build_steps(package_id: str, package_version: str | None = None) -> list[Step]:
+def build_steps(
+    package_id: str,
+    package_version: str | None = None,
+    commands: list[str] | tuple[str, ...] | None = None,
+) -> list[Step]:
     query = package_search_query(package_id)
-    return [
+    steps = [
         Step("init", ["init"]),
         Step("registry sync", ["registry", "sync"]),
         Step("search", ["search", query]),
@@ -159,6 +163,21 @@ def build_steps(package_id: str, package_version: str | None = None) -> list[Ste
         Step("remove", ["remove", "--yes", package_id]),
         Step("gc", ["gc"]),
     ]
+    if commands is None:
+        return steps
+    if not isinstance(commands, (list, tuple)) or not commands:
+        raise ValueError("commands must be a non-empty sequence")
+    if not all(isinstance(command, str) and command for command in commands):
+        raise ValueError("each lifecycle command must be a non-empty string")
+    if len(set(commands)) != len(commands):
+        raise ValueError("commands must not contain duplicates")
+    by_name = {step.name: step for step in steps}
+    unknown = sorted(set(commands) - set(by_name))
+    if unknown:
+        raise ValueError(f"unsupported lifecycle command(s): {', '.join(unknown)}")
+    if "init" not in commands:
+        raise ValueError("commands must include init")
+    return [by_name[command] for command in commands]
 
 
 def run_step(
@@ -426,6 +445,7 @@ def prove(
     package_version: str | None = None,
     forward_env: tuple[str, ...] = (),
     nu_check: str | None = None,
+    commands: tuple[str, ...] | None = None,
 ) -> int:
     # Prefer the requested Nu for `numan init` probing without mutating the
     # caller's shell permanently: create a temporary shim that invokes the
@@ -439,6 +459,7 @@ def prove(
         nu: Path to the Nu executable used during initialization.
         root: Numan root directory for the verification.
         keep_root: Whether to preserve the root directory after completion.
+        commands: Optional ordered lifecycle command names; defaults to the full sequence.
     
     Returns:
         ``0`` if every lifecycle step succeeds, ``2`` if Nu isolation fails,
@@ -486,14 +507,17 @@ def prove(
         print(flush=True)
 
         with ExitStack() as stack:
-            steps = build_steps(package_id, package_version)
+            steps = build_steps(package_id, package_version, commands)
             if candidate_index is not None:
                 version = candidate_version(candidate_index, package_id, package_version, probe)
                 url, public = stack.enter_context(candidate_registry(candidate_index))
                 # This is a brand-new test root. Configure its default before init creates state.
                 (root / "config.toml").write_text('[general]\ndefault_registry = "lifecycle-candidate"\n', encoding="utf-8")
-                steps = build_steps(package_id, version["version"])
-                steps[1:1] = [Step("remove official test-root registry", ["registry", "remove", "official"]), Step("add signed candidate registry", ["registry", "add", "lifecycle-candidate", url, "--key", public])]
+                steps = build_steps(package_id, version["version"], commands)
+                insert_at = next((i for i, step in enumerate(steps) if step.name == "init"), None)
+                if insert_at is None:
+                    raise ValueError("commands must include init")
+                steps[insert_at + 1:insert_at + 1] = [Step("remove official test-root registry", ["registry", "remove", "official"]), Step("add signed candidate registry", ["registry", "add", "lifecycle-candidate", url, "--key", public])]
                 print(f"candidate package version: {version['version']}", flush=True)
                 print("candidate file SHA256: " + hashlib.sha256(candidate_index.read_bytes()).hexdigest(), flush=True)
             for step in steps:
@@ -581,7 +605,27 @@ def main(argv: list[str] | None = None) -> int:
             "a nonzero exit fails the lifecycle proof."
         ),
     )
+    parser.add_argument(
+        "--commands-json",
+        help=(
+            "JSON array of lifecycle step names to run in order; defaults to the "
+            "full standard lifecycle"
+        ),
+    )
     args = parser.parse_args(argv)
+
+    commands: tuple[str, ...] | None = None
+    if args.commands_json:
+        try:
+            parsed_commands = json.loads(args.commands_json)
+            if not isinstance(parsed_commands, list) or not parsed_commands:
+                raise ValueError("commands must be a non-empty JSON array")
+            if not all(isinstance(command, str) and command for command in parsed_commands):
+                raise ValueError("each lifecycle command must be a non-empty string")
+            commands = tuple(parsed_commands)
+        except (json.JSONDecodeError, ValueError) as exc:
+            print(f"error: invalid --commands-json: {exc}", file=sys.stderr)
+            return 2
 
     try:
         validate_package_id(args.package.strip())
@@ -629,6 +673,7 @@ def main(argv: list[str] | None = None) -> int:
         package_version=args.package_version,
         forward_env=tuple(args.forward_env),
         nu_check=args.nu_check,
+        commands=commands,
     )
 
 

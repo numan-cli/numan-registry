@@ -1,0 +1,394 @@
+name: Reusable lifecycle proof
+
+on:
+  workflow_call:
+    inputs:
+      package:
+        description: Package id (owner/name)
+        required: false
+        type: string
+        default: JosephTLyons/nu_plugin_units
+      package_version:
+        description: Exact package version
+        required: false
+        type: string
+        default: 0.1.9
+      nu_version:
+        description: Exact Nu version
+        required: false
+        type: string
+        default: 0.116.1
+      targets:
+        description: JSON array of os/arch targets
+        required: false
+        type: string
+        default: '["linux/aarch64","macos/aarch64"]'
+      activation_kind:
+        description: Optional activation kind; inferred when empty
+        required: false
+        type: string
+        default: ""
+      commands:
+        description: Optional JSON array of lifecycle commands; derived from kind when empty
+        required: false
+        type: string
+        default: ""
+      numan_version:
+        description: Numan release tag without the v prefix
+        required: false
+        type: string
+        default: 0.4.0
+      numan_repo:
+        description: Numan source repository
+        required: false
+        type: string
+        default: numan-cli/numan
+    outputs:
+      proofs:
+        description: JSON array of proof records emitted by the run
+        value: ${{ jobs.collect.outputs.proofs }}
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Package id (owner/name)
+        required: true
+        default: JosephTLyons/nu_plugin_units
+        type: string
+      package_version:
+        description: Exact package version
+        required: true
+        default: 0.1.9
+        type: string
+      nu_version:
+        description: Exact Nu version
+        required: true
+        default: 0.116.1
+        type: string
+      targets:
+        description: JSON array of os/arch targets
+        required: true
+        default: '["linux/aarch64","macos/aarch64"]'
+        type: string
+      activation_kind:
+        description: Optional activation kind; inferred when empty
+        required: false
+        default: ""
+        type: string
+      commands:
+        description: Optional JSON array of lifecycle commands; derived from kind when empty
+        required: false
+        default: ""
+        type: string
+      numan_version:
+        description: Numan release tag without the v prefix
+        required: true
+        default: 0.4.0
+        type: string
+      numan_repo:
+        description: Numan source repository
+        required: true
+        default: numan-cli/numan
+        type: string
+  pull_request:
+    paths:
+      - ".github/workflows/lifecycle-proof.yml"
+      - "scripts/lifecycle-proof.py"
+      - "scripts/lifecycle_proof_plan.py"
+      - "scripts/lifecycle_proof_record.py"
+      - "scripts/lifecycle_proof_collect.py"
+      - "scripts/nu_version_constraint.py"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lifecycle-proof-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PROOF_PACKAGE: ${{ inputs.package || github.event.inputs.package || 'JosephTLyons/nu_plugin_units' }}
+  PROOF_PACKAGE_VERSION: ${{ inputs.package_version || github.event.inputs.package_version || '0.1.9' }}
+  PROOF_NU_VERSION: ${{ inputs.nu_version || github.event.inputs.nu_version || '0.116.1' }}
+  PROOF_TARGETS: ${{ inputs.targets || github.event.inputs.targets || '["linux/aarch64","macos/aarch64"]' }}
+  PROOF_ACTIVATION_KIND: ${{ inputs.activation_kind || github.event.inputs.activation_kind || '' }}
+  PROOF_COMMANDS: ${{ inputs.commands || github.event.inputs.commands || '' }}
+  PROOF_NUMAN_VERSION: ${{ inputs.numan_version || github.event.inputs.numan_version || '0.4.0' }}
+  PROOF_NUMAN_REPO: ${{ inputs.numan_repo || github.event.inputs.numan_repo || 'numan-cli/numan' }}
+
+jobs:
+  plan:
+    name: Resolve proof plan
+    runs-on: ubuntu-latest
+    outputs:
+      package: ${{ steps.plan.outputs.package }}
+      package_version: ${{ steps.plan.outputs.package_version }}
+      nu_version: ${{ steps.plan.outputs.nu_version }}
+      activation_kind: ${{ steps.plan.outputs.activation_kind }}
+      commands: ${{ steps.plan.outputs.commands }}
+      matrix: ${{ steps.plan.outputs.matrix }}
+      numan_version: ${{ steps.plan.outputs.numan_version }}
+      numan_repo: ${{ steps.plan.outputs.numan_repo }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+      - name: Resolve package, commands, and target matrix
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/lifecycle_proof_plan.py \
+            --package "${PROOF_PACKAGE}" \
+            --package-version "${PROOF_PACKAGE_VERSION}" \
+            --nu-version "${PROOF_NU_VERSION}" \
+            --targets "${PROOF_TARGETS}" \
+            --activation-kind "${PROOF_ACTIVATION_KIND}" \
+            --commands "${PROOF_COMMANDS}" \
+            --numan-version "${PROOF_NUMAN_VERSION}" \
+            --numan-repo "${PROOF_NUMAN_REPO}" \
+            --index registry/index.json \
+            --github-output "${GITHUB_OUTPUT}"
+
+  prove:
+    name: ${{ matrix.target }}
+    needs: plan
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    env:
+      PACKAGE: ${{ needs.plan.outputs.package }}
+      PACKAGE_VERSION: ${{ needs.plan.outputs.package_version }}
+      NU_VERSION: ${{ needs.plan.outputs.nu_version }}
+      COMMANDS_JSON: ${{ needs.plan.outputs.commands }}
+      NUMAN_VERSION: ${{ needs.plan.outputs.numan_version }}
+      NUMAN_REPO: ${{ needs.plan.outputs.numan_repo }}
+      TARGET_LABEL: ${{ matrix.label }}
+      TARGET_OS: ${{ matrix.os }}
+      TARGET_ARCH: ${{ matrix.arch }}
+      TARGET_TRIPLE: ${{ matrix.triple }}
+      NU_ASSET: ${{ matrix.triple }}
+      ARCHIVE: ${{ matrix.archive }}
+      NUMAN_ASSET: ${{ matrix.numan_asset }}
+      LOG_NAME: ${{ matrix.log_name }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+      - uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable
+        with:
+          toolchain: stable
+      - name: Install proof dependencies
+        run: python -m pip install --disable-pip-version-check cryptography jsonschema
+
+      - name: Resolve Numan (release asset or source fallback)
+        id: numan
+        shell: bash
+        run: |
+          set -euo pipefail
+          hash_file() {
+            if command -v sha256sum >/dev/null 2>&1; then
+              sha256sum "$1" | awk '{print $1}'
+            else
+              shasum -a 256 "$1" | awk '{print $1}'
+            fi
+          }
+          release_base="https://github.com/${NUMAN_REPO}/releases/download/v${NUMAN_VERSION}"
+          sums="${RUNNER_TEMP}/numan-SHA256SUMS"
+          curl -fsSL -o "${sums}" "${release_base}/SHA256SUMS"
+          asset="numan-${NUMAN_VERSION}-${NUMAN_ASSET}.tar.gz"
+          source=""
+          asset_url=""
+          if grep -Fq "  ${asset}" "${sums}"; then
+            curl -fsSL -o "${RUNNER_TEMP}/${asset}" "${release_base}/${asset}"
+            expected="$(awk -v f="${asset}" '$2==f {print $1}' "${sums}")"
+            actual="$(hash_file "${RUNNER_TEMP}/${asset}")"
+            if [ "${actual}" != "${expected}" ]; then
+              echo "Numan archive SHA mismatch: expected ${expected}, got ${actual}" >&2
+              exit 1
+            fi
+            mkdir -p "${RUNNER_TEMP}/numan"
+            tar -xzf "${RUNNER_TEMP}/${asset}" -C "${RUNNER_TEMP}/numan"
+            NUMAN_PATH="${RUNNER_TEMP}/numan/numan-${NUMAN_VERSION}-${NUMAN_ASSET}/numan"
+            test -x "${NUMAN_PATH}"
+            source="release-asset"
+            asset_url="${release_base}/${asset}"
+          else
+            echo "No Numan release asset for ${NUMAN_ASSET}; building v${NUMAN_VERSION} from source"
+            git clone --depth 1 --branch "v${NUMAN_VERSION}" "https://github.com/${NUMAN_REPO}.git" "${RUNNER_TEMP}/numan-src"
+            cargo build --locked --manifest-path "${RUNNER_TEMP}/numan-src/Cargo.toml" --target-dir "${RUNNER_TEMP}/numan-build"
+            NUMAN_PATH="${RUNNER_TEMP}/numan-build/debug/numan"
+            test -x "${NUMAN_PATH}"
+            source="source-build"
+          fi
+          echo "NUMAN_SOURCE=${source}" >> "${GITHUB_ENV}"
+          echo "NUMAN_ASSET_URL=${asset_url}" >> "${GITHUB_ENV}"
+          echo "NUMAN_SHA256=$(hash_file "${NUMAN_PATH}")" >> "${GITHUB_ENV}"
+          echo "NUMAN_PATH=${NUMAN_PATH}" >> "${GITHUB_ENV}"
+          echo "numan=$("${NUMAN_PATH}" --version) source=${source}"
+
+      - name: Download and verify Nu
+        id: nu
+        shell: bash
+        run: |
+          set -euo pipefail
+          hash_file() {
+            if command -v sha256sum >/dev/null 2>&1; then
+              sha256sum "$1" | awk '{print $1}'
+            else
+              shasum -a 256 "$1" | awk '{print $1}'
+            fi
+          }
+          archive="nu-${NU_VERSION}-${NU_ASSET}.${ARCHIVE}"
+          url="https://github.com/nushell/nushell/releases/download/${NU_VERSION}/${archive}"
+          curl -fsSL -o "${RUNNER_TEMP}/${archive}" "${url}"
+          curl -fsSL -o "${RUNNER_TEMP}/Nu-SHA256SUMS" "https://github.com/nushell/nushell/releases/download/${NU_VERSION}/SHA256SUMS"
+          expected="$(awk -v f="${archive}" '$2==f {print $1}' "${RUNNER_TEMP}/Nu-SHA256SUMS")"
+          if [ -z "${expected}" ]; then
+            echo "No SHA256SUMS entry for ${archive}" >&2
+            exit 1
+          fi
+          actual="$(hash_file "${RUNNER_TEMP}/${archive}")"
+          if [ "${actual}" != "${expected}" ]; then
+            echo "Nu archive SHA mismatch: expected ${expected}, got ${actual}" >&2
+            exit 1
+          fi
+          mkdir -p "${RUNNER_TEMP}/nu"
+          tar -xzf "${RUNNER_TEMP}/${archive}" -C "${RUNNER_TEMP}/nu"
+          NU_PATH="${RUNNER_TEMP}/nu/nu-${NU_VERSION}-${NU_ASSET}/nu"
+          test -x "${NU_PATH}"
+          echo "NU_PATH=${NU_PATH}" >> "${GITHUB_ENV}"
+          echo "NU_ARCHIVE_URL=${url}" >> "${GITHUB_ENV}"
+          echo "NU_ARCHIVE_SHA256=${actual}" >> "${GITHUB_ENV}"
+          echo "NU_SHA256=$(hash_file "${NU_PATH}")" >> "${GITHUB_ENV}"
+          echo "nu=${NU_VERSION} archive_sha256=${actual}"
+
+      - name: Run lifecycle proof
+        id: proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          hash_file() {
+            if command -v sha256sum >/dev/null 2>&1; then
+              sha256sum "$1" | awk '{print $1}'
+            else
+              shasum -a 256 "$1" | awk '{print $1}'
+            fi
+          }
+          LOG="artifacts/${LOG_NAME}"
+          mkdir -p artifacts
+          CANDIDATE_SHA="$(hash_file registry/index.json)"
+          started="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          {
+            echo "package=${PACKAGE}"
+            echo "package_version=${PACKAGE_VERSION}"
+            echo "nu_version=${NU_VERSION}"
+            echo "started_at=${started}"
+            echo "platform=${TARGET_OS}/${TARGET_ARCH}"
+            echo "runner_image=${ImageOS:-unknown} ${ImageVersion:-unknown}"
+            echo "uname=$(uname -a)"
+            if [ "${TARGET_OS}" = "macos" ]; then sw_vers; fi
+            echo "numan_version=$("${NUMAN_PATH}" --version)"
+            echo "numan_source=${NUMAN_SOURCE}"
+            echo "numan_asset_url=${NUMAN_ASSET_URL}"
+            echo "numan_sha256=${NUMAN_SHA256}"
+            echo "candidate_index_sha256=${CANDIDATE_SHA}"
+            echo "nu_archive_url=${NU_ARCHIVE_URL}"
+            echo "nu_archive_sha256=${NU_ARCHIVE_SHA256}"
+            echo "nu_exe_sha256=${NU_SHA256}"
+            echo "commands=${COMMANDS_JSON}"
+            echo "command: lifecycle-prove --package ${PACKAGE} --package-version ${PACKAGE_VERSION} --candidate-index registry/index.json --commands-json ${COMMANDS_JSON} --numan ${NUMAN_PATH} --nu ${NU_PATH}"
+          } | tee "${LOG}"
+
+          set +e
+          python scripts/lifecycle-prove.py \
+            --package "${PACKAGE}" \
+            --package-version "${PACKAGE_VERSION}" \
+            --candidate-index registry/index.json \
+            --commands-json "${COMMANDS_JSON}" \
+            --numan "${NUMAN_PATH}" \
+            --nu "${NU_PATH}" 2>&1 | tee -a "${LOG}"
+          rc=${PIPESTATUS[0]}
+          set -e
+
+          {
+            echo "finished_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "exit_code=${rc}"
+          } | tee -a "${LOG}"
+          echo "proof_exit=${rc}" >> "${GITHUB_OUTPUT}"
+          exit "${rc}"
+
+      - name: Emit index proof record
+        if: always()
+        shell: bash
+        run: |
+          python scripts/lifecycle_proof_record.py \
+            --log "artifacts/${LOG_NAME}" \
+            --commands-json "${COMMANDS_JSON}" \
+            --output artifacts/proof.json \
+            --package "${PACKAGE}" \
+            --package-version "${PACKAGE_VERSION}" \
+            --nu-version "${NU_VERSION}"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: lifecycle-proof-${{ matrix.label }}
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 30
+
+  collect:
+    name: Collect proof records
+    needs: [plan, prove]
+    if: always()
+    runs-on: ubuntu-latest
+    outputs:
+      proofs: ${{ steps.collect.outputs.proofs }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          path: artifacts
+          pattern: lifecycle-proof-*
+      - name: Collect proof records
+        id: collect
+        shell: bash
+        run: |
+          set +e
+          python scripts/lifecycle_proof_collect.py \
+            --artifacts artifacts \
+            --package "${{ needs.plan.outputs.package }}" \
+            --package-version "${{ needs.plan.outputs.package_version }}" \
+            --nu-version "${{ needs.plan.outputs.nu_version }}" \
+            --output proofs.json \
+            --summary proofs.md \
+            --github-output "${GITHUB_OUTPUT}" \
+            --fail-on-failure
+          rc=$?
+          set -e
+          if [ -f proofs.md ]; then
+            cat proofs.md >> "${GITHUB_STEP_SUMMARY}"
+          fi
+          exit "${rc}"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: lifecycle-proofs
+          path: |
+            proofs.json
+            proofs.md
+          if-no-files-found: warn
+          retention-days: 30

@@ -83,6 +83,47 @@ class LifecycleProveTests(unittest.TestCase):
         self.assertEqual(by_name["deactivate"], ["deactivate", "acme/pkg"])
         self.assertEqual(by_name["remove"], ["remove", "--yes", "acme/pkg"])
 
+    def test_build_steps_custom_commands_preserve_order(self):
+        steps = self.mod.build_steps(
+            "acme/pkg", "1.2.3", commands=["init", "install", "gc"]
+        )
+        self.assertEqual([step.name for step in steps], ["init", "install", "gc"])
+        self.assertEqual(steps[1].args, ["install", "acme/pkg@1.2.3"])
+
+    def test_build_steps_rejects_unknown_and_duplicate_commands(self):
+        with self.assertRaisesRegex(ValueError, "unsupported lifecycle command"):
+            self.mod.build_steps("acme/pkg", commands=["init", "explode"])
+        with self.assertRaisesRegex(ValueError, "must not contain duplicates"):
+            self.mod.build_steps("acme/pkg", commands=["init", "init"])
+        with self.assertRaisesRegex(ValueError, "must include init"):
+            self.mod.build_steps("acme/pkg", commands=["install", "gc"])
+
+    def test_prove_uses_custom_commands_in_order(self):
+        calls: list[str] = []
+
+        def fake_run(step, **_kwargs):
+            calls.append(step.name)
+            return mock.Mock(returncode=0)
+
+        with (
+            mock.patch.object(self.mod, "run_step", side_effect=fake_run),
+            mock.patch.object(
+                self.mod,
+                "prepare_nu_search_dir",
+                side_effect=lambda _nu, shim_dir: shim_dir,
+            ),
+        ):
+            code = self.mod.prove(
+                "acme/pkg",
+                numan=Path("numan"),
+                nu=Path("nu"),
+                root=Path("root"),
+                keep_root=True,
+                commands=("init", "install", "gc"),
+            )
+        self.assertEqual(code, 0)
+        self.assertEqual(calls, ["init", "install", "gc"])
+
     def test_render_windows_shim_exact_crlf_and_quoted_path(self):
         nu = Path(r"C:\Program Files\Nushell\nu.exe")
         self.assertEqual(
