@@ -112,6 +112,14 @@ class WorkflowSafetyTests(unittest.TestCase):
             text = (WORKFLOWS / name).read_text(encoding="utf-8")
             self.assertIn(f"ref: {sha}", text)
 
+    def test_production_signing_enforces_proofs_without_exemption(self):
+        text = (WORKFLOWS / "production.yml").read_text(encoding="utf-8")
+        publish = job_block(text, "sign-and-publish")
+        self.assertNotIn("allow_missing_proofs", text)
+        self.assertNotIn("ALLOW_MISSING_PROOFS", publish)
+        self.assertIn("--production", publish)
+        self.assertNotIn("--allow-missing-proofs", publish)
+
     def test_production_materializes_candidate_before_validate_and_sign(self):
         text = (WORKFLOWS / "production.yml").read_text(encoding="utf-8")
         validate = job_block(text, "validate", "sign-and-publish")
