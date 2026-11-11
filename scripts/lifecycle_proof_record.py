@@ -71,11 +71,15 @@ def _decode_commands(raw: str) -> object:
         raise ValueError(f"commands is not valid JSON: {exc}") from exc
 
 
+def _validate_command_items(commands: list) -> None:
+    if not all(isinstance(command, str) and command.strip() for command in commands):
+        raise ValueError("each command must be a non-empty string")
+
+
 def _validate_commands(commands: object) -> list[str]:
     if not isinstance(commands, list) or not commands:
         raise ValueError("commands must be a non-empty JSON array")
-    if not all(isinstance(command, str) and command.strip() for command in commands):
-        raise ValueError("each command must be a non-empty string")
+    _validate_command_items(commands)
     return [command.strip() for command in commands]
 
 

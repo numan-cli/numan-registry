@@ -66,6 +66,10 @@ class ProofRun:
     commands: tuple[str, ...] | None
 
 
+class NuIsolationError(Exception):
+    """The selected Nu could not be isolated for the lifecycle run."""
+
+
 def which(name: str) -> Path | None:
     """Locate an executable by name on the system PATH.
     
@@ -466,23 +470,26 @@ def _parse_commands_input(raw: str | None) -> tuple[str, ...] | None:
     return tuple(parsed)
 
 
-def _runtime_env(root: Path, forward_env: tuple[str, ...]) -> tuple[dict, dict, dict]:
+def _runtime_env(root: Path, nu: Path, forward_env: tuple[str, ...]) -> tuple[dict, dict, dict]:
     env = isolated_environment(root / "lifecycle-home")
     env["NUMAN_ROOT"] = str(root.resolve())
     check_env = {**env, **forward_environment(forward_env)}
     if forward_env:
         print("forwarded to Nu check only: " + ", ".join(forward_env), flush=True)
-    probe = probe_isolated_nu(root / "lifecycle-home", env)
+    probe = probe_isolated_nu(nu, root / "lifecycle-home", env)
     print("isolated Nu probe: " + json.dumps(probe), flush=True)
     return env, check_env, probe
 
 
 def _configure_nu_shim(nu: Path, shim_dir: Path, is_windows: bool) -> Path:
-    shim_path = shim_dir / "nu"
-    if not is_windows:
-        shim_path.write_bytes(render_nu_shim(nu))
-        shim_path.chmod(0o755)
-    return prepare_nu_search_dir(nu, shim_dir)
+    try:
+        shim_path = shim_dir / "nu"
+        if not is_windows:
+            shim_path.write_bytes(render_nu_shim(nu))
+            shim_path.chmod(0o755)
+        return prepare_nu_search_dir(nu, shim_dir)
+    except (OSError, ValueError) as exc:
+        raise NuIsolationError(str(exc)) from exc
 
 
 def _configure_candidate_root(root: Path) -> None:
@@ -546,6 +553,48 @@ def _run_steps(steps: list[Step], run: ProofRun, version: dict | None) -> int:
     return 0
 
 
+def _print_run(run: ProofRun) -> None:
+    print("Nu SHA256: " + sha256_file(run.nu), flush=True)
+    print("Numan SHA256: " + sha256_file(run.numan), flush=True)
+    print(f"package: {run.package_id}")
+    print(f"numan:   {run.numan}")
+    print(f"nu:      {run.nu}")
+    print(f"root:    {run.root}")
+    print(flush=True)
+
+
+def _execute_stack(run: ProofRun) -> int:
+    with ExitStack() as stack:
+        steps, version = _prepare_steps(run, stack)
+        return _run_steps(steps, run, version)
+
+
+def _run_proof(run: ProofRun, shim_dir: Path, is_windows: bool) -> int:
+    # Rust rejects some arguments when Command launches a batch file, so
+    # Windows exposes an isolated nu.exe hardlink/copy of the exact binary.
+    nu_search_dir = _configure_nu_shim(run.nu, shim_dir, is_windows)
+    run.env["PATH"] = str(nu_search_dir) + os.pathsep + run.env.get("PATH", "")
+    _print_run(run)
+    result = _execute_stack(run)
+    if result == 0:
+        print("OK: lifecycle-prove passed.")
+    return result
+
+
+def _cleanup(root: Path, shim_dir: Path, keep_root: bool) -> None:
+    shutil.rmtree(shim_dir, ignore_errors=True)
+    if keep_root:
+        print(f"kept root at {root}")
+    else:
+        shutil.rmtree(root, ignore_errors=True)
+
+
+def _report_failure(exc: Exception) -> None:
+    print(f"FAILED lifecycle preflight/run: {exc}", file=sys.stderr)
+    if isinstance(exc, subprocess.CalledProcessError) and exc.stderr:
+        print(exc.stderr, file=sys.stderr)
+
+
 def prove(
     package_id: str,
     *,
@@ -559,21 +608,9 @@ def prove(
     nu_check: str | None = None,
     commands: tuple[str, ...] | None = None,
 ) -> int:
-    # Create a temporary directory for the nu shim.
     shim_dir = Path(tempfile.mkdtemp(prefix="numan-lifecycle-prove-shim-"))
-    is_windows = sys.platform == "win32"
-
     try:
-        env, check_env, probe = _runtime_env(root, forward_env)
-        # Rust rejects some arguments when Command launches a batch file, so
-        # Windows exposes an isolated nu.exe hardlink/copy of the exact binary.
-        try:
-            nu_search_dir = _configure_nu_shim(nu, shim_dir, is_windows)
-        except (OSError, ValueError) as exc:
-            print(f"error: could not isolate selected Nu: {exc}", file=sys.stderr)
-            return 2
-        env["PATH"] = str(nu_search_dir) + os.pathsep + env.get("PATH", "")
-
+        env, check_env, probe = _runtime_env(root, nu, forward_env)
         run = ProofRun(
             package_id=package_id,
             package_version=package_version,
@@ -587,31 +624,29 @@ def prove(
             nu_check=nu_check,
             commands=commands,
         )
-        print("Nu SHA256: " + sha256_file(nu), flush=True)
-        print("Numan SHA256: " + sha256_file(numan), flush=True)
-        print(f"package: {package_id}")
-        print(f"numan:   {numan}")
-        print(f"nu:      {nu}")
-        print(f"root:    {root}")
-        print(flush=True)
-
-        with ExitStack() as stack:
-            steps, version = _prepare_steps(run, stack)
-            result = _run_steps(steps, run, version)
-        if result == 0:
-            print("OK: lifecycle-prove passed.")
-        return result
+        return _run_proof(run, shim_dir, sys.platform == "win32")
+    except NuIsolationError as exc:
+        print(f"error: could not isolate selected Nu: {exc}", file=sys.stderr)
+        return 2
     except (OSError, ValueError, KeyError, IndexError, subprocess.SubprocessError) as exc:
-        print(f"FAILED lifecycle preflight/run: {exc}", file=sys.stderr)
-        if isinstance(exc, subprocess.CalledProcessError) and exc.stderr:
-            print(exc.stderr, file=sys.stderr)
+        _report_failure(exc)
         return 2
     finally:
-        shutil.rmtree(shim_dir, ignore_errors=True)
-        if keep_root:
-            print(f"kept root at {root}")
-        else:
-            shutil.rmtree(root, ignore_errors=True)
+        _cleanup(root, shim_dir, keep_root)
+
+
+def _resolve_root(root_arg: Path | None, keep_root: bool) -> tuple[Path, bool]:
+    if root_arg is None:
+        return Path(tempfile.mkdtemp(prefix="numan-lifecycle-prove-")), bool(keep_root)
+    root = root_arg.resolve()
+    if not root.exists():
+        root.mkdir(parents=True, exist_ok=True)
+        return root, True
+    if not root.is_dir():
+        raise ValueError(f"--root exists but is not a directory: {root}")
+    if any(root.iterdir()):
+        raise ValueError(f"--root directory must be empty: {root}")
+    return root, True
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -700,24 +735,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 
-    if args.root is not None:
-        root = args.root.resolve()
-        if root.exists():
-            if not root.is_dir():
-                print(f"error: --root exists but is not a directory: {root}", file=sys.stderr)
-                return 2
-            # Reject non-empty existing directories
-            if any(root.iterdir()):
-                print(f"error: --root directory must be empty: {root}", file=sys.stderr)
-                return 2
-        else:
-            # Create the directory if it doesn't exist
-            root.mkdir(parents=True, exist_ok=True)
-        # Never delete a caller-supplied root.
-        keep_root = True
-    else:
-        root = Path(tempfile.mkdtemp(prefix="numan-lifecycle-prove-"))
-        keep_root = bool(args.keep_root)
+    try:
+        root, keep_root = _resolve_root(args.root, args.keep_root)
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
 
     return prove(
         args.package.strip(),
