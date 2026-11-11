@@ -136,33 +136,41 @@ def proof_coverage_error(version):
     return _no_matching_proof_error(constraint, successful, unusable)
 
 
+def _version_proof_error(package, version):
+    if not isinstance(version, dict):
+        return 0, None
+    source = activation_source(package, version)
+    if source is None:
+        return 0, None
+    error = proof_coverage_error(version)
+    if error is None:
+        return 1, None
+    return 1, (
+        f"{version_label(package, version)}: activatable from "
+        f"{source}; {error}"
+    )
+
+
+def _package_proof_errors(package):
+    if not isinstance(package, dict):
+        return 0, []
+    versions = package.get("versions")
+    if not isinstance(versions, list):
+        return 0, []
+    results = [_version_proof_error(package, version) for version in versions]
+    checked = sum(count for count, _ in results)
+    errors = [error for _, error in results if error]
+    return checked, errors
+
+
 def lifecycle_proof_errors(index):
     """Return (errors, activatable_count) for production proof coverage."""
     packages = index.get("packages")
     if not isinstance(packages, list):
         return ["index.packages is not a list"], 0
-
-    errors = []
-    checked = 0
-    for package in packages:
-        if not isinstance(package, dict):
-            continue
-        versions = package.get("versions")
-        if not isinstance(versions, list):
-            continue
-        for version in versions:
-            if not isinstance(version, dict):
-                continue
-            source = activation_source(package, version)
-            if source is None:
-                continue
-            checked += 1
-            error = proof_coverage_error(version)
-            if error:
-                errors.append(
-                    f"{version_label(package, version)}: activatable from "
-                    f"{source}; {error}"
-                )
+    results = [_package_proof_errors(package) for package in packages]
+    checked = sum(count for count, _ in results)
+    errors = [error for _, package_errors in results for error in package_errors]
     return errors, checked
 
 
