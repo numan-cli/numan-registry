@@ -57,6 +57,26 @@ class LifecycleProveTests(unittest.TestCase):
         )
         self.assertEqual(self.mod.package_search_query("plain"), "plain")
 
+    def test_runtime_env_passes_selected_nu_to_probe(self):
+        with (
+            mock.patch.object(
+                self.mod,
+                "isolated_environment",
+                return_value={"PATH": ""},
+            ),
+            mock.patch.object(
+                self.mod,
+                "probe_isolated_nu",
+                return_value={"version": "0.114.1"},
+            ) as probe,
+        ):
+            _env, _check_env, result = self.mod._runtime_env(
+                Path("root"), Path("nu"), ()
+            )
+        probe.assert_called_once()
+        self.assertEqual(probe.call_args.args[0], Path("nu"))
+        self.assertEqual(result["version"], "0.114.1")
+
     def test_build_steps_order(self):
         names = [s.name for s in self.mod.build_steps("acme/pkg")]
         self.assertEqual(

@@ -147,18 +147,31 @@ def _commands_for_kind(activation_kind: str) -> list[str]:
         raise ValueError(f"unsupported activation kind: {activation_kind}") from exc
 
 
+def _validate_command_values(commands: list) -> None:
+    for command in commands:
+        if not isinstance(command, str) or not command.strip():
+            raise ValueError("each command must be a non-empty string")
+
+
+def _validate_unique_commands(commands: list[str]) -> None:
+    if len(set(commands)) != len(commands):
+        raise ValueError("commands must not contain duplicates")
+
+
+def _validate_supported_commands(commands: list[str]) -> None:
+    unknown = sorted(set(commands) - SUPPORTED_COMMANDS)
+    if unknown:
+        raise ValueError(f"unsupported lifecycle command(s): {', '.join(unknown)}")
+
+
 def _clean_commands(raw: str) -> list[str]:
     commands = parse_json_list(raw, "commands")
     if not commands:
         raise ValueError("commands must be non-empty")
-    if not all(isinstance(command, str) and command.strip() for command in commands):
-        raise ValueError("each command must be a non-empty string")
+    _validate_command_values(commands)
     cleaned = [command.strip() for command in commands]
-    if len(set(cleaned)) != len(cleaned):
-        raise ValueError("commands must not contain duplicates")
-    unknown = sorted(set(cleaned) - SUPPORTED_COMMANDS)
-    if unknown:
-        raise ValueError(f"unsupported lifecycle command(s): {', '.join(unknown)}")
+    _validate_unique_commands(cleaned)
+    _validate_supported_commands(cleaned)
     return cleaned
 
 

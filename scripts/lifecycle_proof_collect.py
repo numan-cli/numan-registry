@@ -25,15 +25,27 @@ def _check_fields(proof: dict, source: Path) -> None:
         raise ValueError(f"{source}: unsupported proof field(s): {', '.join(sorted(extra))}")
 
 
-def _check_values(proof: dict, source: Path) -> None:
+def _check_platform_values(proof: dict, source: Path) -> None:
     if proof["os"] not in OS_ORDER:
         raise ValueError(f"{source}: unsupported os {proof['os']!r}")
     if proof["arch"] not in ARCH_ORDER:
         raise ValueError(f"{source}: unsupported arch {proof['arch']!r}")
+
+
+def _check_result(proof: dict, source: Path) -> None:
     if proof["result"] not in {"passed", "failed"}:
         raise ValueError(f"{source}: unsupported result {proof['result']!r}")
+
+
+def _check_nu_version(proof: dict, source: Path) -> None:
     if EXACT_NU_VERSION.fullmatch(str(proof["nu_version"])) is None:
         raise ValueError(f"{source}: nu_version is not exact")
+
+
+def _check_values(proof: dict, source: Path) -> None:
+    _check_platform_values(proof, source)
+    _check_result(proof, source)
+    _check_nu_version(proof, source)
 
 
 def _check_commands(proof: dict, source: Path) -> None:
