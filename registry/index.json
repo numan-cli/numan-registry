@@ -909,7 +909,7 @@
         "owner": "nushell",
         "name": "custom-completions"
       },
-      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, \u2026). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Declares completion targets for its curated custom-completions files for activation with `numan activate`.",
+      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, …). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Declares completion targets for its curated custom-completions files for activation with `numan activate`.",
       "repo": "https://github.com/nushell/nu_scripts",
       "type": "completion",
       "tags": [
@@ -1960,6 +1960,48 @@
               ],
               "timestamp": "2026-11-11T11:13:52Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-linux-lifecycle/dead10ck_nu_plugin_dns__4.0.10__nu-0.113.1__linux-x86_64.log"
+            },
+            {
+              "os": "linux",
+              "arch": "aarch64",
+              "nu_version": "0.113.1",
+              "result": "passed",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "timestamp": "2026-11-11T11:41:19Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-cross-platform-lifecycle/dead10ck_nu_plugin_dns__4.0.10__nu-0.113.1__linux-aarch64.log"
+            },
+            {
+              "os": "macos",
+              "arch": "aarch64",
+              "nu_version": "0.113.1",
+              "result": "passed",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "timestamp": "2026-11-11T11:42:46Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-cross-platform-lifecycle/dead10ck_nu_plugin_dns__4.0.10__nu-0.113.1__macos-aarch64.log"
             }
           ]
         }
@@ -5328,6 +5370,48 @@
               ],
               "timestamp": "2026-11-11T11:13:38Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-linux-lifecycle/fennewald_nu_plugin_net__1.9.0__nu-0.103.0__linux-x86_64.log"
+            },
+            {
+              "os": "macos",
+              "arch": "x86_64",
+              "nu_version": "0.103.0",
+              "result": "passed",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "timestamp": "2026-11-11T11:46:40Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-cross-platform-lifecycle/fennewald_nu_plugin_net__1.9.0__nu-0.103.0__macos-x86_64.log"
+            },
+            {
+              "os": "macos",
+              "arch": "aarch64",
+              "nu_version": "0.103.0",
+              "result": "passed",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "timestamp": "2026-11-11T11:42:48Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-cross-platform-lifecycle/fennewald_nu_plugin_net__1.9.0__nu-0.103.0__macos-aarch64.log"
             }
           ]
         }
