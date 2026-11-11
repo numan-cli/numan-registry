@@ -19,6 +19,59 @@ python3 scripts/lifecycle-prove.py \
 
 Omit `--numan` / `--nu` to use whatever is on `PATH`.
 
+## Reusable workflow
+
+`.github/workflows/lifecycle-proof.yml` is the reusable runner. It accepts a
+package id, exact package version, exact Nu version, a JSON target list, an
+optional activation kind, and optional explicit lifecycle commands. The plan
+job resolves the target matrix and command sequence; the proof jobs verify the
+Nu archive against the upstream `SHA256SUMS`, download the matching Numan
+release asset and verify it against `SHA256SUMS`, or build the tagged Numan
+source when that platform asset is absent. Each target emits a log plus an
+index-format proof record, and the collector writes `proofs.json` and
+`proofs.md` artifacts.
+
+The supported target mapping is:
+
+| Target | Runner |
+|---|---|
+| `linux/x86_64` | `ubuntu-24.04` |
+| `linux/aarch64` | `ubuntu-24.04-arm` |
+| `macos/x86_64` | `macos-15-intel` |
+| `macos/aarch64` | `macos-15` |
+
+Run it from the default branch after merge:
+
+```bash
+gh workflow run lifecycle-proof.yml \
+  -f package=owner/name \
+  -f package_version=1.2.3 \
+  -f nu_version=0.116.1 \
+  -f 'targets=["linux/aarch64","macos/aarch64"]'
+```
+
+`activation_kind` defaults to the kind declared by the package. When `commands`
+is omitted, the plan uses the standard sequence for that kind: the full
+`init -> registry sync -> search -> info -> install -> activate -> doctor ->
+list -> deactivate -> remove -> gc` for plugins; module commands add the module
+vendor-autoload probe where applicable; install-only and completion packages
+use their narrower declared lifecycle. Pass `commands` as a JSON list to
+override the sequence for a package with a specific contract.
+
+The workflow has three triggers. `pull_request` runs the checked-in default
+self-test before the runner lands on the default branch. `workflow_dispatch`
+can run any branch containing the workflow before merge and remains available
+from the default branch afterward. `workflow_call` lets another workflow
+reuse it and receive the collected proof array as an output.
+
+To add proofs for a new package, run the workflow with that package, version,
+Nu version, and target list, download the `lifecycle-proofs` artifact, copy the
+per-target logs into a new directory under `docs/evidence/`, append the proof
+records to the version's `proofs` array with each log's committed
+`evidence_url`, and run the schema, production-gate, unit, catalog, and parser
+checks before publishing. The run URL and artifact names belong in the
+evidence batch's `summary.json`.
+
 For a package that needs live credentials, add `--forward-env NAME` and an
 optional `--nu-check '…'`. Only explicitly named variables are forwarded, and
 only to the isolated post-activation Nu process; they are not passed to install,
@@ -114,6 +167,14 @@ from the `v0.4.0` tag, verified every Nu archive against the upstream
 `SHA256SUMS`, and ran the same loopback-signed candidate lifecycle. All four
 passed. Their logs and per-run metadata are in
 [`evidence/2026-11-11-cross-platform-lifecycle/`](evidence/2026-11-11-cross-platform-lifecycle/).
+
+On 2026-11-11 the reusable workflow itself proved
+`JosephTLyons/nu_plugin_units@0.1.9` on Linux arm64 and macOS arm64 with Nu
+0.116.1. Both targets passed the full lifecycle, selected `ubuntu-24.04-arm`
+and `macos-15`, and used hash-verified Numan 0.4.0 release assets. The run is
+[43017573551](https://github.com/numan-cli/numan-registry/actions/runs/43017573551);
+its logs and per-run metadata are in
+[`evidence/2026-11-11-reusable-lifecycle-proof/`](evidence/2026-11-11-reusable-lifecycle-proof/).
 
 
 The credential-gated `galuszkak/nu_plugin_bigquery@0.3.0` was proven separately

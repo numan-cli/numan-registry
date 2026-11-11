@@ -1,0 +1,42 @@
+[
+  {
+    "os": "linux",
+    "arch": "aarch64",
+    "nu_version": "0.116.1",
+    "result": "passed",
+    "timestamp": "2026-11-11T12:07:33Z",
+    "commands": [
+      "init",
+      "registry sync",
+      "search",
+      "info",
+      "install",
+      "activate",
+      "doctor",
+      "list",
+      "deactivate",
+      "remove",
+      "gc"
+    ]
+  },
+  {
+    "os": "macos",
+    "arch": "aarch64",
+    "nu_version": "0.116.1",
+    "result": "passed",
+    "timestamp": "2026-11-11T12:08:13Z",
+    "commands": [
+      "init",
+      "registry sync",
+      "search",
+      "info",
+      "install",
+      "activate",
+      "doctor",
+      "list",
+      "deactivate",
+      "remove",
+      "gc"
+    ]
+  }
+]
