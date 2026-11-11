@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "record_type": "lifecycle-proof-batch",
+  "run_date": "2026-11-11",
+  "scope": {
+    "platform": "linux/x86_64",
+    "versions": 2,
+    "runs": 2
+  },
+  "numan": {
+    "version": "0.4.0",
+    "sha256": "1dcb395699479799b16883338b65eb0fb6194320f765d511e150e92cd73ce015",
+    "build": "debug"
+  },
+  "candidate_index_sha256": "c97e2b6a6ea2411c05b7ca5266b4ef05fb46222745aeaa8be153b5052a550fe5",
+  "results": [
+    {
+      "package": "fennewald/nu_plugin_net",
+      "package_version": "1.9.0",
+      "nu_version": "0.103.0",
+      "status": "passed",
+      "started_at": "2026-11-11T11:13:33Z",
+      "finished_at": "2026-11-11T11:13:38Z",
+      "nu": {
+        "archive_url": "https://github.com/nushell/nushell/releases/download/0.103.0/nu-0.103.0-x86_64-unknown-linux-gnu.tar.gz",
+        "archive_sha256": "8d765a31611b3ae8fb63582a53b39111c11e2a3a6be3c76afb2c0a4bb38eebee",
+        "nu_exe_sha256": "28bd03d993f525f7c07465320641040b694f13f3666a57f496c94f45f988334a"
+      },
+      "steps": [
+        "init",
+        "registry sync",
+        "search",
+        "info",
+        "install",
+        "activate",
+        "doctor",
+        "list",
+        "deactivate",
+        "remove",
+        "gc"
+      ],
+      "log": "docs/evidence/2026-11-11-linux-lifecycle/fennewald_nu_plugin_net__1.9.0__nu-0.103.0__linux-x86_64.log",
+      "log_sha256": "f56d20cc1d48874b04799f7efda805c8511543694ecb25da738640db6621fb5d"
+    },
+    {
+      "package": "dead10ck/nu_plugin_dns",
+      "package_version": "4.0.10",
+      "nu_version": "0.113.1",
+      "status": "passed",
+      "started_at": "2026-11-11T11:13:38Z",
+      "finished_at": "2026-11-11T11:13:52Z",
+      "nu": {
+        "archive_url": "https://github.com/nushell/nushell/releases/download/0.113.1/nu-0.113.1-x86_64-unknown-linux-gnu.tar.gz",
+        "archive_sha256": "9008d309aaa35e29ed5d5985306a83e2bf5093e31677d4cd969914552d12b8fb",
+        "nu_exe_sha256": "26359341b4ddcb69c20c1d3ec52ffeec3b014f14d4ebff20369287bd29ebce03"
+      },
+      "steps": [
+        "init",
+        "registry sync",
+        "search",
+        "info",
+        "install",
+        "activate",
+        "doctor",
+        "list",
+        "deactivate",
+        "remove",
+        "gc"
+      ],
+      "log": "docs/evidence/2026-11-11-linux-lifecycle/dead10ck_nu_plugin_dns__4.0.10__nu-0.113.1__linux-x86_64.log",
+      "log_sha256": "3e04671186f3c8daaa6cafa2935590b8d846c0ad56b96130bbfa7c31d0d89433"
+    }
+  ]
+}

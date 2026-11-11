@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "record_type": "lifecycle-proof",
+  "package": "galuszkak/nu_plugin_bigquery",
+  "package_version": "0.3.0",
+  "platform": {
+    "os": "windows",
+    "arch": "x86_64"
+  },
+  "status": "passed",
+  "started_at": "2026-11-11T10:59:32Z",
+  "finished_at": "2026-11-11T11:00:02Z",
+  "nu": {
+    "version": "0.114.1",
+    "archive_url": "https://github.com/nushell/nushell/releases/download/0.114.1/nu-0.114.1-x86_64-pc-windows-msvc.zip",
+    "archive_sha256": "71a88cb74f51a9fdd91003273fb1f3361d7b393fb3a03014f43e5f111df9666f",
+    "nu_exe_sha256": "49fb6abfefc74325d398138ce4d3dc0e9ea68aac5a739e638e0f00cb081e445f",
+    "reported_version": "0.114.1"
+  },
+  "numan": {
+    "version": "0.4.0",
+    "sha256": "f359de4ae8adb869e572076c87cf26409be13148c7666e0e3bbd414236f5b0c5",
+    "build": "debug"
+  },
+  "candidate_index": {
+    "path": "registry/index.json",
+    "sha256": "8d1ae59836acaedc540e2e934d39683569bc7a63498d4dfb102a2cc03e01b378",
+    "signing": "ephemeral Ed25519 loopback registry"
+  },
+  "credentialed_check": {
+    "description": "Live BigQuery query executed by the installed and activated plugin through real Nu.",
+    "forwarded_env": [
+      "GOOGLE_APPLICATION_CREDENTIALS",
+      "GOOGLE_CLOUD_PROJECT"
+    ],
+    "values_recorded": false,
+    "query": "SELECT 1 AS proof",
+    "observed_result": 1,
+    "nu_check_exit_code": 0
+  },
+  "lifecycle_steps": [
+    "init",
+    "registry sync",
+    "search",
+    "info",
+    "install",
+    "activate",
+    "nu check (BigQuery SELECT 1 AS proof)",
+    "doctor",
+    "list",
+    "deactivate",
+    "remove",
+    "gc"
+  ],
+  "log": "docs/evidence/2026-11-11-bigquery-0.3.0/lifecycle.log",
+  "log_sha256": "78055494525d3817af3f95e6b56cc1414f55c1b64924c9c26f0058eebfdc597b"
+}
