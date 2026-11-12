@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-12T04:16:04Z",
+  "updated_at": "2026-11-12T04:26:17Z",
   "registry_revision": "seed-2026-07-02",
   "packages": [
     {
@@ -833,9 +833,6 @@
             "reason_code": "nu-plugin-protocol-mismatch",
             "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-reprove.md"
           },
-          "verified_with": [
-            "0.107.0"
-          ],
           "artifact": {
             "kind": "binary",
             "targets": {

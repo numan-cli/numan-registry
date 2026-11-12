@@ -74,16 +74,30 @@ test("activation guidance follows version metadata and never activates install-o
   assert.equal(catalog.canActivate(module, { activation: { kind: "nu-module", import: "unknown" }, artifact: { entry: "mod.nu" } }), false);
   packages.forEach(p => p.versions.forEach(v => {
     const html = catalog.detailHtml(p, v, filters);
-    assert.equal(html.includes("numan activate "), catalog.canActivate(p, v), `${p.id.owner}/${p.id.name}@${v.version}`);
-    assert.ok(html.includes(`numan install ${p.id.owner}/${p.id.name}@${v.version}`));
+    if (v.yanked) {
+      assert.equal(catalog.canActivate(p, v), false, `${p.id.owner}/${p.id.name}@${v.version}`);
+      assert.equal(html.includes("numan install "), false, `${p.id.owner}/${p.id.name}@${v.version}`);
+      assert.equal(html.includes("numan activate "), false, `${p.id.owner}/${p.id.name}@${v.version}`);
+      assert.ok(html.includes("Version yanked"), `${p.id.owner}/${p.id.name}@${v.version}`);
+      assert.ok(html.includes(v.yanked.reason_code), `${p.id.owner}/${p.id.name}@${v.version}`);
+    } else {
+      assert.equal(html.includes("numan activate "), catalog.canActivate(p, v), `${p.id.owner}/${p.id.name}@${v.version}`);
+      assert.ok(html.includes(`numan install ${p.id.owner}/${p.id.name}@${v.version}`));
+      if (catalog.canActivate(p, v) && !(v.verified_with || []).length && v.evidence_tier !== "provisional") {
+        assert.ok(html.includes("Lifecycle proof is missing"), `${p.id.owner}/${p.id.name}@${v.version}`);
+      }
+    }
     assert.ok(html.includes("Lifecycle-tested Nu"));
     assert.ok(html.includes("SHA256:"));
-    if (catalog.canActivate(p, v) && !(v.verified_with || []).length && v.evidence_tier !== "provisional") {
-      assert.ok(html.includes("Lifecycle proof is missing"), `${p.id.owner}/${p.id.name}@${v.version}`);
-    }
   }));
   const missingVersion = { version: "1.0.0", activation: { kind: "nu-module" }, artifact: { entry: "mod.nu" } };
   assert.ok(catalog.detailHtml({ id: { owner: "o", name: "n" }, type: "module" }, missingVersion, filters).includes("Lifecycle proof is missing"));
+  const yankedVersion = { version: "9.9.9", nu_version: "*", yanked: { reason_code: "nu-parser-incompatible", evidence_url: "https://example.com/evidence.md" }, activation: { kind: "nu-module" }, artifact: { kind: "archive", entry: "mod.nu" } };
+  assert.equal(catalog.canActivate({ type: "module" }, yankedVersion), false);
+  const yankedHtml = catalog.detailHtml({ id: { owner: "o", name: "n" }, type: "module", versions: [yankedVersion] }, yankedVersion, filters);
+  assert.ok(yankedHtml.includes("Version yanked"));
+  assert.equal(yankedHtml.includes("numan install "), false);
+  assert.equal(yankedHtml.includes("numan activate "), false);
 });
 
 test("untrusted catalog text and links cannot inject markup or shell commands", () => {

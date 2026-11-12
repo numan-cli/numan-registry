@@ -6,6 +6,7 @@ verbatim, so exclusions must be applied before dispatch. This script builds
 the candidate:
 
 - drops every version entry whose evidence_tier is "provisional"
+- drops every yanked version entry, regardless of evidence tier
 - drops packages named on the --exclude list (approver keep/exclude decisions)
 - drops packages left with zero versions after filtering
 - writes the canonical JSON bytes ci-sign.py would sign, plus a report
@@ -75,6 +76,15 @@ def materialize_candidate(
             continue
         kept_versions = []
         for ver in pkg.get("versions", []):
+            if isinstance(ver, dict) and "yanked" in ver:
+                removals.append(
+                    {
+                        "package": label,
+                        "version": ver.get("version", "?"),
+                        "reason": "yanked",
+                    }
+                )
+                continue
             if isinstance(ver, dict) and ver.get("evidence_tier") == "provisional":
                 removals.append(
                     {

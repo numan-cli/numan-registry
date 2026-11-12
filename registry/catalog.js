@@ -77,6 +77,7 @@
   }
 
   function canActivate(pkg, version) {
+    if (version.yanked) return false;
     return pkg.type === "plugin" || (pkg.type === "module" && (version.activation || {}).kind === "nu-module" &&
       !!(version.artifact || {}).entry && Object.keys(version.dependencies || {}).length === 0 &&
       [undefined, "module", "all"].indexOf((version.activation || {}).import) !== -1);
@@ -123,7 +124,8 @@
   }
 
   function evidenceSummary(version, supported) {
-    return version.evidence_tier === "provisional" ? "Provisional: " + (version.deferral_reason || "Lifecycle proof deferred") :
+    return version.yanked ? "Yanked: " + ((version.yanked || {}).reason_code || "withdrawn") + " — " + ((version.yanked || {}).evidence_url || "no evidence URL") :
+      version.evidence_tier === "provisional" ? "Provisional: " + (version.deferral_reason || "Lifecycle proof deferred") :
       (version.verified_with || []).length ? "Exact tested Nu versions are listed above. This is not an all-platform test guarantee." :
       supported ? "Lifecycle proof is missing. Production admission has not been established for this version." : "Install-only; no activation lifecycle proof is recorded.";
   }
@@ -141,6 +143,11 @@
 
   function installationHtml(id, version, supported) {
     var html = "";
+    if (version.yanked) {
+      return "<h3>Version yanked</h3><p>This catalog version is withdrawn and must not be installed or activated.</p>" +
+        "<p>Reason: <code>" + escapeHtml(version.yanked.reason_code || "withdrawn") + "</code>" +
+        (version.yanked.evidence_url ? ' · <a href="' + escapeHtml(safeUrl(version.yanked.evidence_url)) + '">Evidence</a>' : "") + "</p>";
+    }
     // Catalog values are displayed as text. Only safe package tokens become shell commands.
     if (/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(id) && /^[A-Za-z0-9_.+-]+$/.test(version.version || "")) {
       html += "<h3>Install this version</h3><p>After the initial setup above, inspect and install:</p>" +
@@ -160,7 +167,7 @@
     var repo = safeUrl(pkg.repo);
     var source = version.source || {};
     var tested = (version.verified_with || []).join(", ") || "No exact lifecycle-tested Nu versions recorded";
-    var supported = canActivate(pkg, version);
+    var supported = !version.yanked && canActivate(pkg, version);
     var evidence = evidenceSummary(version, supported);
     var assetHtml = artifactHtml(version);
     var html = '<div class="detail-heading"><h2 id="detail-title">' + escapeHtml(id) + '</h2><button class="plain-button" type="button" id="close-detail">Close details</button></div>' +
@@ -170,7 +177,7 @@
       '<button class="plain-button" type="button" data-copy="' + escapeHtml(id) + '">Copy package ID</button></div>' +
       '<p><label for="package-version">Catalog version </label><select id="package-version">' + (pkg.versions || []).slice().reverse().map(function (v) {
         return '<option value="' + escapeHtml(v.version) + '"' + (v === version ? " selected" : "") + ">" + escapeHtml(v.version) + (v === latest(pkg) ? " (latest in catalog)" : "") + "</option>";
-      }).join("") + "</select></p><dl><dt>Package type</dt><dd>" + escapeHtml(pkg.type) + (supported ? " · explicit activation supported" : " · install-only") + "</dd>" +
+      }).join("") + "</select></p><dl><dt>Package type</dt><dd>" + escapeHtml(pkg.type) + (version.yanked ? " · yanked" : supported ? " · explicit activation supported" : " · install-only") + "</dd>" +
       "<dt>Declared Nu range</dt><dd><code>" + escapeHtml(version.nu_version || "Unknown") + "</code>" + compatibility(version, filters.nu) + "</dd>" +
       "<dt>Lifecycle-tested Nu</dt><dd>" + escapeHtml(tested) + "</dd><dt>Evidence</dt><dd>" + escapeHtml(evidence) + "</dd>" +
       "<dt>Published targets</dt><dd>" + escapeHtml(targetSummary(version)) +
@@ -244,7 +251,7 @@
       }
       if (collapsed[pkg.type]) return;
       html.push('<tr class="pkg-row' + (valid && matchesNu(version.nu_version, f.nu) === true ? " is-match" : "") + '"><td class="pkg"><a href="' + escapeHtml(packageHash(id)) + '">' + escapeHtml(id) + '</a><div class="pkg-description">' + escapeHtml(pkg.description) + '</div></td><td class="type">' + escapeHtml(pkg.type) +
-        (!canActivate(pkg, version) ? '<span class="target-summary">Install-only</span>' : "") + '</td><td class="ver">' + escapeHtml(version.version || "Unavailable") + '</td><td class="nu"><code>' + escapeHtml(version.nu_version || "Unknown") + "</code>" + compatibility(version, f.nu) + '<span class="target-summary">' + escapeHtml(targetSummary(version)) + "</span></td></tr>");
+        (version.yanked ? '<span class="target-summary">Yanked</span>' : (!canActivate(pkg, version) ? '<span class="target-summary">Install-only</span>' : "")) + '</td><td class="ver">' + escapeHtml(version.version || "Unavailable") + '</td><td class="nu"><code>' + escapeHtml(version.nu_version || "Unknown") + "</code>" + compatibility(version, f.nu) + '<span class="target-summary">' + escapeHtml(targetSummary(version)) + "</span></td></tr>");
     });
     rows.innerHTML = html.join("");
     el("package-table").hidden = !visible.length;

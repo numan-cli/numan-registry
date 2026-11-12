@@ -65,6 +65,32 @@ class MaterializeCandidateTests(unittest.TestCase):
         self.assertNotIn("d/drop", labels)
         self.assertIn({"package": "d/drop", "version": "*", "reason": "excluded"}, rem)
 
+    def test_yanked_versions_dropped(self):
+        index = {
+            "schema_version": 1,
+            "updated_at": "2026-10-19T00:00:00Z",
+            "packages": [
+                pkg("e", "yanked", [
+                    ver("1.0.0"),
+                    ver(
+                        "2.0.0",
+                        yanked={
+                            "reason_code": "nu-parser-incompatible",
+                            "evidence_url": "https://example.com/evidence.md",
+                        },
+                    ),
+                ]),
+            ],
+        }
+        cand, rem = mc.materialize_candidate(index)
+        kept = {mc.package_label(p): p for p in cand["packages"]}
+        self.assertEqual(
+            [v["version"] for v in kept["e/yanked"]["versions"]], ["1.0.0"]
+        )
+        self.assertIn(
+            {"package": "e/yanked", "version": "2.0.0", "reason": "yanked"}, rem
+        )
+
     def test_source_not_mutated(self):
         before = json.dumps(self.index, sort_keys=True)
         mc.materialize_candidate(self.index, {"d/drop"})
