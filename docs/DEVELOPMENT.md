@@ -19,7 +19,7 @@ Preview with `python -m http.server 4173 --bind 127.0.0.1 --directory registry`,
 
 Catalog updates remain a separate intake task: do not widen Nu ranges or add platform targets to make browser filters pass. Follow the artifact and lifecycle proof requirements before promoting new versions. The website can ship through the existing protected production workflow after review; a local preview is not a production deployment.
 
-`registry/index.json` contains production candidates that meet the evidence gate. Failed or unproved activatable candidates live in `registry/provisional.json`. The staging workflow merges both with `python scripts/prepare-staging.py --output <temporary-path>` before ephemeral signing. Production continues signing only `registry/index.json`; no unsigned fallback or production evidence exception is introduced.
+`registry/index.json` contains production candidates that meet the evidence gate. Failed or unproved activatable candidates live in `registry/provisional.json`; versions with a terminal `yanked` object are retained in the source index as withdrawn evidence but excluded from production resolution. The staging workflow merges both catalogs with `python scripts/prepare-staging.py --output <temporary-path>` before ephemeral signing. Production continues signing only `registry/index.json`; no unsigned fallback or production evidence exception is introduced.
 
 ## CI Validation Suite
 

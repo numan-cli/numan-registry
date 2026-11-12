@@ -205,6 +205,9 @@ class PlatformGapWorkflowTests(unittest.TestCase):
                 "commands",
                 "numan_version",
                 "numan_repo",
+                "registry_repository",
+                "registry_ref",
+                "registry_checkout",
                 "artifact_prefix",
                 "artifact_summary_prefix",
             },
@@ -282,6 +285,88 @@ class PlatformGapWorkflowTests(unittest.TestCase):
             ".github/workflows/platform-gap-lifecycle-proof.yml",
             caller["on"]["pull_request"]["paths"],
         )
+
+    def test_engine_supports_an_explicit_external_registry_checkout(self):
+        engine = check_workflows.load_workflow(
+            (self.root / ".github" / "workflows" / "lifecycle-proof.yml").read_text(
+                encoding="utf-8"
+            )
+        )
+        for trigger in ("workflow_call", "workflow_dispatch"):
+            with self.subTest(trigger=trigger):
+                inputs = engine["on"][trigger]["inputs"]
+                for name in (
+                    "registry_repository",
+                    "registry_ref",
+                    "registry_checkout",
+                ):
+                    self.assertIn(name, inputs)
+                    self.assertFalse(inputs[name].get("required", False))
+                    self.assertEqual(inputs[name]["type"], "string")
+                self.assertEqual(inputs["registry_checkout"]["default"], ".")
+
+        env = engine["env"]
+        self.assertIn("inputs.registry_checkout", env["PROOF_REGISTRY_CHECKOUT"])
+        self.assertIn(
+            "github.event.inputs.registry_checkout",
+            env["PROOF_REGISTRY_CHECKOUT"],
+        )
+        self.assertIn("format(", env["PROOF_ARTIFACTS"])
+
+        for job_name in ("plan", "prove", "collect"):
+            steps = engine["jobs"][job_name]["steps"]
+            by_name = {step.get("name"): step for step in steps if step.get("name")}
+            self.assertIn("Validate explicit registry checkout", by_name)
+            self.assertIn("Check out registry (external)", by_name)
+            self.assertIn("Check out caller repository", by_name)
+            external = by_name["Check out registry (external)"]
+            self.assertEqual(external["if"], "env.PROOF_REGISTRY_REPOSITORY != ''")
+            self.assertEqual(
+                external["with"]["repository"], "${{ env.PROOF_REGISTRY_REPOSITORY }}"
+            )
+            self.assertEqual(
+                external["with"]["ref"], "${{ env.PROOF_REGISTRY_REF }}"
+            )
+            self.assertEqual(
+                external["with"]["path"], "${{ env.PROOF_REGISTRY_CHECKOUT }}"
+            )
+            caller = by_name["Check out caller repository"]
+            self.assertEqual(caller["if"], "env.PROOF_REGISTRY_REPOSITORY == ''")
+            self.assertEqual(
+                caller["with"]["path"], "${{ env.PROOF_REGISTRY_CHECKOUT }}"
+            )
+
+        plan_step = next(
+            step
+            for step in engine["jobs"]["plan"]["steps"]
+            if step.get("id") == "plan"
+        )
+        self.assertEqual(
+            plan_step["working-directory"], "${{ env.PROOF_REGISTRY_CHECKOUT }}"
+        )
+        for job_name, step_names in {
+            "prove": (
+                "Install proof dependencies",
+                "Run lifecycle proof",
+                "Run lifecycle proof (Windows)",
+                "Emit index proof record",
+                "Emit index proof record (Windows)",
+                "Verify proof record",
+                "Verify proof record (Windows)",
+            ),
+            "collect": ("Collect proof records",),
+        }.items():
+            by_name = {
+                step.get("name"): step
+                for step in engine["jobs"][job_name]["steps"]
+                if step.get("name")
+            }
+            for step_name in step_names:
+                with self.subTest(job=job_name, step=step_name):
+                    self.assertEqual(
+                        by_name[step_name]["working-directory"],
+                        "${{ env.PROOF_REGISTRY_CHECKOUT }}",
+                    )
 
     def test_pinned_linux_caller_keeps_package_nu_target_tuples(self):
         workflow_path = (
@@ -435,7 +520,11 @@ class PlatformGapWorkflowTests(unittest.TestCase):
             uploads[0]["with"]["name"], "${{ env.PROOF_SUMMARY_ARTIFACT }}"
         )
         self.assertEqual(
-            uploads[0]["with"]["path"].split(), ["proofs.json", "proofs.md"]
+            uploads[0]["with"]["path"].splitlines(),
+            [
+                "${{ env.PROOF_REGISTRY_CHECKOUT }}/proofs.json",
+                "${{ env.PROOF_REGISTRY_CHECKOUT }}/proofs.md",
+            ],
         )
 
     def test_platform_gap_artifact_summary_has_distinct_default(self):

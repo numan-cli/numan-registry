@@ -1,0 +1,2301 @@
+{
+  "schema": "numan-lifecycle-proof-backlog-v1",
+  "generated_at": "2026-11-12T14:03:58.450Z",
+  "source": {
+    "index_path": "registry/index.json",
+    "index_updated_at": "2026-11-12T14:03:58Z",
+    "registry_revision": "seed-2026-07-02",
+    "package_count": 71,
+    "version_count": 94
+  },
+  "definition": "A version with at least one Windows proof and at least one Linux or macOS artifact target without a passing proof. This is a snapshot; recompute from registry/index.json after catalog changes.",
+  "target_order": [
+    "linux/x86_64",
+    "linux/aarch64",
+    "macos/aarch64",
+    "macos/x86_64"
+  ],
+  "summary": {
+    "versions": 55,
+    "packages": 35,
+    "latest_versions": 35,
+    "historical_versions": 20,
+    "windows_passed": 54,
+    "windows_failed": 1,
+    "missing_target_proofs": 149,
+    "actionable_missing_target_proofs": 80,
+    "tiers": {
+      "P0": 25,
+      "P1": 8,
+      "P2": 14,
+      "P3": 5,
+      "Held": 3
+    },
+    "artifact_target_versions": {
+      "linux/x86_64": 54,
+      "linux/aarch64": 52,
+      "macos/aarch64": 53,
+      "macos/x86_64": 11
+    },
+    "host_blocked_missing_target_proofs": 60,
+    "held_missing_target_proofs": 9,
+    "attempted_failures": 0
+  },
+  "items": [
+    {
+      "rank": 1,
+      "package": "wangjiawen2013/nu_plugin_charton",
+      "version": "0.9.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "macos/aarch64"
+      ],
+      "missing_target_count": 1,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:24:13Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 448,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [],
+      "actionable_targets": []
+    },
+    {
+      "rank": 2,
+      "package": "idanarye/nu_plugin_skim",
+      "version": "0.31.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:21:54Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 85,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 3,
+      "package": "cptpiepmatz/nu_plugin_highlight",
+      "version": "1.4.17",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.115.0 <0.116.0",
+      "proof_nu_version": "0.115.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:18:11Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 82,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 4,
+      "package": "fdncred/nu_plugin_regex",
+      "version": "0.25.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:21:15Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 66,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 5,
+      "package": "fdncred/nu_plugin_file",
+      "version": "0.28.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:20:28Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 54,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 6,
+      "package": "FMotalleb/nu_plugin_desktop_notifications",
+      "version": "0.116.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:18:47Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 53,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 7,
+      "package": "fdncred/nu_plugin_emoji",
+      "version": "0.25.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:20:18Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 27,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 8,
+      "package": "fdncred/nu_plugin_json_path",
+      "version": "0.26.1",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:20:44Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 22,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 9,
+      "package": "FMotalleb/nu_plugin_image",
+      "version": "0.116.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:19:02Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 22,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 10,
+      "package": "fdncred/nu_plugin_parquet",
+      "version": "0.26.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:20:52Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 18,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 11,
+      "package": "drbrain/nu_plugin_prometheus",
+      "version": "0.13.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.115.0 <0.116.0",
+      "proof_nu_version": "0.115.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_targets": [
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:18:35Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 16,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "linux_missing_targets": [],
+      "actionable_targets": []
+    },
+    {
+      "rank": 12,
+      "package": "FMotalleb/nu_plugin_port_extension",
+      "version": "0.116.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:19:25Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 16,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 13,
+      "package": "fdncred/nu_plugin_jwalk",
+      "version": "0.26.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:16:44Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 9,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 14,
+      "package": "fdncred/nu_plugin_query_git",
+      "version": "0.26.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:21:07Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 8,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 15,
+      "package": "WindSoilder/nu_plugin_mongo",
+      "version": "0.0.0-snapshot.20260816.47854d9",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-10-18T00:00:00Z"
+      },
+      "evidence_tier": "proven",
+      "yanked": null,
+      "demand_stars": 8,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 16,
+      "package": "kik4444/nu_plugin_mime",
+      "version": "0.0.0-snapshot.20260816.8e5872a",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-10-18T00:00:00Z"
+      },
+      "evidence_tier": "proven",
+      "yanked": null,
+      "demand_stars": 6,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 17,
+      "package": "lizclipse/nu_plugin_ulid",
+      "version": "0.23.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:17:46Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 6,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 18,
+      "package": "fdncred/nu_plugin_strutils",
+      "version": "0.25.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:21:30Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 5,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 19,
+      "package": "Yethal/nu_plugin_hcl",
+      "version": "0.114.1",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:15:33Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 4,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 20,
+      "package": "idanarye/nu_plugin_handlebars",
+      "version": "0.3.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-10-19T00:00:00Z"
+      },
+      "evidence_tier": "proven",
+      "yanked": null,
+      "demand_stars": 1,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 21,
+      "package": "rhino-linux/nu_plugin_nutext",
+      "version": "0.6.2",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:18:08Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 1,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 22,
+      "package": "kaathewisegit/nu_plugin_endecode",
+      "version": "0.0.0-snapshot.20261019.2fe5276",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-10-19T00:00:00Z"
+      },
+      "evidence_tier": "proven",
+      "yanked": null,
+      "demand_stars": 0,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 23,
+      "package": "Kissaki/nu_plugin_bson",
+      "version": "26.1160.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:19:29Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 0,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 24,
+      "package": "tonythethompson/nu_plugin_qr_maker",
+      "version": "1.2.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-12T03:10:17Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 0,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 25,
+      "package": "SuaveIV/nu_plugin_audio",
+      "version": "0.2.13",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_target_count": 4,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:19:51Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 0,
+      "priority": "P0",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 26,
+      "package": "Euphrasiologist/nu_plugin_plot",
+      "version": "0.0.0-snapshot.20260816.5a1ca2a",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.105.0 <0.106.0",
+      "proof_nu_version": "0.105.0",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "missing_target_count": 2,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-10-18T00:00:00Z"
+      },
+      "evidence_tier": "proven",
+      "yanked": null,
+      "demand_stars": 71,
+      "priority": "P1",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 27,
+      "package": "Euphrasiologist/nu_plugin_bio",
+      "version": "0.0.0-snapshot.20260816.49ab341",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.104.0 <0.105.0",
+      "proof_nu_version": "0.104.0",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-10-18T00:00:00Z"
+      },
+      "evidence_tier": "proven",
+      "yanked": null,
+      "demand_stars": 31,
+      "priority": "P1",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 28,
+      "package": "oderwat/nu_plugin_logfmt",
+      "version": "0.0.0-snapshot.20260816.892c4f9",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.101.0 <0.102.0",
+      "proof_nu_version": "0.101.0",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-10-18T00:00:00Z"
+      },
+      "evidence_tier": "proven",
+      "yanked": null,
+      "demand_stars": 5,
+      "priority": "P1",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 29,
+      "package": "yybit/nu_plugin_x509",
+      "version": "0.0.0-snapshot.20260816.15518dd",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.109.0 <0.110.0",
+      "proof_nu_version": "0.109.0",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-10-18T00:00:00Z"
+      },
+      "evidence_tier": "proven",
+      "yanked": null,
+      "demand_stars": 5,
+      "priority": "P1",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 30,
+      "package": "fnuttens/nu_plugin_hmac",
+      "version": "0.27.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.113.0 <0.114.0",
+      "proof_nu_version": "0.113.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:13:20Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 0,
+      "priority": "P1",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 31,
+      "package": "abusch/nu_plugin_semver",
+      "version": "0.11.17",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.113.0 <0.114.0",
+      "proof_nu_version": "0.113.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_target_count": 4,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:12:30Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": null,
+      "priority": "P1",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 32,
+      "package": "b4nst/nu_plugin_format_pcap",
+      "version": "0.1.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.101.0 <0.102.0",
+      "proof_nu_version": "0.101.0",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_target_count": 4,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:11:19Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": null,
+      "priority": "P1",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 33,
+      "package": "nushell-works/nu_plugin_nw_ulid",
+      "version": "0.2.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.111.0 <0.112.0",
+      "proof_nu_version": "0.111.0",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_target_count": 4,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:11:36Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": null,
+      "priority": "P1",
+      "status": "ready",
+      "reason": "",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 34,
+      "package": "idanarye/nu_plugin_skim",
+      "version": "0.29.1",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:17:31Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 85,
+      "priority": "P2",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 35,
+      "package": "cptpiepmatz/nu_plugin_highlight",
+      "version": "1.4.16",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:15:44Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 82,
+      "priority": "P2",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 36,
+      "package": "fdncred/nu_plugin_regex",
+      "version": "0.23.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:17:08Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 66,
+      "priority": "P2",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 37,
+      "package": "fdncred/nu_plugin_file",
+      "version": "0.26.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:16:25Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 54,
+      "priority": "P2",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 38,
+      "package": "FMotalleb/nu_plugin_desktop_notifications",
+      "version": "0.114.1",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:14:51Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 53,
+      "priority": "P2",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 39,
+      "package": "fdncred/nu_plugin_emoji",
+      "version": "0.23.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:16:09Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 27,
+      "priority": "P2",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 40,
+      "package": "fdncred/nu_plugin_json_path",
+      "version": "0.24.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:16:26Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 22,
+      "priority": "P2",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 41,
+      "package": "fdncred/nu_plugin_parquet",
+      "version": "0.24.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:16:48Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 18,
+      "priority": "P2",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 42,
+      "package": "drbrain/nu_plugin_prometheus",
+      "version": "0.12.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:16:06Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 16,
+      "priority": "P2",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64"
+      ]
+    },
+    {
+      "rank": 43,
+      "package": "FMotalleb/nu_plugin_port_extension",
+      "version": "0.114.1",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:14:57Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 16,
+      "priority": "P2",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 44,
+      "package": "fdncred/nu_plugin_query_git",
+      "version": "0.24.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:17:04Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 8,
+      "priority": "P2",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 45,
+      "package": "fdncred/nu_plugin_strutils",
+      "version": "0.22.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:17:25Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 5,
+      "priority": "P2",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 46,
+      "package": "Kissaki/nu_plugin_bson",
+      "version": "26.1140.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:15:12Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 0,
+      "priority": "P2",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 47,
+      "package": "SuaveIV/nu_plugin_audio",
+      "version": "0.2.10",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_target_count": 4,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:15:21Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 0,
+      "priority": "P2",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 48,
+      "package": "SuaveIV/nu_plugin_audio",
+      "version": "0.2.8",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.113.1 <0.114.0",
+      "proof_nu_version": "0.113.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/aarch64"
+      ],
+      "missing_targets": [
+        "linux/aarch64"
+      ],
+      "missing_target_count": 1,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:12:18Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 0,
+      "priority": "P3",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [],
+      "linux_missing_targets": [
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 49,
+      "package": "cptpiepmatz/nu_plugin_highlight",
+      "version": "1.4.15",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.113.0 <0.114.0",
+      "proof_nu_version": "0.113.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:12:56Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 82,
+      "priority": "P3",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 50,
+      "package": "fdncred/nu_plugin_regex",
+      "version": "0.22.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.113.0 <0.114.0",
+      "proof_nu_version": "0.113.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:13:09Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 66,
+      "priority": "P3",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 51,
+      "package": "FMotalleb/nu_plugin_image",
+      "version": "0.112.2",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.112.0 <0.113.0",
+      "proof_nu_version": "0.112.2",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_target_count": 4,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:11:47Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 22,
+      "priority": "P3",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 52,
+      "package": "FMotalleb/nu_plugin_port_extension",
+      "version": "0.113.1",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.113.0 <0.114.0",
+      "proof_nu_version": "0.113.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_target_count": 4,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:11:56Z"
+      },
+      "evidence_tier": null,
+      "yanked": null,
+      "demand_stars": 16,
+      "priority": "P3",
+      "status": "ready",
+      "reason": "",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ]
+    },
+    {
+      "rank": 53,
+      "package": "galuszkak/nu_plugin_bigquery",
+      "version": "0.5.1",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.116.0 <0.117.0",
+      "proof_nu_version": "0.116.1",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T10:21:50Z"
+      },
+      "evidence_tier": "proven",
+      "yanked": null,
+      "demand_stars": 0,
+      "priority": "Held",
+      "status": "credential-gated",
+      "reason": "Requires GOOGLE_APPLICATION_CREDENTIALS and GOOGLE_CLOUD_PROJECT; do not run without a credential-forwarding plan.",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": []
+    },
+    {
+      "rank": 54,
+      "package": "galuszkak/nu_plugin_bigquery",
+      "version": "0.3.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.114.0 <0.115.0",
+      "proof_nu_version": "0.114.1",
+      "latest": false,
+      "artifact_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64",
+        "macos/aarch64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "passed",
+        "timestamp": "2026-11-11T11:00:02Z"
+      },
+      "evidence_tier": "proven",
+      "yanked": null,
+      "demand_stars": 0,
+      "priority": "Held",
+      "status": "credential-gated",
+      "reason": "Requires GOOGLE_APPLICATION_CREDENTIALS and GOOGLE_CLOUD_PROJECT; do not run without a credential-forwarding plan.",
+      "note": "Historical version for older Nu support",
+      "host_blocked_targets": [
+        "macos/aarch64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64",
+        "linux/aarch64"
+      ],
+      "actionable_targets": []
+    },
+    {
+      "rank": 55,
+      "package": "Trivernis/nu-plugin-dialog",
+      "version": "0.1.0",
+      "package_type": "plugin",
+      "nu_constraint": ">=0.78.0 <0.79.0",
+      "proof_nu_version": "0.107.0",
+      "latest": true,
+      "artifact_targets": [
+        "linux/x86_64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_targets": [
+        "linux/x86_64",
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "missing_target_count": 3,
+      "windows_proof": {
+        "result": "failed",
+        "timestamp": "2026-11-11T10:11:10Z"
+      },
+      "evidence_tier": "provisional",
+      "yanked": {
+        "reason_code": "nu-plugin-protocol-mismatch",
+        "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-reprove.md"
+      },
+      "demand_stars": null,
+      "priority": "Held",
+      "status": "terminal",
+      "reason": "Failed Windows proof and yanked; do not spend Linux/macOS proof time unless the package is reintroduced.",
+      "note": "Current version",
+      "host_blocked_targets": [
+        "macos/aarch64",
+        "macos/x86_64"
+      ],
+      "linux_missing_targets": [
+        "linux/x86_64"
+      ],
+      "actionable_targets": []
+    }
+  ],
+  "failures": [],
+  "host_blocked": {
+    "reason": "No macOS runner is available in this environment.",
+    "targets": [
+      "macos/aarch64",
+      "macos/x86_64"
+    ]
+  }
+}

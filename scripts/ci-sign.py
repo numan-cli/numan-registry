@@ -61,15 +61,37 @@ def _proof_requirement(constraint):
     )
 
 
+def _usable_commands(proof):
+    """Whether a passing proof records at least one non-empty lifecycle step."""
+    commands = proof.get("commands")
+    return (
+        isinstance(commands, list)
+        and bool(commands)
+        and all(isinstance(command, str) and command.strip() for command in commands)
+    )
+
+
 def _successful_proofs(proofs):
     return [
         proof
         for proof in proofs
-        if isinstance(proof, dict) and proof.get("result") == "passed"
+        if isinstance(proof, dict)
+        and proof.get("result") == "passed"
+        and _usable_commands(proof)
     ]
 
 
 def _no_successful_proof_error(proofs, required):
+    passing = [
+        proof
+        for proof in proofs
+        if isinstance(proof, dict) and proof.get("result") == "passed"
+    ]
+    if passing:
+        return (
+            "version.proofs has no usable successful proof: passing proof records "
+            f"must list at least one non-empty command; {required}"
+        )
     results = sorted(
         {
             repr(proof.get("result"))
@@ -138,6 +160,10 @@ def proof_coverage_error(version):
 
 def _version_proof_error(package, version):
     if not isinstance(version, dict):
+        return 0, None
+    # Yanked versions are terminal and are excluded from production before
+    # signing; if one reaches this gate, it is not activatable.
+    if "yanked" in version:
         return 0, None
     source = activation_source(package, version)
     if source is None:

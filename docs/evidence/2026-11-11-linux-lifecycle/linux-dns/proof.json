@@ -1,0 +1,21 @@
+{
+  "os": "linux",
+  "arch": "x86_64",
+  "nu_version": "0.113.1",
+  "result": "passed",
+  "timestamp": "2026-11-11T11:13:52Z",
+  "commands": [
+    "init",
+    "registry sync",
+    "search",
+    "info",
+    "install",
+    "activate",
+    "doctor",
+    "list",
+    "deactivate",
+    "remove",
+    "gc"
+  ],
+  "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-linux-lifecycle/dead10ck_nu_plugin_dns__4.0.10__nu-0.113.1__linux-x86_64.log"
+}

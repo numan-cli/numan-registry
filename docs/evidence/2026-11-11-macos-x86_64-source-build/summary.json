@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "record_type": "lifecycle-proof",
+  "run_date": "2026-11-11",
+  "source": "https://github.com/numan-cli/numan-registry/actions/runs/43107704173",
+  "workflow": ".github/workflows/lifecycle-proof.yml",
+  "workflow_ref": "numan-cli/numan-registry/.github/workflows/lifecycle-proof.yml@a7bf38253a08183109ffe42d39cb7d4d0c20fdaf",
+  "run_id": 43107704173,
+  "head_sha": "a7bf38253a08183109ffe42d39cb7d4d0c20fdaf",
+  "package": "alex-kattathra-johnson/nu_plugin_ws",
+  "package_version": "1.0.6",
+  "platform": {
+    "os": "macos",
+    "arch": "x86_64"
+  },
+  "status": "passed",
+  "run_started_at": "2026-11-11T21:58:20Z",
+  "run_completed_at": "2026-11-11T22:05:05Z",
+  "started_at": "2026-11-11T22:04:07Z",
+  "finished_at": "2026-11-11T22:04:48Z",
+  "runner_image": "macos15 20260824.0482.1",
+  "nu": {
+    "version": "0.107.0",
+    "archive_url": "https://github.com/nushell/nushell/releases/download/0.107.0/nu-0.107.0-x86_64-apple-darwin.tar.gz",
+    "archive_sha256": "e69c2e4f3b68444e17186f289a9a2ed7ec88b57da930892b1a7a3544d68a91d1",
+    "nu_exe_sha256": "7087641ab77c711f95a2d0edeaa597c49f0efb71573f4fa5d6fa2b080d0f5449",
+    "reported_version": "0.107.0"
+  },
+  "numan": {
+    "version": "0.4.0",
+    "source": "source-build",
+    "build": "debug",
+    "repo": "numan-cli/numan",
+    "asset_url": "",
+    "sha256": "412408cda235d7d8d2695173a7ea8e3a6ce80fc8c51fee597b4d0b16a79ec943"
+  },
+  "candidate_index": {
+    "path": "registry/index.json",
+    "sha256": "6b805797a60a0b4ffa5052c34e2dd940aa5af22b10e33d1ea13bf54c8a305322",
+    "signing": "ephemeral Ed25519 loopback registry"
+  },
+  "artifact": {
+    "url": "https://github.com/alex-kattathra-johnson/nu_plugin_ws/releases/download/v1.0.6/nu_plugin_ws-v1.0.6-x86_64-apple-darwin.tar.gz",
+    "sha256": "ef278ae91757922141a56b29caa4c5ff34dc798408b934aad24666815c5c5ec3"
+  },
+  "lifecycle_steps": [
+    "init",
+    "registry sync",
+    "search",
+    "info",
+    "install",
+    "activate",
+    "doctor",
+    "list",
+    "deactivate",
+    "remove",
+    "gc"
+  ],
+  "log": "docs/evidence/2026-11-11-macos-x86_64-source-build/alex-kattathra-johnson__nu_plugin_ws__1.0.6__nu-0.107.0__macos-x86_64.log",
+  "log_sha256": "8bb9d41b1432570453f64734b35f0fab4c65bed873da8271a5b12ef2fe9c4374",
+  "proof": "docs/evidence/2026-11-11-macos-x86_64-source-build/proof.json",
+  "proof_sha256": "af02f42151c71fee1d6bd17fcee7b11ceecd04113d26c371f3364df43f654f59"
+}

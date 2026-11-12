@@ -10,6 +10,9 @@ claims to run.
 
 Supported actions are the ones used by the lifecycle proof workflow:
 checkout, setup-python, the Rust toolchain, and artifact upload/download.
+Cross-repository checkout steps copy the registry tree from the explicit
+`/registry` mount; same-repository checkout steps use the caller checkout at
+`/src`.
 """
 
 from __future__ import annotations
@@ -18,10 +21,13 @@ import argparse
 import json
 import os
 import re
+import shlex
+import shutil
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from pathlib import PurePosixPath
 
 import yaml
 
@@ -389,17 +395,37 @@ def run_plan_scaffold(
         env["GITHUB_OUTPUT"] = str(output)
         env["RUNNER_TEMP"] = str(temp_path / "runner-temp")
         Path(env["RUNNER_TEMP"]).mkdir()
-        python_dir = Path(sys.executable).parent.as_posix()
-        if os.name == "nt":
+
+        def bash_path(value: str | Path) -> str:
+            path = str(value)
+            if os.name == "nt":
+                try:
+                    return subprocess.check_output(
+                        ["cygpath", "-u", path], text=True
+                    ).strip()
+                except (OSError, subprocess.CalledProcessError):
+                    pass
+            return Path(path).as_posix()
+
+        python_dir = bash_path(Path(sys.executable).parent)
+        path_prefix = python_dir
+        if shutil.which("python") is None:
+            # GitHub's setup-python provides both `python` and `python3`; a
+            # local Python installation may only expose `python3`. The plan
+            # step invokes `python`, so give it a temporary executable alias
+            # without requiring a hand-made PATH entry on the host.
+            shim_dir = temp_path / "python-shim"
+            shim_dir.mkdir()
+            python_name = "python.exe" if os.name == "nt" else "python"
+            shim = shim_dir / python_name
             try:
-                python_dir = subprocess.check_output(
-                    ["cygpath", "-u", python_dir], text=True
-                ).strip()
-            except (OSError, subprocess.CalledProcessError):
-                pass
+                shim.symlink_to(Path(sys.executable))
+            except OSError:
+                shutil.copy2(sys.executable, shim)
+            path_prefix = bash_path(shim_dir)
         # The plan step runs under bash, including Git Bash on Windows, where
         # PATH uses ':' rather than Windows' ';' separator.
-        env["PATH"] = python_dir + ":" + env.get("PATH", "")
+        env["PATH"] = path_prefix + ":" + env.get("PATH", "")
         reusable_text = reusable_path.read_text(encoding="utf-8")
         steps = workflow_steps(reusable, yaml.compose(reusable_text), "plan", reusable_text)
         plan_step = next(item["step"] for item in steps if item["step"].get("id") == "plan")
@@ -445,17 +471,35 @@ def _python_version_check(executable: str, version: str) -> str:
     )
 
 
-def action_commands(action: str, with_values: dict, ctx: dict) -> list[str]:
+def _work_checkout_target(path: str) -> str:
+    """Translate a workspace-relative checkout path into a /work path."""
+    value = str(path or ".")
+    if value == ".":
+        return "/work"
+    candidate = PurePosixPath(value)
+    if candidate.is_absolute() or ".." in candidate.parts:
+        raise RuntimeError(f"checkout path must stay under the workspace: {value}")
+    return "/work/" + candidate.as_posix()
+
+
+def action_commands(
+    action: str,
+    with_values: dict,
+    ctx: dict,
+    registry_checkout: str = "/registry",
+) -> list[str]:
     """Translate a supported GitHub action into shell commands."""
     action_name = action.split("@", 1)[0]
     if action_name == "actions/checkout":
-        if with_values.get("repository"):
-            raise RuntimeError("cross-repository checkout is not supported")
+        target = _work_checkout_target(with_values.get("path", "."))
+        source = registry_checkout if with_values.get("repository") else "/src"
+        source_path = shlex.quote(source)
+        target_path = shlex.quote(target)
         return [
-            "rm -rf /work",
-            "mkdir -p /work",
-            "cp -a /src/scripts /src/registry /src/schemas /src/requirements /work/",
-            "cd /work",
+            f"rm -rf {target_path}",
+            f"mkdir -p {target_path}",
+            f"cp -a {source_path}/scripts {source_path}/registry {source_path}/schemas {source_path}/requirements {target_path}/",
+            f"cd {target_path}",
         ]
     if action_name == "actions/setup-python":
         version = with_values.get("python-version", "")
@@ -595,6 +639,10 @@ def emit_job(workflow_root: Path, repo_root: Path, job_name: str):
             if "run" not in step:
                 raise RuntimeError(f"step at {source} has neither run nor uses")
             commands = [resolve_text(step["run"], step_ctx)]
+            working_directory = step.get("working-directory")
+            if working_directory:
+                resolved = resolve_text(working_directory, step_ctx)
+                commands.insert(0, f"cd {shlex.quote(resolved)}")
             kind = "run"
         manifest.append(
             {
