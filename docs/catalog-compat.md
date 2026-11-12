@@ -2,7 +2,7 @@
 
 _Auto-generated from `registry/index.json`. Do not hand-edit._
 
-Generated: `2026-11-02T07:51:19Z` · Index `updated_at`: `2026-11-02T07:51:19Z` · `registry_revision`: `seed-2026-07-02`
+Generated: `2026-11-12T04:16:04Z` · Index `updated_at`: `2026-11-12T04:16:04Z` · `registry_revision`: `seed-2026-07-02`
 
 This is the **master list** of packages in the committed `registry/index.json` (in-tree; the public CDN updates after production signing/publish) and the Nu constraint on each package's **latest** version. For demand-ranked *plugin candidates* not yet in the registry, see [`numan-plugins/docs/backlog.json`](https://github.com/numan-cli/numan-plugins/blob/main/docs/backlog.json). For intake workflow status, see [`intake-candidates.md`](intake-candidates.md).
 
@@ -82,7 +82,7 @@ Nu band is a coarse label from the constraint **lower bound** (`>=0.114` / `>0.1
 | `SuaveIV/nu_script_hnews` | script | 0.1.0-6cd8aef | `>=0.97.0` | other | — | mirror | 1 |
 | `SuaveIV/nu_script_wttr` | script | 0.1.0-main | `*` | * | — | mirror | 1 |
 | `tesujimath/bash-env-nushell` | module | 0.19.0 | `*` | * | — | upstream | 1 |
-| `Trivernis/nu-plugin-dialog` | plugin | 0.1.0 | `>=0.107.0 <0.108.0` | other | mac,win,linux | upstream | 1 |
+| `Trivernis/nu-plugin-dialog` | plugin | 0.1.0 | `>=0.78.0 <0.79.0` | other | mac,win,linux | upstream | 1 |
 | `vyadh/nutest` | module | 1.2.0 | `>=0.114.0` | 0.114 | — | upstream | 2 |
 | `wangjiawen2013/nu_plugin_charton` | plugin | 0.9.0 | `>=0.116.0 <0.117.0` | other | mac,linux,win | ci-built | 1 |
 | `WindSoilder/nu_plugin_mongo` | plugin | 0.0.0-snapshot.20260816.47854d9 | `>=0.114.0 <0.115.0` | 0.114 | mac,linux,win | ci-built | 1 |

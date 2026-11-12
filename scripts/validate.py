@@ -173,6 +173,10 @@ def lifecycle_evidence_errors(index, *, allow_missing=False):
     for package in index.get("packages", []):
         package_id = f"{package['id']['owner']}/{package['id']['name']}"
         for version in package.get("versions", []):
+            # Yanked versions are terminal and cannot be installed; their
+            # historical proof records are retained but no longer gate them.
+            if "yanked" in version:
+                continue
             activatable = package.get("type") == "plugin" or "activation" in version
             if not activatable:
                 continue

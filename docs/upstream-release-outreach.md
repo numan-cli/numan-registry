@@ -50,24 +50,17 @@ Optional PR: GitHub Actions workflow on tag push that runs `git archive` or a sm
 
 ## Per-repo outreach plan
 
-### 1. `amtoine/nu-git-manager` — **Issue first**
+### 1. `amtoine/nu-git-manager` — **Deprecated; archived; no outreach**
 
 | Field | Detail |
 |-------|--------|
-| Contact | [@amtoine](https://github.com/amtoine) (nupm ecosystem regular) |
-| Current state | Tags through **0.8.0**; releases have **zero assets** |
-| Registry mirror | `mirror-amtoine-nu-git-manager-0.8.0` |
-| Suggested entry | `pkgs/nu-git-manager/` → zip root `nu-git-manager-{version}/` |
-| Issue vs PR | **Issue** — offer PR for release workflow after they agree on layout |
-| Tone | Peer nupm/Numan maintainer; reference nupm.nuon layout they already publish |
+| Contact | [@amtoine](https://github.com/amtoine) |
+| Current state | Upstream archived; releases have zero assets; no maintained public fork or successor found |
+| Registry state | Both entries `deprecated`, `watch-off`, `yanked` (`nu-parser-incompatible`), provisional and production-excluded |
+| Alternative | [`fj0r/git.nu`](https://github.com/fj0r/git.nu) |
+| Watch issue | [#109](https://github.com/numan-cli/numan-registry/issues/109) closed as not planned |
 
-**Issue title:** `Release zip for pkgs/nu-git-manager on tags?`
-
-**Key points:**
-
-- Already in [nupm registry](https://github.com/nushell/nupm); Numan mirrors tag 0.8.0 today
-- Ask for zip of `pkgs/nu-git-manager/` at `{version}` tags
-- Entry path: `pkgs/nu-git-manager/nu-git-manager/mod.nu`
+No release-workflow outreach is possible: GitHub archived the repository read-only, and the fork/network audit found no maintained successor. If a maintained fork appears, treat it as a new intake request.
 
 ---
 
@@ -181,7 +174,7 @@ When a maintainer says yes, PR should include:
 
 | Upstream | Issue/PR | Opened | Response | Upstream asset shipped | Registry switched |
 |----------|----------|--------|----------|------------------------|-------------------|
-| amtoine/nu-git-manager | blocked (repo archived (read-only); cannot open issues or comments) |  |  |  | mirror only |
+| amtoine/nu-git-manager | blocked (repo archived (read-only); no public fork found; watch issue #109 closed as not planned; cannot open issues or comments) |  |  |  | mirror only |
 | nushell-prophet/dotnu | [#115](https://github.com/nushell-prophet/numd/issues/115) | 2026-07-06 | awaiting |  | mirror only |
 | nushell-prophet/numd | [#115](https://github.com/nushell-prophet/numd/issues/115) | 2026-07-06 | awaiting |  | mirror only |
 | nushell/nu_scripts (nu-hooks) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | awaiting |  | mirror only |
@@ -190,7 +183,7 @@ When a maintainer says yes, PR should include:
 | SuaveIV/nu_script_gh_status |  |  |  |  | mirror only |
 | SuaveIV/nu_script_hnews |  |  |  |  | mirror only |
 | Sanceilaks/nufetch |  |  |  |  | mirror only |
-| amtoine/nu-git-manager-sugar | blocked (repo archived (read-only); cannot open issues or comments) |  |  |  | mirror only |
+| amtoine/nu-git-manager-sugar | blocked (repo archived (read-only); no public fork found; watch issue #109 closed as not planned; cannot open issues or comments) |  |  |  | mirror only |
 | nushell/nu_scripts (git-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | awaiting |  | mirror only |
 | nushell/nu_scripts (cargo-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | awaiting |  | mirror only |
 | nushell/nu_scripts (npm-completions) | [#1266](https://github.com/nushell/nu_scripts/issues/1266) | 2026-07-06 | awaiting |  | mirror only |

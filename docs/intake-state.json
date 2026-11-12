@@ -62,7 +62,7 @@
       "type": "plugin",
       "version": "0.1.0",
       "platforms": "Windows zip; Linux x86_64 + macOS tar.xz (nested cargo-dist paths)",
-      "note": "multi-OS upstream assets (.tar.xz + .zip)",
+      "note": "multi-OS upstream assets (.tar.xz + .zip); Windows lifecycle-prove failed on Nu 0.107.0 (protocol decode); marked provisional 2026-11-11",
       "repo": "https://github.com/Trivernis/nu-plugin-dialog",
       "spec": "specs/Trivernis-nu-plugin-dialog-0.1.0.json"
     },
@@ -477,6 +477,8 @@
       "repo": "https://github.com/amtoine/nu-git-manager",
       "spec": "specs/amtoine-nu-git-manager-0.8.0.json",
       "pr": 12,
+      "note": "archived upstream mirror; deprecated; yanked (nu-parser-incompatible); provisional and production-excluded; no maintained public fork or successor found; watch-off; maintained alternative: fj0r/git.nu",
+      "alternative": "fj0r/git.nu",
       "outreach": {
         "upstream_repo": "amtoine/nu-git-manager",
         "search_terms": [
@@ -485,7 +487,7 @@
           "mirror",
           "byte-stable"
         ],
-        "blocked": "repo archived (read-only); cannot open issues or comments"
+        "blocked": "repo archived (read-only); no public fork found; watch issue #109 closed as not planned; cannot open issues or comments"
       }
     },
     {
@@ -625,6 +627,8 @@
       "source": "tag 0.7.0",
       "repo": "https://github.com/amtoine/nu-git-manager",
       "spec": "specs/amtoine-nu-git-manager-sugar-0.7.0.json",
+      "note": "archived upstream mirror; deprecated; yanked (nu-parser-incompatible); provisional and production-excluded; no maintained public fork or successor found; watch-off; maintained alternative: fj0r/git.nu",
+      "alternative": "fj0r/git.nu",
       "outreach": {
         "upstream_repo": "amtoine/nu-git-manager",
         "search_terms": [
@@ -633,8 +637,10 @@
           "mirror",
           "byte-stable"
         ],
-        "blocked": "repo archived (read-only); cannot open issues or comments"
-      }
+        "blocked": "repo archived (read-only); no public fork found; watch issue #109 closed as not planned; cannot open issues or comments"
+      },
+      "watch_issue": "https://github.com/numan-cli/numan-registry/issues/109",
+      "watch_status": "closed-not-planned"
     },
     {
       "id": "nushell/git-completions",
@@ -1046,6 +1052,18 @@
     }
   ],
   "changelog": [
+    {
+      "date": "2026-11-12",
+      "change": "Marked amtoine/nu-git-manager@0.8.0 and nu-git-manager-sugar@0.7.0 deprecated with the maintained alternative fj0r/git.nu; both remain yanked (nu-parser-incompatible), watch-off, and production-excluded."
+    },
+    {
+      "date": "2026-11-12",
+      "change": "Recorded the archived-upstream decision for amtoine/nu-git-manager and nu-git-manager-sugar: both remain watch-off, yanked (nu-parser-incompatible), and production-excluded; maintained alternative fj0r/git.nu. Closed stale watch issue #109 as not planned. Evidence: docs/evidence/2026-11-11-reprove.md and docs/evidence/2026-11-11-archive-audit.md."
+    },
+    {
+      "date": "2026-11-11",
+      "change": "Revisited the archived amtoine/nu-git-manager modules: GitHub network/forks pages and API show no public fork (0 forks); GitLab API returns [] for both exact names (broader terms only unrelated projects); Codeberg's Gitea API returned HTTP 429 after 0/2/5/10s backoff while its web search returned HTTP 200 with zero repository links and direct paths returned 404; SourceHut project/search endpoints returned HTTP 418 goaway challenges, git.sr.ht's home was generic, and guessed paths returned 404; nupm still points only at the archived upstream through 0.7.0. Marked both entries archived/watch-off, kept them provisional and production-excluded, recorded fj0r/git.nu as the maintained alternative, and marked the watch for closure with no successor expected; the open watch issue was closed on 2026-11-12. Evidence: docs/evidence/2026-11-11-archive-audit.md."
+    },
     {
       "date": "2026-10-25",
       "change": "SuaveIV/nu_plugin_audio@0.2.13 (Nu >=0.116 <0.117): full-platform upstream assets; lifecycle-prove OK on Nu 0.116.1. Retain 0.2.10 for Nu 0.114."

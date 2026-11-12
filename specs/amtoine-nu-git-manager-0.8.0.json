@@ -1,13 +1,17 @@
 {
   "owner": "amtoine",
   "name": "nu-git-manager",
-  "description": "Git repository management tools for Nushell (prompts, status, utilities). Artifact is a registry-hosted mirror of upstream tag 0.8.0 (pkgs/nu-git-manager); upstream has no uploaded release zip.",
+  "description": "Deprecated: archived upstream mirror of tag 0.8.0 (pkgs/nu-git-manager); no maintained fork found. Maintained alternative: fj0r/git.nu. Upstream has no uploaded release zip.",
   "repo": "https://github.com/amtoine/nu-git-manager",
   "type": "module",
-  "tags": ["module", "git", "mirror"],
+  "tags": ["module", "git", "mirror", "archived", "deprecated", "watch-off", "alternative:fj0r/git.nu"],
   "version": "0.8.0",
   "nu_version": ">=0.92.0",
   "verified_with": ["0.113.1"],
+  "yanked": {
+    "reason_code": "nu-parser-incompatible",
+    "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-reprove.md"
+  },
   "artifact": {
     "kind": "archive",
     "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-amtoine-nu-git-manager-0.8.0/nu-git-manager-0.8.0.zip",
