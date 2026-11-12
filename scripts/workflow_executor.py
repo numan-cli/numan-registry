@@ -436,6 +436,15 @@ def run_plan_scaffold(
         return outputs, ctx
 
 
+def _python_version_check(executable: str, version: str) -> str:
+    """Accept the requested Python series or one of its patch releases."""
+    pattern = re.escape(version)
+    return (
+        f"{executable} --version 2>&1 | "
+        f"grep -Eq '^Python {pattern}(\\.[0-9]+)?$'"
+    )
+
+
 def action_commands(action: str, with_values: dict, ctx: dict) -> list[str]:
     """Translate a supported GitHub action into shell commands."""
     action_name = action.split("@", 1)[0]
@@ -456,10 +465,10 @@ def action_commands(action: str, with_values: dict, ctx: dict) -> list[str]:
             "export DEBIAN_FRONTEND=noninteractive",
             "apt-get -o Acquire::ForceIPv4=true update -qq",
             "apt-get -o Acquire::ForceIPv4=true install -y -qq --no-install-recommends python3 python3-venv",
-            f"test \"$(python3 --version 2>&1)\" = 'Python {version}'",
+            _python_version_check("python3", version),
             "python3 -m venv /opt/venv",
             "export PATH=\"/opt/venv/bin:${PATH}\"",
-            f"test \"$(python --version 2>&1)\" = 'Python {version}'",
+            _python_version_check("python", version),
         ]
     if action_name == "dtolnay/rust-toolchain":
         toolchain = with_values.get("toolchain", "")
