@@ -475,6 +475,57 @@ class LifecycleEvidenceErrorsTests(unittest.TestCase):
         self.assertEqual(self.validate.lifecycle_evidence_errors(index), [])
 
 
+class LifecycleEvidenceYankedTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.validate = VALIDATE
+
+    def test_yanked_version_without_evidence_is_terminal(self):
+        index = {
+            "packages": [
+                {
+                    "id": {"owner": "acme", "name": "pkg"},
+                    "type": "plugin",
+                    "versions": [
+                        {
+                            "version": "1.0.0",
+                            "nu_version": ">=0.78.0 <0.79.0",
+                            "yanked": {
+                                "reason_code": "nu-plugin-protocol-mismatch",
+                                "evidence_url": "https://example.com/evidence",
+                            },
+                        }
+                    ],
+                }
+            ]
+        }
+        self.assertEqual(self.validate.lifecycle_evidence_errors(index), [])
+
+    def test_yanked_version_with_incompatible_evidence_still_fails(self):
+        index = {
+            "packages": [
+                {
+                    "id": {"owner": "acme", "name": "pkg"},
+                    "type": "plugin",
+                    "versions": [
+                        {
+                            "version": "1.0.0",
+                            "nu_version": ">=0.78.0 <0.79.0",
+                            "verified_with": ["0.107.0"],
+                            "yanked": {
+                                "reason_code": "nu-plugin-protocol-mismatch",
+                                "evidence_url": "https://example.com/evidence",
+                            },
+                        }
+                    ],
+                }
+            ]
+        }
+        errors = self.validate.lifecycle_evidence_errors(index)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("0.107.0", errors[0])
+
+
 class CollectArtifactUrlsTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

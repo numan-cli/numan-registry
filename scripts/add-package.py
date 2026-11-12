@@ -452,7 +452,7 @@ def validate_spec(spec, *, allow_provisional=False):
         sys.exit(1)
     validate_fork_identity(spec)
     validate_provenance(spec)
-    if "yanked" in spec:
+    if "yanked" in spec and "verified_with" not in spec:
         return
     if spec["type"] == "plugin" or "activation" in spec:
         evidence = spec.get("verified_with")

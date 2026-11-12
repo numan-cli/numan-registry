@@ -32,19 +32,23 @@ independently verify the claim.
 
 ## Yank or revoke a package version
 
-Registry schema v1 has no `yanked` flag. A yank is therefore a reviewed,
-signed catalog revision that removes the affected version (or package) from
-future resolution and names the reason in the incident advisory.
+Registry schema v1 uses an optional version-level `yanked` object. A yank is a
+reviewed, signed catalog revision that adds `{reason_code, evidence_url}` to the
+affected version while retaining the artifact and hashes for audit.
 
-1. Remove only the affected version or package from `registry/index.json`.
+1. Add `yanked` to the affected version in `registry/index.json` and its source
+   spec; keep the version and artifact so the withdrawal remains auditable.
 2. Run the normal schema, artifact-digest, and Numan-parser checks.
 3. Merge the reviewed change to `main` and dispatch the protected production
    workflow with the incident reference as its reason.
 4. Verify the published index and detached signature before announcing the
    yank.
 
-Existing lockfiles remain immutable evidence of an earlier selection. A yank
-prevents new resolution after `numan registry sync`; it does not remotely
+Removing a version is reserved for cases where it must not remain in the
+catalog at all, such as a legal removal or malformed metadata. Existing
+lockfiles remain immutable evidence of an earlier selection. Production
+materialization excludes yanked versions, so clients that have not adopted the
+field are protected after their next registry sync. A yank does not remotely
 delete a user's payload or rewrite their lockfile.
 
 ## Compromised or incorrect artifact

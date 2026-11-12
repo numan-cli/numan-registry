@@ -62,7 +62,7 @@
       "type": "plugin",
       "version": "0.1.0",
       "platforms": "Windows zip; Linux x86_64 + macOS tar.xz (nested cargo-dist paths)",
-      "note": "multi-OS upstream assets (.tar.xz + .zip); Windows lifecycle-prove failed on Nu 0.107.0 (protocol decode); marked provisional 2026-11-11",
+      "note": "multi-OS upstream assets (.tar.xz + .zip); Windows lifecycle-prove failed on Nu 0.107.0 (protocol decode); terminal yanked 2026-11-12 (nu-plugin-protocol-mismatch); provisional history retained",
       "repo": "https://github.com/Trivernis/nu-plugin-dialog",
       "spec": "specs/Trivernis-nu-plugin-dialog-0.1.0.json"
     },
@@ -477,8 +477,10 @@
       "repo": "https://github.com/amtoine/nu-git-manager",
       "spec": "specs/amtoine-nu-git-manager-0.8.0.json",
       "pr": 12,
-      "note": "archived upstream mirror; deprecated; yanked (nu-parser-incompatible); provisional and production-excluded; no maintained public fork or successor found; watch-off; maintained alternative: fj0r/git.nu",
+      "note": "archived upstream mirror; deprecated; yanked (nu-parser-incompatible); provisional and production-excluded; no maintained public fork or successor found in the sources checked; watch-off; maintained alternative: fj0r/git.nu",
       "alternative": "fj0r/git.nu",
+      "watch_issue": "https://github.com/numan-cli/numan-registry/issues/109",
+      "watch_status": "closed-not-planned",
       "outreach": {
         "upstream_repo": "amtoine/nu-git-manager",
         "search_terms": [
@@ -627,7 +629,7 @@
       "source": "tag 0.7.0",
       "repo": "https://github.com/amtoine/nu-git-manager",
       "spec": "specs/amtoine-nu-git-manager-sugar-0.7.0.json",
-      "note": "archived upstream mirror; deprecated; yanked (nu-parser-incompatible); provisional and production-excluded; no maintained public fork or successor found; watch-off; maintained alternative: fj0r/git.nu",
+      "note": "archived upstream mirror; deprecated; yanked (nu-parser-incompatible); provisional and production-excluded; no maintained public fork or successor found in the sources checked; watch-off; maintained alternative: fj0r/git.nu",
       "alternative": "fj0r/git.nu",
       "outreach": {
         "upstream_repo": "amtoine/nu-git-manager",
@@ -1055,6 +1057,10 @@
     {
       "date": "2026-11-12",
       "change": "Marked amtoine/nu-git-manager@0.8.0 and nu-git-manager-sugar@0.7.0 deprecated with the maintained alternative fj0r/git.nu; both remain yanked (nu-parser-incompatible), watch-off, and production-excluded."
+    },
+    {
+      "date": "2026-11-12",
+      "change": "Marked Trivernis/nu-plugin-dialog@0.1.0 terminal yanked (nu-plugin-protocol-mismatch); removed stale verified_with 0.107.0 and recorded the failed 0.107.0 probe in docs/evidence/2026-11-11-reprove.md."
     },
     {
       "date": "2026-11-12",

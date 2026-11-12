@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-12T04:26:17Z",
+  "updated_at": "2026-11-12T04:42:00Z",
   "registry_revision": "seed-2026-07-02",
   "packages": [
     {
@@ -390,7 +390,7 @@
         "owner": "amtoine",
         "name": "nu-git-manager"
       },
-      "description": "Deprecated: archived upstream mirror of tag 0.8.0 (pkgs/nu-git-manager); no maintained fork found. Maintained alternative: fj0r/git.nu. Upstream has no uploaded release zip.",
+      "description": "Deprecated: archived upstream mirror of tag 0.8.0 (pkgs/nu-git-manager); no maintained fork found in the sources checked. Maintained alternative: fj0r/git.nu. Upstream has no uploaded release zip.",
       "repo": "https://github.com/amtoine/nu-git-manager",
       "type": "module",
       "tags": [
@@ -412,9 +412,6 @@
             "reason_code": "nu-parser-incompatible",
             "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-reprove.md"
           },
-          "verified_with": [
-            "0.113.1"
-          ],
           "artifact": {
             "kind": "archive",
             "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-amtoine-nu-git-manager-0.8.0/nu-git-manager-0.8.0.zip",
@@ -585,7 +582,7 @@
         "owner": "nushell",
         "name": "custom-completions"
       },
-      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, \u2026). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Declares completion targets for its curated custom-completions files for activation with `numan activate`.",
+      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, …). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Declares completion targets for its curated custom-completions files for activation with `numan activate`.",
       "repo": "https://github.com/nushell/nu_scripts",
       "type": "completion",
       "tags": [
@@ -906,7 +903,7 @@
         "owner": "amtoine",
         "name": "nu-git-manager-sugar"
       },
-      "description": "Deprecated: archived upstream mirror of tag 0.7.0 (pkgs/nu-git-manager-sugar); no maintained fork found. Maintained alternative: fj0r/git.nu.",
+      "description": "Deprecated: archived upstream mirror of tag 0.7.0 (pkgs/nu-git-manager-sugar); no maintained fork found in the sources checked. Maintained alternative: fj0r/git.nu.",
       "repo": "https://github.com/amtoine/nu-git-manager",
       "type": "module",
       "tags": [
@@ -929,9 +926,6 @@
             "reason_code": "nu-parser-incompatible",
             "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-reprove.md"
           },
-          "verified_with": [
-            "0.113.1"
-          ],
           "artifact": {
             "kind": "archive",
             "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-amtoine-nu-git-manager-sugar-0.7.0/nu-git-manager-sugar-0.7.0.zip",

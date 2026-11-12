@@ -98,10 +98,11 @@ goaway body are the block evidence, not a “no results” claim.
 ## Conclusion
 
 - GitHub has no fork behind the archived repository; the “1 fork” label is stale.
-- GitLab, Codeberg web search, and nupm contain no maintained successor.
+- GitLab, Codeberg web search, and nupm contain no maintained successor in
+  the sources checked.
 - Codeberg’s API and SourceHut’s search endpoint are blocked (429 and 418);
-  SourceHut direct paths are 404.
-- No candidate exists to evaluate for activation contract, release artifacts,
+  SourceHut direct paths are 404. These sources remain unenumerated.
+- No candidate was found in the sources checked to evaluate for activation contract, release artifacts,
   lifecycle proofs, or upstream provenance.
 - Registry state remains: both entries `archived` + `deprecated` + `watch-off` +
   `alternative:fj0r/git.nu`, `evidence_tier: provisional`, production-excluded.

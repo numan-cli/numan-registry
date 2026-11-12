@@ -23,7 +23,7 @@ From the committed index (44 packages):
 
 Notes on non-plugins already present:
 
-- **Modules:** `bash-env-nushell`, `nutest`, `dotnu`, `numd`, `nu-hooks`, `nu-git-manager` (+ sugar; deprecated, archived upstream, no maintained fork; `fj0r/git.nu` is the maintained alternative).
+- **Modules:** `bash-env-nushell`, `nutest`, `dotnu`, `numd`, `nu-hooks`, `nu-git-manager` (+ sugar; deprecated, archived upstream, no maintained fork found in the searched sources (SourceHut search blocked); `fj0r/git.nu` is the maintained alternative).
 - **Completions:** `nushell/custom-completions` (whole tree snapshot), `nushell/git-completions` (git slice), plus cargo / npm / make / winget splits (Wave 3B). All install-only mirrors at commit `f04cb44`.
 - **Scripts:** `SuaveIV/nu_script_wttr`, `nu_script_gh_status`, `nu_script_hnews`, `Sanceilaks/nufetch`, and `KamilKleina/git-aliases` (all install-only mirrors).
 
