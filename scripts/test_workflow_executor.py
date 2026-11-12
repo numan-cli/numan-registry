@@ -91,6 +91,17 @@ class ActionTests(unittest.TestCase):
             any("/src/requirements" in command for command in commands)
         )
 
+    def test_setup_python_accepts_matching_patch_version(self):
+        commands = workflow_executor.action_commands(
+            "actions/setup-python@example",
+            {"python-version": "3.12"},
+            context(),
+        )
+        joined = "\n".join(commands)
+        self.assertIn("grep -Eq '^Python 3\\.12(\\.[0-9]+)?$'", joined)
+        self.assertIn("python3 --version", joined)
+        self.assertIn("python --version", joined)
+
     def test_upload_artifact_honors_warn_mode(self):
         commands = workflow_executor.action_commands(
             "actions/upload-artifact@example",
