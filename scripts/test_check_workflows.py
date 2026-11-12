@@ -174,6 +174,48 @@ class CheckWorkflowsTests(unittest.TestCase):
         self.assertIn("c.yml", errors[0])
 
 
+class PlatformCoverageAuditWorkflowTests(unittest.TestCase):
+    def setUp(self):
+        self.root = Path(check_workflows.__file__).resolve().parent.parent
+        self.path = (
+            self.root
+            / ".github"
+            / "workflows"
+            / "platform-coverage-audit.yml"
+        )
+
+    def test_workflow_parses(self):
+        self.assertEqual(
+            check_workflows.validate_workflows(self.root, files=[self.path]), []
+        )
+
+    def test_workflow_is_index_scoped_and_read_only(self):
+        doc = check_workflows.load_workflow(self.path.read_text(encoding="utf-8"))
+        self.assertIn("registry/index.json", doc["on"]["pull_request"]["paths"])
+        self.assertIn("registry/index.json", doc["on"]["push"]["paths"])
+        self.assertTrue((self.root / "registry/index.json").is_file())
+        self.assertEqual(doc["permissions"], {"contents": "read"})
+        self.assertEqual(doc["on"]["workflow_dispatch"]["inputs"]["base_ref"]["type"], "string")
+
+    def test_workflow_checks_out_shallow_and_resolves_an_explicit_base(self):
+        doc = check_workflows.load_workflow(self.path.read_text(encoding="utf-8"))
+        checkout = doc["jobs"]["audit"]["steps"][0]
+        self.assertEqual(checkout["with"]["fetch-depth"], 1)
+        self.assertEqual(
+            doc["jobs"]["audit"]["steps"][2]["run"],
+            "python scripts/resolve_coverage_base.py",
+        )
+
+    def test_workflow_runs_the_audit_and_publishes_reports(self):
+        text = self.path.read_text(encoding="utf-8")
+        self.assertIn("scripts/audit_platform_coverage.py", text)
+        self.assertIn("scripts/resolve_coverage_base.py", text)
+        self.assertIn("--base-index", text)
+        self.assertIn("--base-missing", text)
+        self.assertIn("GITHUB_STEP_SUMMARY", text)
+        self.assertIn("actions/upload-artifact@", text)
+
+
 class PlatformGapWorkflowTests(unittest.TestCase):
     def setUp(self):
         self.root = Path(check_workflows.__file__).resolve().parent.parent
