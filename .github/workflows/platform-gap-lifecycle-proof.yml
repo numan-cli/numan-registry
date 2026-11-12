@@ -1,0 +1,158 @@
+name: Platform-gap lifecycle proof
+
+# Permanent entry point for a package that needs real-Nu lifecycle proof on
+# one or more supported targets it does not yet cover. This is intentionally a
+# thin wrapper around lifecycle-proof.yml: the reusable runner owns the plan,
+# pinned tool acquisition, per-target logs, and proof records. This workflow
+# does not sign, publish, or mutate the registry.
+#
+# Use workflow_dispatch from the Actions UI, or call it from another workflow
+# in this repository:
+#
+#   jobs:
+#     prove-gap:
+#       uses: ./.github/workflows/platform-gap-lifecycle-proof.yml
+#       with:
+#         package: owner/name
+#         package_version: 1.2.3
+#         nu_version: 0.116.1
+#         targets: '["linux/x86_64","linux/aarch64","windows/x86_64"]'
+#
+# The wrapper is intentionally same-repository only. GitHub resolves a local
+# reusable-workflow reference against the caller's checkout, so this only
+# works when the caller is in this repository. That is deliberate: a local
+# reference keeps the runner on the same commit as the caller, which lets pull
+# requests exercise the workflow they change instead of silently running a
+# mutable @main version.
+#
+# Keep artifact_prefix and artifact_summary_prefix distinct when launching
+# parallel calls for the same ref.
+
+on:
+  workflow_call:
+    inputs:
+      package:
+        description: Package id (owner/name)
+        required: true
+        type: string
+      package_version:
+        description: Exact package version
+        required: true
+        type: string
+      nu_version:
+        description: Exact Nu version
+        required: true
+        type: string
+      targets:
+        description: JSON array of supported os/arch targets
+        required: true
+        type: string
+      activation_kind:
+        description: Optional activation kind; inferred when empty
+        required: false
+        type: string
+        default: ""
+      commands:
+        description: Optional JSON array of lifecycle commands; derived from kind when empty
+        required: false
+        type: string
+        default: ""
+      numan_version:
+        description: Numan release tag without the v prefix
+        required: false
+        type: string
+        default: 0.4.0
+      numan_repo:
+        description: Numan source repository
+        required: false
+        type: string
+        default: numan-cli/numan
+      artifact_prefix:
+        description: Artifact name prefix; keep parallel proof calls distinct
+        required: false
+        type: string
+        default: platform-gap
+      artifact_summary_prefix:
+        description: Summary artifact name
+        required: false
+        type: string
+        default: platform-gap-proofs
+    outputs:
+      proofs:
+        description: JSON array of proof records emitted by the run
+        value: ${{ jobs.prove.outputs.proofs }}
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Package id (owner/name)
+        required: true
+        type: string
+      package_version:
+        description: Exact package version
+        required: true
+        type: string
+      nu_version:
+        description: Exact Nu version
+        required: true
+        type: string
+      targets:
+        description: JSON array of supported os/arch targets
+        required: true
+        type: string
+        default: '["linux/x86_64","linux/aarch64","macos/x86_64","macos/aarch64","windows/x86_64"]'
+      activation_kind:
+        description: Optional activation kind; inferred when empty
+        required: false
+        type: string
+        default: ""
+      commands:
+        description: Optional JSON array of lifecycle commands; derived from kind when empty
+        required: false
+        type: string
+        default: ""
+      numan_version:
+        description: Numan release tag without the v prefix
+        required: false
+        type: string
+        default: 0.4.0
+      numan_repo:
+        description: Numan source repository
+        required: false
+        type: string
+        default: numan-cli/numan
+      artifact_prefix:
+        description: Artifact name prefix; keep parallel proof calls distinct
+        required: false
+        type: string
+        default: platform-gap
+      artifact_summary_prefix:
+        description: Summary artifact name
+        required: false
+        type: string
+        default: platform-gap-proofs
+
+permissions:
+  contents: read
+
+concurrency:
+  group: platform-gap-lifecycle-${{ inputs.package }}-${{ inputs.package_version }}-${{ inputs.nu_version }}-${{ inputs.artifact_prefix }}
+  cancel-in-progress: false
+
+jobs:
+  prove:
+    name: ${{ inputs.package }}@${{ inputs.package_version }}
+    # Local reference: the runner is always this repository at this commit.
+    # Do not replace this with an @main reference; that would make a pull
+    # request test the default branch instead of the workflow it changes.
+    uses: ./.github/workflows/lifecycle-proof.yml
+    with:
+      package: ${{ inputs.package }}
+      package_version: ${{ inputs.package_version }}
+      nu_version: ${{ inputs.nu_version }}
+      targets: ${{ inputs.targets }}
+      activation_kind: ${{ inputs.activation_kind }}
+      commands: ${{ inputs.commands }}
+      numan_version: ${{ inputs.numan_version }}
+      numan_repo: ${{ inputs.numan_repo }}
+      artifact_prefix: ${{ inputs.artifact_prefix }}
+      artifact_summary_prefix: ${{ inputs.artifact_summary_prefix }}

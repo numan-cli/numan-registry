@@ -45,6 +45,14 @@ TARGETS = {
         "archive": "tar.gz",
         "numan_asset": "aarch64-apple-darwin",
     },
+    "windows/x86_64": {
+        "os": "windows",
+        "arch": "x86_64",
+        "runner": "windows-latest",
+        "triple": "x86_64-pc-windows-msvc",
+        "archive": "zip",
+        "numan_asset": "x86_64-pc-windows-msvc",
+    },
 }
 
 STANDARD_COMMANDS = [

@@ -23,6 +23,16 @@ on:
         required: false
         type: string
         default: '["linux/aarch64","macos/aarch64"]'
+      artifact_prefix:
+        description: Artifact name prefix; keep parallel proof calls distinct
+        required: false
+        type: string
+        default: lifecycle-proof
+      artifact_summary_prefix:
+        description: Summary artifact name; defaults to the historical lifecycle-proofs name
+        required: false
+        type: string
+        default: lifecycle-proofs
       activation_kind:
         description: Optional activation kind; inferred when empty
         required: false
@@ -69,6 +79,16 @@ on:
         required: true
         default: '["linux/aarch64","macos/aarch64"]'
         type: string
+      artifact_prefix:
+        description: Artifact name prefix; keep parallel proof calls distinct
+        required: false
+        default: lifecycle-proof
+        type: string
+      artifact_summary_prefix:
+        description: Summary artifact name; defaults to the historical lifecycle-proofs name
+        required: false
+        default: lifecycle-proofs
+        type: string
       activation_kind:
         description: Optional activation kind; inferred when empty
         required: false
@@ -92,7 +112,8 @@ on:
   pull_request:
     paths:
       - ".github/workflows/lifecycle-proof.yml"
-      - "scripts/lifecycle-proof.py"
+      - "requirements/lifecycle-proof.txt"
+      - "scripts/lifecycle-prove.py"
       - "scripts/lifecycle_proof_plan.py"
       - "scripts/lifecycle_proof_record.py"
       - "scripts/lifecycle_proof_collect.py"
@@ -102,7 +123,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: lifecycle-proof-${{ github.ref }}
+  group: lifecycle-proof-${{ github.ref }}-${{ inputs.artifact_prefix || github.event.inputs.artifact_prefix || 'lifecycle-proof' }}
   cancel-in-progress: false
 
 env:
@@ -110,6 +131,8 @@ env:
   PROOF_PACKAGE_VERSION: ${{ inputs.package_version || github.event.inputs.package_version || '0.1.9' }}
   PROOF_NU_VERSION: ${{ inputs.nu_version || github.event.inputs.nu_version || '0.116.1' }}
   PROOF_TARGETS: ${{ inputs.targets || github.event.inputs.targets || '["linux/aarch64","macos/aarch64"]' }}
+  PROOF_ARTIFACT_PREFIX: ${{ inputs.artifact_prefix || github.event.inputs.artifact_prefix || 'lifecycle-proof' }}
+  PROOF_SUMMARY_ARTIFACT: ${{ inputs.artifact_summary_prefix || github.event.inputs.artifact_summary_prefix || 'lifecycle-proofs' }}
   PROOF_ACTIVATION_KIND: ${{ inputs.activation_kind || github.event.inputs.activation_kind || '' }}
   PROOF_COMMANDS: ${{ inputs.commands || github.event.inputs.commands || '' }}
   PROOF_NUMAN_VERSION: ${{ inputs.numan_version || github.event.inputs.numan_version || '0.4.0' }}
@@ -134,7 +157,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
-          python-version: "3.12"
+          python-version: "3.12.3"
       - name: Resolve package, commands, and target matrix
         id: plan
         shell: bash
@@ -181,15 +204,195 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
-          python-version: "3.12"
-      - uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable
+          python-version: "3.12.3"
+      - name: Install system proof dependencies
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if command -v sudo >/dev/null 2>&1; then
+            sudo DEBIAN_FRONTEND=noninteractive apt-get update
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates curl xz-utils git
+          else
+            DEBIAN_FRONTEND=noninteractive apt-get update
+            DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates curl xz-utils git
+          fi
+      - uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # 1.97.1
         with:
-          toolchain: stable
+          toolchain: 1.97.1
       - name: Install proof dependencies
-        run: python -m pip install --disable-pip-version-check cryptography jsonschema
+        run: python -m pip install --disable-pip-version-check --require-hashes -r requirements/lifecycle-proof.txt
+
+      - name: Check out Numan source (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ env.NUMAN_REPO }}
+          ref: ${{ format('v{0}', env.NUMAN_VERSION) }}
+          path: _numan
+          persist-credentials: false
+
+      - name: Build Numan (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        working-directory: _numan
+        run: |
+          $ErrorActionPreference = "Stop"
+          cargo build --locked --release
+          if ($LASTEXITCODE -ne 0) {
+            throw "cargo build failed with exit code $LASTEXITCODE"
+          }
+          $numan = Join-Path $env:GITHUB_WORKSPACE "_numan\target\release\numan.exe"
+          if (-not (Test-Path -LiteralPath $numan)) {
+            throw "Numan executable not found at $numan"
+          }
+          $sha = (Get-FileHash -LiteralPath $numan -Algorithm SHA256).Hash.ToLowerInvariant()
+          "NUMAN_PATH=$numan" | Add-Content -Path $env:GITHUB_ENV -Encoding utf8
+          "NUMAN_SOURCE=source-build" | Add-Content -Path $env:GITHUB_ENV -Encoding utf8
+          "NUMAN_ASSET_URL=" | Add-Content -Path $env:GITHUB_ENV -Encoding utf8
+          "NUMAN_SHA256=$sha" | Add-Content -Path $env:GITHUB_ENV -Encoding utf8
+          (Split-Path -Parent $numan) | Add-Content -Path $env:GITHUB_PATH -Encoding utf8
+          & $numan --version
+
+      - name: Install Nushell (Windows)
+        if: runner.os == 'Windows'
+        uses: hustcer/setup-nu@1b8faed9a8ff673c8ce0beae243e0b72d0787241 # v3
+        with:
+          version: ${{ env.NU_VERSION }}
+
+      - name: Resolve and verify Nu (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $command = Get-Command nu -CommandType Application -ErrorAction Stop | Select-Object -First 1
+          if ($null -eq $command) {
+            throw "Nu was not installed by setup-nu"
+          }
+          $nu = $command.Source
+          if ([IO.Path]::GetExtension($nu).ToLowerInvariant() -ne ".exe") {
+            throw "Expected a real nu.exe on Windows, found $nu"
+          }
+          $version = (& $nu --version).Trim()
+          if ($version -ne $env:NU_VERSION) {
+            throw "Expected Nushell $env:NU_VERSION, found '$version'"
+          }
+          $sha = (Get-FileHash -LiteralPath $nu -Algorithm SHA256).Hash.ToLowerInvariant()
+          $archiveUrl = "https://github.com/nushell/nushell/releases/download/{0}/nu-{0}-{1}.zip" -f $env:NU_VERSION, $env:NU_ASSET
+          "NU_PATH=$nu" | Add-Content -Path $env:GITHUB_ENV -Encoding utf8
+          "NU_ARCHIVE_URL=$archiveUrl" | Add-Content -Path $env:GITHUB_ENV -Encoding utf8
+          "NU_ARCHIVE_SHA256=" | Add-Content -Path $env:GITHUB_ENV -Encoding utf8
+          "NU_SHA256=$sha" | Add-Content -Path $env:GITHUB_ENV -Encoding utf8
+          & $nu --version
+
+      - name: Run lifecycle proof (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $logDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
+          New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+          $log = Join-Path $logDir $env:LOG_NAME
+          $utf8 = New-Object System.Text.UTF8Encoding($false)
+          function Write-Log([string]$Message) {
+            Write-Host $Message
+            [System.IO.File]::AppendAllText($log, $Message + "`n", $utf8)
+          }
+          $candidate = Join-Path $env:GITHUB_WORKSPACE "registry/index.json"
+          $candidateSha = (Get-FileHash -LiteralPath $candidate -Algorithm SHA256).Hash.ToLowerInvariant()
+          $started = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss'Z'")
+          $runnerImage = "$env:ImageOS $env:ImageVersion".Trim()
+          if (-not $runnerImage) { $runnerImage = "windows-latest" }
+          $numanVersion = (& $env:NUMAN_PATH --version).Trim()
+          $nuVersion = (& $env:NU_PATH --version).Trim()
+          Write-Log "package=$env:PACKAGE"
+          Write-Log "package_version=$env:PACKAGE_VERSION"
+          Write-Log "nu_version=$env:NU_VERSION"
+          Write-Log "started_at=$started"
+          Write-Log "platform=$env:TARGET_OS/$env:TARGET_ARCH"
+          Write-Log "runner_image=$runnerImage"
+          Write-Log "uname=$([System.Environment]::OSVersion.VersionString)"
+          Write-Log "numan_version=$numanVersion"
+          Write-Log "numan_source=$env:NUMAN_SOURCE"
+          Write-Log "numan_asset_url=$env:NUMAN_ASSET_URL"
+          Write-Log "numan_sha256=$env:NUMAN_SHA256"
+          Write-Log "candidate_index_sha256=$candidateSha"
+          Write-Log "nu_archive_url=$env:NU_ARCHIVE_URL"
+          Write-Log "nu_archive_sha256=$env:NU_ARCHIVE_SHA256"
+          Write-Log "nu_exe_sha256=$env:NU_SHA256"
+          Write-Log "commands=$env:COMMANDS_JSON"
+          Write-Log "command: lifecycle-prove --package $env:PACKAGE --package-version $env:PACKAGE_VERSION --candidate-index registry/index.json --commands-json $env:COMMANDS_JSON --numan $env:NUMAN_PATH --nu $env:NU_PATH"
+
+          $output = & python scripts/lifecycle-prove.py `
+            --package $env:PACKAGE `
+            --package-version $env:PACKAGE_VERSION `
+            --candidate-index registry/index.json `
+            --commands-json $env:COMMANDS_JSON `
+            --numan $env:NUMAN_PATH `
+            --nu $env:NU_PATH 2>&1
+          $rc = $LASTEXITCODE
+          foreach ($line in $output) { Write-Log "$line" }
+          $finished = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss'Z'")
+          Write-Log "finished_at=$finished"
+          Write-Log "exit_code=$rc"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "proof_exit=$rc" -Encoding utf8
+          if ($rc -ne 0) {
+            throw "lifecycle-prove failed for $env:PACKAGE (exit $rc)"
+          }
+
+      - name: Emit index proof record (Windows)
+        if: always() && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $artifacts = Join-Path $env:GITHUB_WORKSPACE "artifacts"
+          New-Item -ItemType Directory -Force -Path $artifacts | Out-Null
+          $proof = Join-Path $artifacts "proof.json"
+          python scripts/lifecycle_proof_record.py `
+            --log (Join-Path $artifacts $env:LOG_NAME) `
+            --commands-json $env:COMMANDS_JSON `
+            --output $proof `
+            --package $env:PACKAGE `
+            --package-version $env:PACKAGE_VERSION `
+            --nu-version $env:NU_VERSION
+          if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $proof)) {
+            throw "could not emit proof record: $proof"
+          }
+
+      - name: Verify proof record (Windows)
+        if: always() && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $proofPath = Join-Path $env:GITHUB_WORKSPACE "artifacts/proof.json"
+          if (-not (Test-Path -LiteralPath $proofPath) -or (Get-Item -LiteralPath $proofPath).Length -eq 0) {
+            throw "proof record missing or empty: $proofPath"
+          }
+          $proof = Get-Content -LiteralPath $proofPath -Raw | ConvertFrom-Json
+          $required = @("os", "arch", "nu_version", "result", "commands")
+          $names = @($proof.PSObject.Properties.Name)
+          foreach ($key in $required) {
+            if ($names -notcontains $key) {
+              throw "proof record missing ${key}: $proofPath"
+            }
+          }
+          if ($proof.os -ne $env:TARGET_OS -or $proof.arch -ne $env:TARGET_ARCH) {
+            throw "proof record is $($proof.os)/$($proof.arch), expected $env:TARGET_OS/$env:TARGET_ARCH"
+          }
+          if ($proof.nu_version -ne $env:NU_VERSION) {
+            throw "proof record Nu version $($proof.nu_version) does not match $env:NU_VERSION"
+          }
+          if ($proof.result -ne "passed") {
+            throw "proof record did not pass: $proofPath"
+          }
+          if (@($proof.commands).Count -eq 0) {
+            throw "proof record has no lifecycle commands: $proofPath"
+          }
+          Write-Host "proof record verified: $proofPath"
 
       - name: Resolve Numan (release asset or source fallback)
         id: numan
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           set -euo pipefail
@@ -238,6 +441,7 @@ jobs:
 
       - name: Download and verify Nu
         id: nu
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           set -euo pipefail
@@ -276,6 +480,7 @@ jobs:
 
       - name: Run lifecycle proof
         id: proof
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           set -euo pipefail
@@ -330,7 +535,7 @@ jobs:
           exit "${rc}"
 
       - name: Emit index proof record
-        if: always()
+        if: always() && runner.os != 'Windows'
         shell: bash
         run: |
           python scripts/lifecycle_proof_record.py \
@@ -341,10 +546,49 @@ jobs:
             --package-version "${PACKAGE_VERSION}" \
             --nu-version "${NU_VERSION}"
 
+      - name: Verify proof record
+        if: always() && runner.os != 'Windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          proof="artifacts/proof.json"
+          if [ ! -s "${proof}" ]; then
+            echo "error: proof record missing or empty: ${proof}" >&2
+            exit 1
+          fi
+          python - "${proof}" "${NU_VERSION}" "${TARGET_OS}" "${TARGET_ARCH}" <<'PY'
+          import json
+          import sys
+
+          path, nu_version, os_name, arch = sys.argv[1:]
+          with open(path, encoding="utf-8") as handle:
+              proof = json.load(handle)
+          if not isinstance(proof, dict):
+              raise SystemExit(f"error: proof record is not an object: {path}")
+          missing = [key for key in ("os", "arch", "nu_version", "result", "commands") if key not in proof]
+          if missing:
+              raise SystemExit(f"error: proof record missing {', '.join(missing)}: {path}")
+          if proof["os"] != os_name or proof["arch"] != arch:
+              raise SystemExit(
+                  f"error: proof record is {proof['os']}/{proof['arch']}, "
+                  f"expected {os_name}/{arch}: {path}"
+              )
+          if proof["nu_version"] != nu_version:
+              raise SystemExit(
+                  f"error: proof record Nu version {proof['nu_version']!r} "
+                  f"does not match {nu_version!r}: {path}"
+              )
+          if proof["result"] != "passed":
+              raise SystemExit(f"error: proof record did not pass: {path}")
+          if not isinstance(proof["commands"], list) or not proof["commands"]:
+              raise SystemExit(f"error: proof record has no lifecycle commands: {path}")
+          print(f"proof record verified: {path}")
+          PY
+
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
-          name: lifecycle-proof-${{ matrix.label }}
+          name: ${{ env.PROOF_ARTIFACT_PREFIX }}-${{ matrix.label }}
           path: artifacts/
           if-no-files-found: error
           retention-days: 30
@@ -362,11 +606,11 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
-          python-version: "3.12"
+          python-version: "3.12.3"
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           path: artifacts
-          pattern: lifecycle-proof-*
+          pattern: ${{ env.PROOF_ARTIFACT_PREFIX }}-*
       - name: Collect proof records
         id: collect
         shell: bash
@@ -390,7 +634,7 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
-          name: lifecycle-proofs
+          name: ${{ env.PROOF_SUMMARY_ARTIFACT }}
           path: |
             proofs.json
             proofs.md

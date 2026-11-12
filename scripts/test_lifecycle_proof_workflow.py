@@ -26,6 +26,26 @@ plan_mod = load_mod("lifecycle_proof_plan", "lifecycle_proof_plan.py")
 record_mod = load_mod("lifecycle_proof_record", "lifecycle_proof_record.py")
 collect_mod = load_mod("lifecycle_proof_collect", "lifecycle_proof_collect.py")
 
+WINDOWS_PASS_LOG = """\
+package=acme/pkg
+package_version=1.2.3
+nu_version=0.116.1
+started_at=2026-11-11T12:00:00Z
+platform=windows/x86_64
+runner_image=Windows Server 2025 test
+numan_version=numan 0.4.0
+numan_source=source-build
+numan_sha256=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+candidate_index_sha256=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+nu_archive_url=https://example.invalid/nu.zip
+nu_archive_sha256=
+nu_exe_sha256=dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+command: lifecycle-prove
+OK: lifecycle-prove passed.
+finished_at=2026-11-11T12:01:00Z
+exit_code=0
+"""
+
 PASS_LOG = """\
 package=acme/pkg
 package_version=1.2.3
@@ -63,6 +83,11 @@ def index_for(package_type="plugin", activation=None):
                     "url": "https://example.invalid/macos.tar.gz",
                     "sha256": "b" * 64,
                     "executable_path": "nu_plugin_pkg",
+                },
+                "x86_64-pc-windows-msvc": {
+                    "url": "https://example.invalid/windows.zip",
+                    "sha256": "c" * 64,
+                    "executable_path": "nu_plugin_pkg.exe",
                 },
             },
         },
@@ -120,6 +145,17 @@ class LifecycleProofPlanTests(unittest.TestCase):
             "acme__pkg__1.2.3__nu-0.116.1__linux-aarch64.log",
         )
         self.assertEqual(targets[0]["artifact_sha256"], "a" * 64)
+
+    def test_resolves_windows_target_to_hosted_runner_and_zip(self):
+        target = self.build(targets='["windows/x86_64"]')["matrix"]["include"][0]
+        self.assertEqual(target["runner"], "windows-latest")
+        self.assertEqual(target["triple"], "x86_64-pc-windows-msvc")
+        self.assertEqual(target["archive"], "zip")
+        self.assertEqual(target["artifact_sha256"], "c" * 64)
+        self.assertEqual(
+            target["log_name"],
+            "acme__pkg__1.2.3__nu-0.116.1__windows-x86_64.log",
+        )
 
     def test_infers_module_and_install_only_kinds(self):
         self.index_path.write_text(
@@ -191,6 +227,21 @@ class LifecycleProofRecordTests(unittest.TestCase):
             },
         )
 
+    def test_creates_windows_passed_record(self):
+        proof = record_mod.build_proof(
+            WINDOWS_PASS_LOG,
+            record_mod.ProofExpectation(
+                commands=["init", "install", "gc"],
+                package="acme/pkg",
+                package_version="1.2.3",
+                nu_version="0.116.1",
+            ),
+        )
+        self.assertEqual(proof["os"], "windows")
+        self.assertEqual(proof["arch"], "x86_64")
+        self.assertEqual(proof["result"], "passed")
+        self.assertEqual(proof["commands"], ["init", "install", "gc"])
+
     def test_creates_failed_record_without_commands(self):
         failed = PASS_LOG.replace("OK: lifecycle-prove passed.\n", "").replace(
             "exit_code=0", "exit_code=7"
@@ -244,12 +295,23 @@ class LifecycleProofCollectTests(unittest.TestCase):
                     "timestamp": "2026-11-11T12:00:00Z",
                     "commands": ["init"],
                 },
+                {
+                    "os": "windows",
+                    "arch": "x86_64",
+                    "nu_version": "0.116.1",
+                    "result": "passed",
+                    "timestamp": "2026-11-11T12:00:00Z",
+                    "commands": ["init"],
+                },
             ]
         )
         proofs = collect_mod.load_proofs(root)
-        self.assertEqual([proof["os"] for proof in proofs], ["linux", "macos"])
+        self.assertEqual(
+            [proof["os"] for proof in proofs], ["windows", "linux", "macos"]
+        )
         summary = collect_mod.render_summary(proofs, "acme/pkg", "1.2.3", "0.116.1")
         self.assertIn("acme/pkg@1.2.3", summary)
+        self.assertIn("| windows | x86_64 | passed |", summary)
         self.assertIn("| linux | aarch64 | passed |", summary)
 
     def test_rejects_duplicate_targets(self):
