@@ -224,14 +224,23 @@ class ProductionLifecycleProofGateTests(unittest.TestCase):
             "versions": [version],
         }
 
-    def _proof(self, *, nu_version="0.113.1", result="passed"):
-        return {
+    def _proof(
+        self,
+        *,
+        nu_version="0.113.1",
+        result="passed",
+        commands=("install", "activate", "doctor"),
+    ):
+        proof = {
             "os": "linux",
             "arch": "x86_64",
             "nu_version": nu_version,
             "result": result,
             "timestamp": "2026-10-18T12:00:00Z",
         }
+        if commands is not None:
+            proof["commands"] = list(commands)
+        return proof
 
     def _run(self, index, *, production=True):
         private_key = Ed25519PrivateKey.generate()
@@ -290,6 +299,32 @@ class ProductionLifecycleProofGateTests(unittest.TestCase):
         self.assertIn("no successful proof", stderr)
         self.assertIn("'failed'", stderr)
 
+    def test_rejects_passed_proof_without_usable_commands(self):
+        for commands in (None, [], ["install", "  "]):
+            with self.subTest(commands=commands):
+                package = self._package(
+                    proofs=[self._proof(commands=commands)]
+                )
+                rc, signed, _stdout, stderr = self._run(self._index(package))
+
+                self.assertEqual(rc, 1)
+                self.assertFalse(signed)
+                self.assertIn("no usable successful proof", stderr)
+                self.assertIn("at least one non-empty command", stderr)
+
+    def test_legacy_failed_proof_without_commands_does_not_block_valid_proof(self):
+        package = self._package(
+            proofs=[
+                self._proof(result="failed", commands=None),
+                self._proof(),
+            ]
+        )
+        rc, signed, _stdout, stderr = self._run(self._index(package))
+
+        self.assertEqual(rc, 0)
+        self.assertTrue(signed)
+        self.assertIn("lifecycle proof gate passed for 1", stderr)
+
     def test_rejects_successful_proof_outside_claimed_range(self):
         package = self._package(proofs=[self._proof(nu_version="0.114.1")])
         rc, signed, _stdout, stderr = self._run(self._index(package))
@@ -317,6 +352,18 @@ class ProductionLifecycleProofGateTests(unittest.TestCase):
         self.assertTrue(signed)
         self.assertIn("lifecycle proof gate passed for 0", stderr)
         self.assertIn("Signed", stdout)
+
+    def test_yanked_version_is_not_checked_for_proofs(self):
+        package = self._package(proofs=[])
+        package["versions"][0]["yanked"] = {
+            "reason_code": "nu-parser-incompatible",
+            "evidence_url": "https://example.com/evidence.md",
+        }
+        rc, signed, _stdout, stderr = self._run(self._index(package))
+
+        self.assertEqual(rc, 0)
+        self.assertTrue(signed)
+        self.assertIn("lifecycle proof gate passed for 0", stderr)
 
     def test_non_production_signing_is_unchanged(self):
         package = self._package()

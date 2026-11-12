@@ -1,0 +1,23 @@
+[
+  {
+    "os": "linux",
+    "arch": "x86_64",
+    "nu_version": "0.103.0",
+    "result": "passed",
+    "timestamp": "2026-11-11T11:13:38Z",
+    "commands": [
+      "init",
+      "registry sync",
+      "search",
+      "info",
+      "install",
+      "activate",
+      "doctor",
+      "list",
+      "deactivate",
+      "remove",
+      "gc"
+    ],
+    "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-linux-lifecycle/fennewald_nu_plugin_net__1.9.0__nu-0.103.0__linux-x86_64.log"
+  }
+]

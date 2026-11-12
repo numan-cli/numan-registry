@@ -1,0 +1,20 @@
+{
+  "os": "macos",
+  "arch": "x86_64",
+  "nu_version": "0.107.0",
+  "result": "passed",
+  "timestamp": "2026-11-11T22:04:48Z",
+  "commands": [
+    "init",
+    "registry sync",
+    "search",
+    "info",
+    "install",
+    "activate",
+    "doctor",
+    "list",
+    "deactivate",
+    "remove",
+    "gc"
+  ]
+}

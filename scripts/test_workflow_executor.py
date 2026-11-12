@@ -91,6 +91,30 @@ class ActionTests(unittest.TestCase):
             any("/src/requirements" in command for command in commands)
         )
 
+    def test_cross_repository_checkout_uses_the_explicit_registry_mount(self):
+        commands = workflow_executor.action_commands(
+            "actions/checkout@example",
+            {
+                "repository": "numan-cli/numan-registry",
+                "ref": "a" * 40,
+                "path": "registry-src",
+            },
+            context(),
+        )
+        joined = "\n".join(commands)
+        self.assertIn("/registry/scripts", joined)
+        self.assertIn("/registry/requirements", joined)
+        self.assertIn("cd /work/registry-src", joined)
+        self.assertNotIn("cross-repository checkout is not supported", joined)
+
+    def test_checkout_rejects_paths_outside_the_workspace(self):
+        with self.assertRaisesRegex(RuntimeError, "must stay under the workspace"):
+            workflow_executor.action_commands(
+                "actions/checkout@example",
+                {"repository": "numan-cli/numan-registry", "path": "../escape"},
+                context(),
+            )
+
     def test_setup_python_accepts_matching_patch_version(self):
         commands = workflow_executor.action_commands(
             "actions/setup-python@example",
@@ -133,6 +157,10 @@ class EmitTests(unittest.TestCase):
         self.assertIn("WORKFLOW_DERIVED_JOB_OK", script)
         self.assertEqual(manifest[0]["job"], "plan")
         self.assertTrue(any(entry["job"] == "collect" for entry in manifest))
+
+    def test_emit_job_honors_workflow_working_directory(self):
+        script, _, _, _ = workflow_executor.emit_job(ROOT, ROOT, "nu-plugin-net")
+        self.assertIn("\ncd .\n", script)
 
 
 class WrapperResolutionTests(unittest.TestCase):

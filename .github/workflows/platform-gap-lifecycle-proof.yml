@@ -23,7 +23,8 @@ name: Platform-gap lifecycle proof
 # works when the caller is in this repository. That is deliberate: a local
 # reference keeps the runner on the same commit as the caller, which lets pull
 # requests exercise the workflow they change instead of silently running a
-# mutable @main version.
+# mutable @main version. External repositories call lifecycle-proof.yml
+# directly with registry_repository/registry_ref/registry_checkout.
 #
 # Keep artifact_prefix and artifact_summary_prefix distinct when launching
 # parallel calls for the same ref.
@@ -67,6 +68,21 @@ on:
         required: false
         type: string
         default: numan-cli/numan
+      registry_repository:
+        description: Repository to check out as the registry; empty uses the caller checkout
+        required: false
+        type: string
+        default: ""
+      registry_ref:
+        description: Exact ref or commit SHA to check out from registry_repository
+        required: false
+        type: string
+        default: ""
+      registry_checkout:
+        description: Workspace-relative path for the explicit registry checkout
+        required: false
+        type: string
+        default: "."
       artifact_prefix:
         description: Artifact name prefix; keep parallel proof calls distinct
         required: false
@@ -120,6 +136,21 @@ on:
         required: false
         type: string
         default: numan-cli/numan
+      registry_repository:
+        description: Repository to check out as the registry; empty uses the caller checkout
+        required: false
+        type: string
+        default: ""
+      registry_ref:
+        description: Exact ref or commit SHA to check out from registry_repository
+        required: false
+        type: string
+        default: ""
+      registry_checkout:
+        description: Workspace-relative path for the explicit registry checkout
+        required: false
+        type: string
+        default: "."
       artifact_prefix:
         description: Artifact name prefix; keep parallel proof calls distinct
         required: false
@@ -154,5 +185,8 @@ jobs:
       commands: ${{ inputs.commands }}
       numan_version: ${{ inputs.numan_version }}
       numan_repo: ${{ inputs.numan_repo }}
+      registry_repository: ${{ inputs.registry_repository }}
+      registry_ref: ${{ inputs.registry_ref }}
+      registry_checkout: ${{ inputs.registry_checkout }}
       artifact_prefix: ${{ inputs.artifact_prefix }}
       artifact_summary_prefix: ${{ inputs.artifact_summary_prefix }}

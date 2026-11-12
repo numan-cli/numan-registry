@@ -8,6 +8,7 @@ set -euo pipefail
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 PYTHON="${PYTHON:-python}"
+REGISTRY_CHECKOUT="${REGISTRY_CHECKOUT:-$ROOT}"
 OUT="${RUNNER_TEMP:-/tmp}/numan-yaml-executor"
 rm -rf "${OUT}"
 mkdir -p "${OUT}"
@@ -40,6 +41,7 @@ run_container() {
   local directory=$1
   MSYS_NO_PATHCONV=1 docker run --rm \
     --volume "$(host_path "${ROOT}"):/src:ro" \
+    --volume "$(host_path "${REGISTRY_CHECKOUT}"):/registry:ro" \
     --volume "$(host_path "${directory}/out"):/out" \
     --volume "$(host_path "${directory}/run.sh"):/tmp/workflow-executor.sh:ro" \
     ubuntu:24.04 \

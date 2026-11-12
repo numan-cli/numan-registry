@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "record_type": "lifecycle-proof",
+  "run_date": "2026-11-12",
+  "source": "local Windows x86_64 host; not a GitHub Actions run",
+  "workflow": ".github/workflows/lifecycle-proof.yml",
+  "workflow_ref": "local uncommitted workspace; windows/x86_64 matrix target",
+  "package": "tonythethompson/nu_plugin_qr_maker",
+  "package_version": "1.2.0",
+  "platform": {
+    "os": "windows",
+    "arch": "x86_64"
+  },
+  "status": "passed",
+  "started_at": "2026-11-12T03:09:49Z",
+  "finished_at": "2026-11-12T03:10:17Z",
+  "runner_image": "local Windows 10.0.26300 (MINGW64_NT-10.0-26300)",
+  "nu": {
+    "version": "0.114.1",
+    "archive_url": "https://github.com/nushell/nushell/releases/download/0.114.1/nu-0.114.1-x86_64-pc-windows-msvc.zip",
+    "archive_sha256": "71a88cb74f51a9fdd91003273fb1f3361d7b393fb3a03014f43e5f111df9666f",
+    "nu_exe_sha256": "49fb6abfefc74325d398138ce4d3dc0e9ea68aac5a739e638e0f00cb081e445f",
+    "reported_version": "0.114.1"
+  },
+  "numan": {
+    "version": "0.4.0",
+    "source": "local-debug-build",
+    "build": "debug",
+    "repo": "numan-cli/numan",
+    "asset_url": "",
+    "sha256": "10d68691018b825317d7514180c8ca9a53650d4cb649d7f9eb01fc61006aee08"
+  },
+  "candidate_index": {
+    "path": "staging merge of registry/index.json and registry/provisional.json",
+    "sha256": "998c913f214c8b74c05060de227d6eec33977f831f7cb3f898b74e23f1515f99",
+    "signing": "ephemeral Ed25519 loopback registry"
+  },
+  "artifact": {
+    "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_qr_maker-1.2.0/nu_plugin_qr_maker-1.2.0-x86_64-pc-windows-msvc.zip",
+    "sha256": "a2c0e875f449b4ee73b75a0ca063af24de5608a0cb2058a98c8fe1d82ac3d55a"
+  },
+  "lifecycle_steps": [
+    "init",
+    "registry sync",
+    "search",
+    "info",
+    "install",
+    "activate",
+    "doctor",
+    "list",
+    "deactivate",
+    "remove",
+    "gc"
+  ],
+  "notes": "The reusable workflow matrix resolver emitted windows-latest and x86_64-pc-windows-msvc for this target. The proof ran locally on the enrolled Windows host because the Windows workflow changes are uncommitted.",
+  "log": "docs/evidence/2026-11-12-windows-x86_64-lifecycle/tonythethompson__nu_plugin_qr_maker__1.2.0__nu-0.114.1__windows-x86_64.log",
+  "log_sha256": "11c1046b8807add2c2cc306c4d4c69d0f3c9cf643c8be195ee14643d84bcf06c",
+  "proof": "docs/evidence/2026-11-12-windows-x86_64-lifecycle/proof.json",
+  "proof_sha256": "14bd2c785bf19efce95dde37aded32e4c2c20cd980daccaea475224d9906185f"
+}

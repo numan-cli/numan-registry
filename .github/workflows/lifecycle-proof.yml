@@ -53,6 +53,21 @@ on:
         required: false
         type: string
         default: numan-cli/numan
+      registry_repository:
+        description: Repository to check out as the registry; empty uses the caller checkout
+        required: false
+        type: string
+        default: ""
+      registry_ref:
+        description: Exact ref or commit SHA to check out from registry_repository
+        required: false
+        type: string
+        default: ""
+      registry_checkout:
+        description: Workspace-relative path for the explicit registry checkout
+        required: false
+        type: string
+        default: "."
     outputs:
       proofs:
         description: JSON array of proof records emitted by the run
@@ -109,6 +124,21 @@ on:
         required: true
         default: numan-cli/numan
         type: string
+      registry_repository:
+        description: Repository to check out as the registry; empty uses the caller checkout
+        required: false
+        default: ""
+        type: string
+      registry_ref:
+        description: Exact ref or commit SHA to check out from registry_repository
+        required: false
+        default: ""
+        type: string
+      registry_checkout:
+        description: Workspace-relative path for the explicit registry checkout
+        required: false
+        default: "."
+        type: string
   pull_request:
     paths:
       - ".github/workflows/lifecycle-proof.yml"
@@ -137,6 +167,10 @@ env:
   PROOF_COMMANDS: ${{ inputs.commands || github.event.inputs.commands || '' }}
   PROOF_NUMAN_VERSION: ${{ inputs.numan_version || github.event.inputs.numan_version || '0.4.0' }}
   PROOF_NUMAN_REPO: ${{ inputs.numan_repo || github.event.inputs.numan_repo || 'numan-cli/numan' }}
+  PROOF_REGISTRY_REPOSITORY: ${{ inputs.registry_repository || github.event.inputs.registry_repository || '' }}
+  PROOF_REGISTRY_REF: ${{ inputs.registry_ref || github.event.inputs.registry_ref || '' }}
+  PROOF_REGISTRY_CHECKOUT: ${{ inputs.registry_checkout || github.event.inputs.registry_checkout || '.' }}
+  PROOF_ARTIFACTS: ${{ format('{0}/artifacts', inputs.registry_checkout || github.event.inputs.registry_checkout || '.') }}
 
 jobs:
   plan:
@@ -152,8 +186,34 @@ jobs:
       numan_version: ${{ steps.plan.outputs.numan_version }}
       numan_repo: ${{ steps.plan.outputs.numan_repo }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Validate explicit registry checkout
+        if: env.PROOF_REGISTRY_REPOSITORY != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${PROOF_REGISTRY_REF}" ]; then
+            echo "error: registry_ref is required when registry_repository is set" >&2
+            exit 1
+          fi
+          case "${PROOF_REGISTRY_CHECKOUT}" in
+            ""|..|/*|../*|*/..|*/../*)
+              echo "error: registry_checkout must be a non-empty workspace-relative path" >&2
+              exit 1
+              ;;
+          esac
+      - name: Check out registry (external)
+        if: env.PROOF_REGISTRY_REPOSITORY != ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          repository: ${{ env.PROOF_REGISTRY_REPOSITORY }}
+          ref: ${{ env.PROOF_REGISTRY_REF }}
+          path: ${{ env.PROOF_REGISTRY_CHECKOUT }}
+          persist-credentials: false
+      - name: Check out caller repository
+        if: env.PROOF_REGISTRY_REPOSITORY == ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: ${{ env.PROOF_REGISTRY_CHECKOUT }}
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
@@ -161,6 +221,7 @@ jobs:
       - name: Resolve package, commands, and target matrix
         id: plan
         shell: bash
+        working-directory: ${{ env.PROOF_REGISTRY_CHECKOUT }}
         run: |
           set -euo pipefail
           python scripts/lifecycle_proof_plan.py \
@@ -199,8 +260,34 @@ jobs:
       NUMAN_ASSET: ${{ matrix.numan_asset }}
       LOG_NAME: ${{ matrix.log_name }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Validate explicit registry checkout
+        if: env.PROOF_REGISTRY_REPOSITORY != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${PROOF_REGISTRY_REF}" ]; then
+            echo "error: registry_ref is required when registry_repository is set" >&2
+            exit 1
+          fi
+          case "${PROOF_REGISTRY_CHECKOUT}" in
+            ""|..|/*|../*|*/..|*/../*)
+              echo "error: registry_checkout must be a non-empty workspace-relative path" >&2
+              exit 1
+              ;;
+          esac
+      - name: Check out registry (external)
+        if: env.PROOF_REGISTRY_REPOSITORY != ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          repository: ${{ env.PROOF_REGISTRY_REPOSITORY }}
+          ref: ${{ env.PROOF_REGISTRY_REF }}
+          path: ${{ env.PROOF_REGISTRY_CHECKOUT }}
+          persist-credentials: false
+      - name: Check out caller repository
+        if: env.PROOF_REGISTRY_REPOSITORY == ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: ${{ env.PROOF_REGISTRY_CHECKOUT }}
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
@@ -221,6 +308,7 @@ jobs:
         with:
           toolchain: 1.97.1
       - name: Install proof dependencies
+        working-directory: ${{ env.PROOF_REGISTRY_CHECKOUT }}
         run: python -m pip install --disable-pip-version-check --require-hashes -r requirements/lifecycle-proof.txt
 
       - name: Check out Numan source (Windows)
@@ -288,9 +376,10 @@ jobs:
       - name: Run lifecycle proof (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
+        working-directory: ${{ env.PROOF_REGISTRY_CHECKOUT }}
         run: |
           $ErrorActionPreference = "Stop"
-          $logDir = Join-Path $env:GITHUB_WORKSPACE "artifacts"
+          $logDir = Join-Path (Get-Location) "artifacts"
           New-Item -ItemType Directory -Force -Path $logDir | Out-Null
           $log = Join-Path $logDir $env:LOG_NAME
           $utf8 = New-Object System.Text.UTF8Encoding($false)
@@ -298,7 +387,7 @@ jobs:
             Write-Host $Message
             [System.IO.File]::AppendAllText($log, $Message + "`n", $utf8)
           }
-          $candidate = Join-Path $env:GITHUB_WORKSPACE "registry/index.json"
+          $candidate = Join-Path (Get-Location) "registry/index.json"
           $candidateSha = (Get-FileHash -LiteralPath $candidate -Algorithm SHA256).Hash.ToLowerInvariant()
           $started = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss'Z'")
           $runnerImage = "$env:ImageOS $env:ImageVersion".Trim()
@@ -343,9 +432,10 @@ jobs:
       - name: Emit index proof record (Windows)
         if: always() && runner.os == 'Windows'
         shell: pwsh
+        working-directory: ${{ env.PROOF_REGISTRY_CHECKOUT }}
         run: |
           $ErrorActionPreference = "Stop"
-          $artifacts = Join-Path $env:GITHUB_WORKSPACE "artifacts"
+          $artifacts = Join-Path (Get-Location) "artifacts"
           New-Item -ItemType Directory -Force -Path $artifacts | Out-Null
           $proof = Join-Path $artifacts "proof.json"
           python scripts/lifecycle_proof_record.py `
@@ -362,9 +452,10 @@ jobs:
       - name: Verify proof record (Windows)
         if: always() && runner.os == 'Windows'
         shell: pwsh
+        working-directory: ${{ env.PROOF_REGISTRY_CHECKOUT }}
         run: |
           $ErrorActionPreference = "Stop"
-          $proofPath = Join-Path $env:GITHUB_WORKSPACE "artifacts/proof.json"
+          $proofPath = Join-Path (Get-Location) "artifacts/proof.json"
           if (-not (Test-Path -LiteralPath $proofPath) -or (Get-Item -LiteralPath $proofPath).Length -eq 0) {
             throw "proof record missing or empty: $proofPath"
           }
@@ -482,6 +573,7 @@ jobs:
         id: proof
         if: runner.os != 'Windows'
         shell: bash
+        working-directory: ${{ env.PROOF_REGISTRY_CHECKOUT }}
         run: |
           set -euo pipefail
           hash_file() {
@@ -537,6 +629,7 @@ jobs:
       - name: Emit index proof record
         if: always() && runner.os != 'Windows'
         shell: bash
+        working-directory: ${{ env.PROOF_REGISTRY_CHECKOUT }}
         run: |
           python scripts/lifecycle_proof_record.py \
             --log "artifacts/${LOG_NAME}" \
@@ -549,6 +642,7 @@ jobs:
       - name: Verify proof record
         if: always() && runner.os != 'Windows'
         shell: bash
+        working-directory: ${{ env.PROOF_REGISTRY_CHECKOUT }}
         run: |
           set -euo pipefail
           proof="artifacts/proof.json"
@@ -589,7 +683,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.PROOF_ARTIFACT_PREFIX }}-${{ matrix.label }}
-          path: artifacts/
+          path: ${{ env.PROOF_ARTIFACTS }}/
           if-no-files-found: error
           retention-days: 30
 
@@ -601,19 +695,46 @@ jobs:
     outputs:
       proofs: ${{ steps.collect.outputs.proofs }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Validate explicit registry checkout
+        if: env.PROOF_REGISTRY_REPOSITORY != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${PROOF_REGISTRY_REF}" ]; then
+            echo "error: registry_ref is required when registry_repository is set" >&2
+            exit 1
+          fi
+          case "${PROOF_REGISTRY_CHECKOUT}" in
+            ""|..|/*|../*|*/..|*/../*)
+              echo "error: registry_checkout must be a non-empty workspace-relative path" >&2
+              exit 1
+              ;;
+          esac
+      - name: Check out registry (external)
+        if: env.PROOF_REGISTRY_REPOSITORY != ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          repository: ${{ env.PROOF_REGISTRY_REPOSITORY }}
+          ref: ${{ env.PROOF_REGISTRY_REF }}
+          path: ${{ env.PROOF_REGISTRY_CHECKOUT }}
+          persist-credentials: false
+      - name: Check out caller repository
+        if: env.PROOF_REGISTRY_REPOSITORY == ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: ${{ env.PROOF_REGISTRY_CHECKOUT }}
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: "3.12"
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
-          path: artifacts
+          path: ${{ env.PROOF_ARTIFACTS }}
           pattern: ${{ env.PROOF_ARTIFACT_PREFIX }}-*
       - name: Collect proof records
         id: collect
         shell: bash
+        working-directory: ${{ env.PROOF_REGISTRY_CHECKOUT }}
         run: |
           set +e
           python scripts/lifecycle_proof_collect.py \
@@ -636,7 +757,7 @@ jobs:
         with:
           name: ${{ env.PROOF_SUMMARY_ARTIFACT }}
           path: |
-            proofs.json
-            proofs.md
+            ${{ env.PROOF_REGISTRY_CHECKOUT }}/proofs.json
+            ${{ env.PROOF_REGISTRY_CHECKOUT }}/proofs.md
           if-no-files-found: warn
           retention-days: 30
