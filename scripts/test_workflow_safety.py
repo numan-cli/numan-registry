@@ -36,7 +36,13 @@ def job_block(text: str, name: str, next_name: str | None = None) -> str:
 class WorkflowSafetyTests(unittest.TestCase):
     def test_every_action_is_pinned_to_full_commit(self):
         """Verify that every GitHub Actions workflow action references a full commit SHA."""
-        for name in ("repo-safety.yml", "staging.yml", "production.yml", "watch-indexed-updates.yml"):
+        for name in (
+            "repo-safety.yml",
+            "staging.yml",
+            "production.yml",
+            "watch-indexed-updates.yml",
+            "platform-coverage-audit.yml",
+        ):
             text = (WORKFLOWS / name).read_text(encoding="utf-8")
             self.assertEqual(
                 len(ANY_USE.findall(text)),
@@ -45,7 +51,12 @@ class WorkflowSafetyTests(unittest.TestCase):
             )
 
     def test_workflows_default_to_read_only(self):
-        for name in ("repo-safety.yml", "staging.yml", "production.yml"):
+        for name in (
+            "repo-safety.yml",
+            "staging.yml",
+            "production.yml",
+            "platform-coverage-audit.yml",
+        ):
             text = (WORKFLOWS / name).read_text(encoding="utf-8")
             self.assertRegex(text, r"(?m)^permissions:\n  contents: read$")
 
@@ -111,6 +122,19 @@ class WorkflowSafetyTests(unittest.TestCase):
         for name in ("repo-safety.yml", "production.yml"):
             text = (WORKFLOWS / name).read_text(encoding="utf-8")
             self.assertIn(f"ref: {sha}", text)
+
+    def test_platform_coverage_audit_is_report_only_and_index_scoped(self):
+        text = (WORKFLOWS / "platform-coverage-audit.yml").read_text(encoding="utf-8")
+        self.assertIn('"registry/index.json"', text)
+        self.assertIn('"scripts/audit_platform_coverage.py"', text)
+        self.assertIn("GITHUB_STEP_SUMMARY", text)
+        self.assertIn("--base-index", text)
+        self.assertIn("--base-missing", text)
+        self.assertIn("scripts/audit_platform_coverage.py", text)
+        self.assertIn("scripts/resolve_coverage_base.py", text)
+        self.assertIn("fetch-depth: 1", text)
+        self.assertNotIn("contents: write", text)
+        self.assertNotIn("secrets.", text)
 
     def test_production_signing_enforces_proofs_without_exemption(self):
         text = (WORKFLOWS / "production.yml").read_text(encoding="utf-8")
