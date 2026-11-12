@@ -1,0 +1,79 @@
+name: Linux lifecycle proof (pinned packages)
+
+# Re-proves the two packages that earned Linux x86_64 lifecycle evidence in
+# docs/evidence/2026-11-11-linux-lifecycle/summary.json. It invokes the
+# platform-gap wrapper, which owns the reusable proof run. The runner verifies
+# Numan and Nu archives against their published SHA256SUMS, runs the full
+# lifecycle against the committed candidate index, and uploads proof logs plus
+# index-format proof records. This job does not sign, publish, or mutate the
+# registry.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/linux-lifecycle-proof.yml"
+      - ".github/workflows/lifecycle-proof.yml"
+      - ".github/workflows/platform-gap-lifecycle-proof.yml"
+      - "requirements/lifecycle-proof.txt"
+      - "scripts/run-workflow-executor-ci.sh"
+      - "scripts/workflow_executor.py"
+      - "scripts/test_workflow_executor.py"
+      - "scripts/test_check_workflows.py"
+      - "scripts/lifecycle-prove.py"
+      - "scripts/lifecycle_proof_plan.py"
+      - "scripts/lifecycle_proof_record.py"
+      - "scripts/lifecycle_proof_collect.py"
+      - "scripts/nu_version_constraint.py"
+      - "registry/index.json"
+      - "specs/fennewald-nu_plugin_net-1.9.0.json"
+      - "specs/dead10ck-nu_plugin_dns-4.0.10.json"
+  schedule:
+    # Weekly drift check; the reusable workflow is pinned to exact versions.
+    - cron: "0 8 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linux-lifecycle-proof-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  nu-plugin-net:
+    name: fennewald/nu_plugin_net 1.9.0 (Linux x86_64, Nu 0.103.0)
+    uses: ./.github/workflows/platform-gap-lifecycle-proof.yml
+    with:
+      package: fennewald/nu_plugin_net
+      package_version: "1.9.0"
+      nu_version: "0.103.0"
+      targets: '["linux/x86_64"]'
+      artifact_prefix: linux-net
+      artifact_summary_prefix: linux-net-proofs
+
+  nu-plugin-dns:
+    name: dead10ck/nu_plugin_dns 4.0.10 (Linux x86_64, Nu 0.113.1)
+    uses: ./.github/workflows/platform-gap-lifecycle-proof.yml
+    with:
+      package: dead10ck/nu_plugin_dns
+      package_version: "4.0.10"
+      nu_version: "0.113.1"
+      targets: '["linux/x86_64"]'
+      artifact_prefix: linux-dns
+      artifact_summary_prefix: linux-dns-proofs
+
+  yaml-executor:
+    name: YAML-derived executor (pinned packages + withheld record)
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12.3"
+      - name: Install YAML executor dependency
+        run: python -m pip install --disable-pip-version-check PyYAML==6.0.3
+      - name: Run executor against pinned packages and withheld record
+        shell: bash
+        run: bash scripts/run-workflow-executor-ci.sh
