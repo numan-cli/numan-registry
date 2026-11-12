@@ -1,0 +1,98 @@
+name: Platform-proof coverage audit
+
+# Report-only: this workflow never signs, publishes, or mutates the registry.
+# It compares the checked-out index with the pull-request base or the pushed
+# commit's parent, then writes a target-level coverage summary and artifact.
+on:
+  pull_request:
+    paths:
+      - "registry/index.json"
+      - "schemas/index-v1.json"
+      - "scripts/audit_platform_coverage.py"
+      - "scripts/resolve_coverage_base.py"
+      - "scripts/test_platform_coverage.py"
+      - "scripts/test_resolve_coverage_base.py"
+      - "scripts/lifecycle_proof_plan.py"
+      - "scripts/nu_version_constraint.py"
+      - ".github/workflows/platform-coverage-audit.yml"
+  push:
+    branches: [main, master]
+    paths:
+      - "registry/index.json"
+      - "schemas/index-v1.json"
+      - "scripts/audit_platform_coverage.py"
+      - "scripts/resolve_coverage_base.py"
+      - "scripts/test_platform_coverage.py"
+      - "scripts/test_resolve_coverage_base.py"
+      - "scripts/lifecycle_proof_plan.py"
+      - "scripts/nu_version_constraint.py"
+      - ".github/workflows/platform-coverage-audit.yml"
+  workflow_dispatch:
+    inputs:
+      base_ref:
+        description: "Optional git ref/SHA to compare against (blank = report all current targets as new)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: registry-platform-coverage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: Report platform-proof coverage drift
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Deliberately shallow: the base resolver fetches the exact base
+          # commit instead of depending on full history being present.
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+      - name: Resolve the base index
+        id: base
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          INPUT_BASE_REF: ${{ github.event.inputs.base_ref }}
+          INDEX_PATH: registry/index.json
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python scripts/resolve_coverage_base.py
+      - name: Audit platform-proof coverage
+        env:
+          BASE_INDEX: ${{ steps.base.outputs.base_index }}
+        run: |
+          set -euo pipefail
+          args=(
+            --index registry/index.json
+            --report-json "${RUNNER_TEMP}/platform-coverage.json"
+            --report-md "${RUNNER_TEMP}/platform-coverage.md"
+          )
+          if [[ -n "${BASE_INDEX}" && -s "${BASE_INDEX}" ]]; then
+            args+=(--base-index "${BASE_INDEX}")
+          else
+            # No base index means first-commit/all-new, never a current-only report.
+            args+=(--base-missing)
+          fi
+          if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+            args+=(--summary "${GITHUB_STEP_SUMMARY}")
+          fi
+          python scripts/audit_platform_coverage.py "${args[@]}"
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: platform-coverage-audit
+          path: |
+            ${{ runner.temp }}/platform-coverage.json
+            ${{ runner.temp }}/platform-coverage.md
+          if-no-files-found: warn
+          retention-days: 30
