@@ -1,5 +1,5 @@
 # Hash-locked Python dependencies for the lifecycle proof workflow.
-# Targets: Python 3.12.3 on linux/x86_64, linux/aarch64, macos/x86_64,
+# Targets: Python 3.12 on linux/x86_64, linux/aarch64, macos/x86_64,
 # macos/aarch64, and windows/x86_64.
 # cryptography 50.0.2 has no macOS x86_64 wheel; its sdist hash is included so
 # that target continues to build from source as before.
