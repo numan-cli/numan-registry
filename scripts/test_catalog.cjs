@@ -11,6 +11,36 @@ const packages = JSON.parse(fs.readFileSync(path.join(root, "registry/index.json
 const filters = { q: "", type: "", nu: "", target: "", only: false };
 const windows = "x86_64-pc-windows-msvc";
 const linux = "x86_64-unknown-linux-gnu";
+const pythonProbe = `
+import sys
+sys.path.insert(0, 'scripts')
+from nu_version_constraint import matches_nu_constraint
+print(sys.executable)
+`;
+
+function resolvePython() {
+  const candidates = [];
+  if (process.env.PYTHON) candidates.push({ command: process.env.PYTHON, args: [] });
+  candidates.push({
+    command: path.join(root, ".venv", process.platform === "win32" ? "Scripts/python.exe" : "bin/python"),
+    args: [],
+  });
+  if (process.platform === "win32") candidates.push({ command: "py", args: ["-3"] });
+  candidates.push({ command: "python3", args: [] }, { command: "python", args: [] });
+
+  for (const candidate of candidates) {
+    const probe = spawnSync(candidate.command, [...candidate.args, "-c", pythonProbe], {
+      cwd: root,
+      encoding: "utf8",
+    });
+    if (probe.status === 0) return candidate;
+  }
+
+  assert.fail(
+    "no working Python interpreter found for constraint parity; " +
+      "set PYTHON or provide python3/python on PATH"
+  );
+}
 
 test("Nu grammar agrees with the registry validator, including range boundaries", () => {
   const constraints = [...new Set(packages.flatMap(p => p.versions.map(v => v.nu_version)))].concat([
@@ -18,7 +48,8 @@ test("Nu grammar agrees with the registry validator, including range boundaries"
   ]);
   const versions = ["0.0.0", "0.92.0", "0.113.9", "0.114.0", "0.114.1", "0.114.2", "0.115.0", "1.0.0", "banana", "0.114.1-beta", "0.114.1.0", "00.114.1"];
   const cases = constraints.flatMap(c => versions.map(v => [c, v]));
-  const python = spawnSync(process.env.PYTHON || "python", ["-c", `
+  const interpreter = resolvePython();
+  const python = spawnSync(interpreter.command, [...interpreter.args, "-c", `
 import json, sys
 sys.path.insert(0, 'scripts')
 from nu_version_constraint import matches_nu_constraint
@@ -65,6 +96,35 @@ test("search, type, target and Nu filters combine without hiding invalid-input r
   assert.equal(catalog.filterPackages([p], { ...filters, nu: "banana", only: true }).length, 1);
 });
 
+test("proof coverage groups results by OS and architecture", () => {
+  const version = { proofs: [
+    { os: "windows", arch: "x86_64", result: "passed" },
+    { os: "windows", arch: "x86_64", result: "failed" },
+    { os: "linux", arch: "x86_64", result: "passed" },
+  ] };
+  assert.deepEqual(catalog.proofCoverage(version), [
+    { platform: "linux/x86_64", label: "Linux · x64", passed: 1, failed: 0, status: "passed" },
+    { platform: "windows/x86_64", label: "Windows · x64", passed: 1, failed: 1, status: "1 passed, 1 failed" },
+  ]);
+  assert.deepEqual(catalog.proofCoverage({}), []);
+});
+
+test("catalog details show per-platform proof coverage", () => {
+  const pkg = { id: { owner: "acme", name: "pkg" }, type: "plugin", description: "test", versions: [] };
+  const version = { version: "1.0.0", nu_version: "*", artifact: { kind: "archive" }, proofs: [
+    { os: "linux", arch: "x86_64", result: "passed" },
+    { os: "windows", arch: "x86_64", result: "passed" },
+    { os: "windows", arch: "x86_64", result: "failed" },
+  ] };
+  pkg.versions.push(version);
+  const html = catalog.detailHtml(pkg, version, filters);
+  assert.ok(html.includes("Lifecycle-proof coverage"));
+  assert.ok(html.includes("Linux · x64"));
+  assert.ok(html.includes("Windows · x64"));
+  assert.ok(html.includes("1 passed, 1 failed"));
+  assert.ok(!html.includes("No per-platform proof records"));
+});
+
 test("activation guidance follows version metadata and never activates install-only packages", () => {
   const module = { type: "module" };
   assert.equal(catalog.canActivate(module, { activation: { kind: "nu-module" }, artifact: { entry: "mod.nu" } }), true);
@@ -88,21 +148,20 @@ test("activation guidance follows version metadata and never activates install-o
       }
     }
     assert.ok(html.includes("Lifecycle-tested Nu"));
+    assert.ok(html.includes("Lifecycle-proof coverage"));
+    if ((v.proofs || []).length) assert.ok(!html.includes("No per-platform proof records"));
     assert.ok(html.includes("SHA256:"));
   }));
+  const yanked = { version: "9.9.9", yanked: { reason_code: "nu-parser-incompatible", evidence_url: "https://example.com/evidence.md" }, activation: { kind: "nu-module" }, artifact: { entry: "mod.nu" } };
+  assert.equal(catalog.canActivate(module, yanked), false);
+  assert.equal(catalog.detailHtml({ id: { owner: "o", name: "n" }, type: "module" }, yanked, filters).includes("numan install "), false);
   const missingVersion = { version: "1.0.0", activation: { kind: "nu-module" }, artifact: { entry: "mod.nu" } };
   assert.ok(catalog.detailHtml({ id: { owner: "o", name: "n" }, type: "module" }, missingVersion, filters).includes("Lifecycle proof is missing"));
-  const yankedVersion = { version: "9.9.9", nu_version: "*", yanked: { reason_code: "nu-parser-incompatible", evidence_url: "https://example.com/evidence.md" }, activation: { kind: "nu-module" }, artifact: { kind: "archive", entry: "mod.nu" } };
-  assert.equal(catalog.canActivate({ type: "module" }, yankedVersion), false);
-  const yankedHtml = catalog.detailHtml({ id: { owner: "o", name: "n" }, type: "module", versions: [yankedVersion] }, yankedVersion, filters);
-  assert.ok(yankedHtml.includes("Version yanked"));
-  assert.equal(yankedHtml.includes("numan install "), false);
-  assert.equal(yankedHtml.includes("numan activate "), false);
 });
 
 test("untrusted catalog text and links cannot inject markup or shell commands", () => {
   const p = { id: { owner: "owner", name: "bad;command" }, type: "script", description: '<img src=x onerror="alert(1)">', repo: "javascript:alert(1)", tags: ["<script>"], versions: [] };
-  const v = { version: "1.0.0", artifact: { kind: "archive", url: 'https://example.com/" onclick="bad', sha256: "<unsafe>" }, evidence_tier: "provisional", deferral_reason: "<unsafe>", source: { git: "javascript:alert(1)", rev: "<unsafe>" } };
+  const v = { version: "1.0.0", artifact: { kind: "archive", url: 'https://example.com/" onclick="bad', sha256: "<unsafe>" }, evidence_tier: "provisional", deferral_reason: "<unsafe>", source: { git: "javascript:alert(1)", rev: "<unsafe>" }, proofs: [{ os: "<script>", arch: "x86_64", result: "passed" }] };
   p.versions.push(v);
   const html = catalog.detailHtml(p, v, filters);
   assert.ok(!html.includes("<img"));

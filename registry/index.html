@@ -459,6 +459,12 @@
       -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
     .target-summary, .compatibility { display: block; margin-top: .3rem; white-space: normal; }
+    .proof-coverage {
+      display: inline-block; margin: .15rem .35rem .15rem 0; padding: .1rem .4rem;
+      border: 1px solid var(--line); border-radius: .3rem;
+      font: .82rem/1.5 var(--sans); background: rgba(255,255,255,.5);
+    }
+    .proof-coverage.has-failure { color: #852d22; border-color: rgba(133,45,34,.35); }
     .compatibility[data-compatible="false"], .validation { color: #852d22; }
     .compatibility[data-compatible="true"] { color: var(--leaf-deep); }
     .validation { font: .9rem var(--sans); margin-bottom: .8rem; }

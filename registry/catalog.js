@@ -12,6 +12,14 @@
     "x86_64-unknown-linux-gnu": "Linux · x64 (GNU target)",
     "aarch64-unknown-linux-gnu": "Linux · ARM64 (GNU target)"
   };
+  var PROOF_PLATFORMS = {
+    "linux/x86_64": "Linux · x64",
+    "linux/aarch64": "Linux · ARM64",
+    "macos/x86_64": "macOS · Intel",
+    "macos/aarch64": "macOS · Apple silicon",
+    "windows/x86_64": "Windows · x64",
+    "windows/aarch64": "Windows · ARM64"
+  };
 
   function escapeHtml(value) {
     return String(value == null ? "" : value).replace(/[&<>"']/g, function (c) {
@@ -106,6 +114,33 @@
     return (version.artifact || {}).kind === "archive" ? "Untargeted archive · check upstream OS requirements" : "No published binary targets";
   }
 
+  function proofCoverage(version) {
+    var proofs = version && Array.isArray(version.proofs) ? version.proofs : [];
+    var counts = {}, platforms = [];
+    proofs.forEach(function (proof) {
+      var platform = ((proof && proof.os) || "unknown") + "/" + ((proof && proof.arch) || "unknown");
+      if (!counts[platform]) { counts[platform] = { passed: 0, failed: 0 }; platforms.push(platform); }
+      if (proof && proof.result === "passed") counts[platform].passed++;
+      else if (proof && proof.result === "failed") counts[platform].failed++;
+    });
+    return platforms.sort().map(function (platform) {
+      var count = counts[platform], status;
+      if (count.passed && count.failed) status = count.passed + " passed, " + count.failed + " failed";
+      else if (count.passed) status = count.passed === 1 ? "passed" : count.passed + " passed";
+      else if (count.failed) status = count.failed === 1 ? "failed" : count.failed + " failed";
+      else status = "recorded";
+      return { platform: platform, label: PROOF_PLATFORMS[platform] || platform, passed: count.passed, failed: count.failed, status: status };
+    });
+  }
+
+  function proofCoverageHtml(version) {
+    var coverage = proofCoverage(version);
+    if (!coverage.length) return '<span class="target-summary">No per-platform proof records</span>';
+    return coverage.map(function (item) {
+      return '<span class="proof-coverage' + (item.failed ? " has-failure" : "") + '">' + escapeHtml(item.label) + " · " + escapeHtml(item.status) + "</span>";
+    }).join(" ");
+  }
+
   function command(text) {
     return '<div class="command"><code>' + escapeHtml(text) + '</code><button class="plain-button" type="button" data-copy="' + escapeHtml(text) + '" aria-label="Copy ' + escapeHtml(text) + '">Copy</button></div>';
   }
@@ -170,6 +205,7 @@
     var supported = !version.yanked && canActivate(pkg, version);
     var evidence = evidenceSummary(version, supported);
     var assetHtml = artifactHtml(version);
+    var proofHtml = proofCoverageHtml(version);
     var html = '<div class="detail-heading"><h2 id="detail-title">' + escapeHtml(id) + '</h2><button class="plain-button" type="button" id="close-detail">Close details</button></div>' +
       "<p>" + escapeHtml(pkg.description) + '</p><p class="tags">' + escapeHtml((pkg.tags || []).join(" · ")) + '</p><div class="detail-actions">' +
       (repo ? '<a href="' + escapeHtml(repo) + '">Upstream documentation</a>' : "") +
@@ -179,7 +215,9 @@
         return '<option value="' + escapeHtml(v.version) + '"' + (v === version ? " selected" : "") + ">" + escapeHtml(v.version) + (v === latest(pkg) ? " (latest in catalog)" : "") + "</option>";
       }).join("") + "</select></p><dl><dt>Package type</dt><dd>" + escapeHtml(pkg.type) + (version.yanked ? " · yanked" : supported ? " · explicit activation supported" : " · install-only") + "</dd>" +
       "<dt>Declared Nu range</dt><dd><code>" + escapeHtml(version.nu_version || "Unknown") + "</code>" + compatibility(version, filters.nu) + "</dd>" +
-      "<dt>Lifecycle-tested Nu</dt><dd>" + escapeHtml(tested) + "</dd><dt>Evidence</dt><dd>" + escapeHtml(evidence) + "</dd>" +
+      "<dt>Lifecycle-tested Nu</dt><dd>" + escapeHtml(tested) + "</dd>" +
+      "<dt>Lifecycle-proof coverage</dt><dd>" + proofHtml + "</dd>" +
+      "<dt>Evidence</dt><dd>" + escapeHtml(evidence) + "</dd>" +
       "<dt>Published targets</dt><dd>" + escapeHtml(targetSummary(version)) +
       (filters.target && !targetMatches(version, filters.target) ? '<span class="compatibility" data-compatible="false">No binary published for your selected target</span>' : "") + "</dd>" +
       "<dt>Source revision</dt><dd>" + escapeHtml(source.rev || "Not recorded") + (version.provenance ? " · " + escapeHtml(version.provenance) : "") + "</dd></dl>";
@@ -193,7 +231,7 @@
   }
 
   if (typeof module !== "undefined" && module.exports) {
-    module.exports = { parseNu: parseNu, matchesNu: matchesNu, latest: latest, targetMatches: targetMatches, canActivate: canActivate, filterPackages: filterPackages, detailHtml: detailHtml, safeUrl: safeUrl, packageHash: packageHash, publicationHtml: publicationHtml };
+    module.exports = { parseNu: parseNu, matchesNu: matchesNu, latest: latest, targetMatches: targetMatches, proofCoverage: proofCoverage, canActivate: canActivate, filterPackages: filterPackages, detailHtml: detailHtml, safeUrl: safeUrl, packageHash: packageHash, publicationHtml: publicationHtml };
   }
   if (typeof document === "undefined") return;
 
@@ -245,13 +283,15 @@
     var visible = filterPackages(packages, f), html = [], lastType = "";
     visible.forEach(function (pkg) {
       var version = latest(pkg), id = pkg.id.owner + "/" + pkg.id.name;
+      var coverage = proofCoverage(version);
+      var coverageSummary = coverage.length ? "Proofs: " + coverage.map(function (item) { return item.label + " " + item.status; }).join("; ") : "";
       if (lastType !== pkg.type) {
         lastType = pkg.type;
         html.push('<tr class="group"><td colspan="4"><button type="button" data-group="' + escapeHtml(pkg.type) + '" aria-expanded="' + !collapsed[pkg.type] + '">' + (collapsed[pkg.type] ? "Show " : "Hide ") + escapeHtml(LABELS[pkg.type] || pkg.type) + "</button></td></tr>");
       }
       if (collapsed[pkg.type]) return;
       html.push('<tr class="pkg-row' + (valid && matchesNu(version.nu_version, f.nu) === true ? " is-match" : "") + '"><td class="pkg"><a href="' + escapeHtml(packageHash(id)) + '">' + escapeHtml(id) + '</a><div class="pkg-description">' + escapeHtml(pkg.description) + '</div></td><td class="type">' + escapeHtml(pkg.type) +
-        (version.yanked ? '<span class="target-summary">Yanked</span>' : (!canActivate(pkg, version) ? '<span class="target-summary">Install-only</span>' : "")) + '</td><td class="ver">' + escapeHtml(version.version || "Unavailable") + '</td><td class="nu"><code>' + escapeHtml(version.nu_version || "Unknown") + "</code>" + compatibility(version, f.nu) + '<span class="target-summary">' + escapeHtml(targetSummary(version)) + "</span></td></tr>");
+        (version.yanked ? '<span class="target-summary">Yanked</span>' : (!canActivate(pkg, version) ? '<span class="target-summary">Install-only</span>' : "")) + '</td><td class="ver">' + escapeHtml(version.version || "Unavailable") + '</td><td class="nu"><code>' + escapeHtml(version.nu_version || "Unknown") + "</code>" + compatibility(version, f.nu) + '<span class="target-summary">' + escapeHtml(targetSummary(version)) + "</span>" + (coverageSummary ? '<span class="target-summary">' + escapeHtml(coverageSummary) + "</span>" : "") + "</td></tr>");
     });
     rows.innerHTML = html.join("");
     el("package-table").hidden = !visible.length;
