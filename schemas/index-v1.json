@@ -71,6 +71,7 @@
           },
           "tags": {
             "type": "array",
+            "description": "Free-form tags. `deprecated` marks a package as superseded; `alternative:<owner/name>` names the maintained replacement.",
             "items": { "type": "string" }
           },
           "versions": {
@@ -91,6 +92,26 @@
                   "type": "string",
                   "pattern": ".*\\S.*",
                   "description": "Required alongside evidence_tier: 'provisional' — explains why lifecycle-prove was deferred."
+                },
+                "yanked": {
+                  "type": "object",
+                  "description": "Present only when this version is withdrawn from installation and activation. Presence is terminal: clients must not offer or perform install/activate. reason_code is the stable machine-readable cause; evidence_url points at the public diagnosis.",
+                  "required": ["reason_code", "evidence_url"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "reason_code": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+                      "minLength": 3,
+                      "maxLength": 64,
+                      "description": "Stable lowercase kebab-case reason code, e.g. 'nu-plugin-protocol-mismatch' or 'nu-parser-incompatible'."
+                    },
+                    "evidence_url": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "Public evidence document explaining the withdrawal."
+                    }
+                  }
                 },
                 "provenance": {
                   "type": "string",

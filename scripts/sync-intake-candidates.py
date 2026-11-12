@@ -92,6 +92,7 @@ def registry_packages(index: dict[str, Any]) -> dict[str, dict[str, Any]]:
             "ci_built": provenances == {"ci-built"},
             "upstream_asset": provenances == {"upstream"},
             "mixed": len(provenances) > 1,
+            "yanked": bool(latest.get("yanked")),
         }
     return live
 
@@ -234,16 +235,17 @@ def _live_status(
     info = live[pid]
     version = entry.get("version", "")
     parts: list[str] = []
+    label = "yanked" if info.get("yanked") else "live"
     if info.get("mixed"):
-        parts.append("live (mixed provenance)")
+        parts.append(f"{label} (mixed provenance)")
     elif info.get("mirror"):
-        parts.append("live (registry mirror)")
+        parts.append(f"{label} (registry mirror)")
     elif info.get("ci_built"):
-        parts.append("live (ci-built asset)")
+        parts.append(f"{label} (ci-built asset)")
     elif info.get("upstream_asset"):
-        parts.append("live (upstream asset)")
+        parts.append(f"{label} (upstream asset)")
     else:
-        parts.append("live")
+        parts.append(label)
     if version and info.get("version") != version:
         parts.append(f"index@{info['version']}")
     return parts

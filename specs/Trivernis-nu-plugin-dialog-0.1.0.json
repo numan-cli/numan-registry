@@ -6,8 +6,11 @@
   "type": "plugin",
   "tags": ["plugin", "dialog", "ui"],
   "version": "0.1.0",
-  "nu_version": ">=0.107.0 <0.108.0",
-  "verified_with": ["0.107.0"],
+  "nu_version": ">=0.78.0 <0.79.0",
+  "yanked": {
+    "reason_code": "nu-plugin-protocol-mismatch",
+    "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-reprove.md"
+  },
   "artifact": {
     "kind": "binary",
     "targets": {

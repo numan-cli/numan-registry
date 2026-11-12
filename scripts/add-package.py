@@ -326,6 +326,8 @@ def build_version_entry(spec, *, deferral_reason=None):
         version_entry["deferral_reason"] = deferral_reason
     if "provenance" in spec:
         version_entry["provenance"] = spec["provenance"]
+    if "yanked" in spec:
+        version_entry["yanked"] = spec["yanked"]
     copy_source_field(spec, version_entry)
     if "activation" in spec:
         check_module_import_mode(spec["artifact"], spec["activation"])
@@ -450,6 +452,8 @@ def validate_spec(spec, *, allow_provisional=False):
         sys.exit(1)
     validate_fork_identity(spec)
     validate_provenance(spec)
+    if "yanked" in spec and "verified_with" not in spec:
+        return
     if spec["type"] == "plugin" or "activation" in spec:
         evidence = spec.get("verified_with")
         evidence_error = lifecycle_evidence_error(spec["nu_version"], evidence)

@@ -173,6 +173,10 @@ def lifecycle_evidence_errors(index, *, allow_missing=False):
     for package in index.get("packages", []):
         package_id = f"{package['id']['owner']}/{package['id']['name']}"
         for version in package.get("versions", []):
+            # Terminal yanked versions may omit lifecycle proof. If a proof is
+            # retained, still validate it against the declared Nu range.
+            if "yanked" in version and "verified_with" not in version:
+                continue
             activatable = package.get("type") == "plugin" or "activation" in version
             if not activatable:
                 continue

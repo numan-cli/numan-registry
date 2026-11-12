@@ -93,6 +93,32 @@ class SyncIntakeCandidatesTests(unittest.TestCase):
         self.assertFalse(info["upstream_asset"])
         self.assertFalse(info["mirror"])
         self.assertFalse(info["mixed"])
+        self.assertFalse(info["yanked"])
+
+    def test_registry_packages_marks_yanked(self):
+        index = {
+            "packages": [
+                {
+                    "id": {"owner": "acme", "name": "pkg"},
+                    "versions": [
+                        {
+                            "version": "1.0.0",
+                            "yanked": {
+                                "reason_code": "nu-parser-incompatible",
+                                "evidence_url": "https://example.com/evidence",
+                            },
+                            "artifact": {
+                                "kind": "archive",
+                                "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror/pkg.zip",
+                            },
+                        }
+                    ],
+                }
+            ]
+        }
+        info = self.sync.registry_packages(index)["acme/pkg"]
+        self.assertTrue(info["yanked"])
+        self.assertTrue(info["mirror"])
 
     def test_registry_packages_preserves_mirror_when_mixed(self):
         index = {
@@ -151,6 +177,22 @@ class SyncIntakeCandidatesTests(unittest.TestCase):
         self.assertTrue(status.startswith("live (ci-built asset)"))
         self.assertIn("ci-built via numan-plugins; wave1; Nu 0.112", status)
         self.assertNotIn("upstream asset", status)
+
+    def test_package_status_uses_yanked_label(self):
+        entry = {"id": "acme/withdrawn", "version": "1.0.0"}
+        live = {
+            "acme/withdrawn": {
+                "version": "1.0.0",
+                "mirror": True,
+                "ci_built": False,
+                "upstream_asset": False,
+                "mixed": False,
+                "yanked": True,
+            }
+        }
+        status = self.sync.package_status(entry, live, {}, {})
+        self.assertTrue(status.startswith("yanked (registry mirror)"))
+        self.assertNotIn("live", status)
 
     def test_package_status_prefers_mixed_over_mirror(self):
         entry = {"id": "acme/nu_plugin_partial", "version": "1.0.0"}

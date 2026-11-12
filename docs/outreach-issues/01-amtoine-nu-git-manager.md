@@ -1,3 +1,5 @@
+> **Do not send — upstream archived.** `amtoine/nu-git-manager` is archived and no maintained public fork or successor was found. Both `nu-git-manager` entries are `deprecated`, `watch-off`, `yanked` (`nu-parser-incompatible`), and production-excluded; use `fj0r/git.nu`. The stale watch issue [#109](https://github.com/numan-cli/numan-registry/issues/109) is closed as not planned. This draft is retained for history only.
+
 Hi. I'm adding NGM to the [Numan](https://github.com/numan-cli/numan) registry (same general idea as nupm: install from a curated index, verify artifacts by hash).
 
 You're already listed in the [nupm registry](https://github.com/nushell/nupm) with git pins on `pkgs/nu-git-manager`. For Numan I need something with stable bytes per tag, so right now I'm hosting a mirror of **0.8.0** myself (`pkgs/nu-git-manager/` zipped as `nu-git-manager-0.8.0.zip`).

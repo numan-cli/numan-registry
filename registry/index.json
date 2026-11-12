@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-02T07:51:19Z",
+  "updated_at": "2026-11-12T04:42:00Z",
   "registry_revision": "seed-2026-07-02",
   "packages": [
     {
@@ -390,21 +390,28 @@
         "owner": "amtoine",
         "name": "nu-git-manager"
       },
-      "description": "Git repository management tools for Nushell (prompts, status, utilities). Artifact is a registry-hosted mirror of upstream tag 0.8.0 (pkgs/nu-git-manager); upstream has no uploaded release zip.",
+      "description": "Deprecated: archived upstream mirror of tag 0.8.0 (pkgs/nu-git-manager); no maintained fork found in the sources checked. Maintained alternative: fj0r/git.nu. Upstream has no uploaded release zip.",
       "repo": "https://github.com/amtoine/nu-git-manager",
       "type": "module",
       "tags": [
         "module",
         "git",
-        "mirror"
+        "mirror",
+        "archived",
+        "deprecated",
+        "watch-off",
+        "alternative:fj0r/git.nu"
       ],
       "versions": [
         {
           "version": "0.8.0",
           "nu_version": ">=0.92.0",
-          "verified_with": [
-            "0.113.1"
-          ],
+          "evidence_tier": "provisional",
+          "deferral_reason": "Windows x86_64 lifecycle-prove failed on Nu 0.113.1: module activation failed with nu::parser::operator_incompatible_types in mod.nu; upstream is archived and the module needs a compatibility fix. No maintained public fork or successor found; archived/watch-off; use fj0r/git.nu as the maintained alternative.",
+          "yanked": {
+            "reason_code": "nu-parser-incompatible",
+            "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-reprove.md"
+          },
           "artifact": {
             "kind": "archive",
             "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-amtoine-nu-git-manager-0.8.0/nu-git-manager-0.8.0.zip",
@@ -575,7 +582,7 @@
         "owner": "nushell",
         "name": "custom-completions"
       },
-      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, \u2026). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Declares completion targets for its curated custom-completions files for activation with `numan activate`.",
+      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, …). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Declares completion targets for its curated custom-completions files for activation with `numan activate`.",
       "repo": "https://github.com/nushell/nu_scripts",
       "type": "completion",
       "tags": [
@@ -816,10 +823,13 @@
       "versions": [
         {
           "version": "0.1.0",
-          "nu_version": ">=0.107.0 <0.108.0",
-          "verified_with": [
-            "0.107.0"
-          ],
+          "nu_version": ">=0.78.0 <0.79.0",
+          "evidence_tier": "provisional",
+          "deferral_reason": "Windows x86_64 lifecycle-prove failed on Nu 0.107.0: plugin registration returned a protocol decode error (unknown variant Error); the artifact was built against nu-plugin 0.78.0, and requires an upstream rebuild for a supported Nu era.",
+          "yanked": {
+            "reason_code": "nu-plugin-protocol-mismatch",
+            "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-reprove.md"
+          },
           "artifact": {
             "kind": "binary",
             "targets": {
@@ -893,22 +903,29 @@
         "owner": "amtoine",
         "name": "nu-git-manager-sugar"
       },
-      "description": "Git prompt sugar for nu-git-manager (right prompt, completions). Registry-hosted mirror of upstream tag 0.7.0 (pkgs/nu-git-manager-sugar).",
+      "description": "Deprecated: archived upstream mirror of tag 0.7.0 (pkgs/nu-git-manager-sugar); no maintained fork found in the sources checked. Maintained alternative: fj0r/git.nu.",
       "repo": "https://github.com/amtoine/nu-git-manager",
       "type": "module",
       "tags": [
         "module",
         "git",
         "prompt",
-        "mirror"
+        "mirror",
+        "archived",
+        "deprecated",
+        "watch-off",
+        "alternative:fj0r/git.nu"
       ],
       "versions": [
         {
           "version": "0.7.0",
           "nu_version": ">=0.92.0",
-          "verified_with": [
-            "0.113.1"
-          ],
+          "evidence_tier": "provisional",
+          "deferral_reason": "Windows x86_64 lifecycle-prove failed on Nu 0.113.1: module activation failed with nu::parser::extra_positional in git/mod.nu; upstream is archived and the module needs a compatibility fix. No maintained public fork or successor found; archived/watch-off; use fj0r/git.nu as the maintained alternative.",
+          "yanked": {
+            "reason_code": "nu-parser-incompatible",
+            "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-reprove.md"
+          },
           "artifact": {
             "kind": "archive",
             "url": "https://github.com/numan-cli/numan-registry/releases/download/mirror-amtoine-nu-git-manager-sugar-0.7.0/nu-git-manager-sugar-0.7.0.zip",

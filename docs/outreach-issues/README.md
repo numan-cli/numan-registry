@@ -6,7 +6,7 @@ Copy-paste ready: each draft is written for its repo, not from a shared template
 
 | Repo | Title | Status |
 | ------ | ------- | -------- |
-| [amtoine/nu-git-manager](https://github.com/amtoine/nu-git-manager) | Release zip for `pkgs/nu-git-manager` on tags? | **Blocked**: repo archived |
+| [amtoine/nu-git-manager](https://github.com/amtoine/nu-git-manager) | Release zip for `pkgs/nu-git-manager` on tags? | **Blocked**: repo archived; no public fork/successor found; deprecated; watch-off; [#109](https://github.com/numan-cli/numan-registry/issues/109) closed as not planned; use `fj0r/git.nu` |
 | [tesujimath/bash-env-nushell](https://github.com/tesujimath/bash-env-nushell) | Uploaded zip for tag releases? | Resolved [#50](https://github.com/tesujimath/bash-env-nushell/issues/50) |
 | [nushell-prophet/numd](https://github.com/nushell-prophet/numd) | Release zip assets for dotnu + numd | Filed [#115](https://github.com/nushell-prophet/numd/issues/115): await / use [12](12-nushell-prophet-numd-nudge.md) |
 | [nushell/nu_scripts](https://github.com/nushell/nu_scripts) | Release artifacts for nu-hooks / custom-completions | Filed [#1266](https://github.com/nushell/nu_scripts/issues/1266): zips declined; use [11](11-nushell-nu-scripts-followup-org.md) |

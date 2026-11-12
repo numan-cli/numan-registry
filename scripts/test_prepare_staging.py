@@ -21,6 +21,10 @@ class PrepareStagingTests(unittest.TestCase):
         provisional = json.loads((root / "registry/provisional.json").read_text(encoding="utf-8"))
         for package in production["packages"]:
             for version in package["versions"]:
+                if version.get("yanked"):
+                    self.assertTrue(version["yanked"].get("reason_code"), package["id"])
+                    self.assertTrue(version["yanked"].get("evidence_url"), package["id"])
+                    continue
                 if package["type"] == "plugin" or version.get("activation", {}).get("kind") == "nu-module":
                     self.assertTrue(version.get("verified_with"), package["id"])
         for package in provisional["packages"]:

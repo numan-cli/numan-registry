@@ -61,6 +61,13 @@ shape, or any changed artifact bytes refuses and stays human-gated.
 ## Maintainer overrides
 
 - Tag a package `watch-off` to silence it (archived/abandoned upstream).
+- When an upstream is archived and no maintained fork or successor exists, record the
+  decision in `docs/intake-state.json`, mark the package `deprecated` in its
+  registry tags, keep the version provisional/yanked as appropriate, and close its
+  open `[watch]` issue as `not_planned` with a comment linking the evidence and the
+  maintained alternative. Example:
+  `amtoine/nu-git-manager` and `nu-git-manager-sugar` (issue #109), alternative
+  `fj0r/git.nu`.
 - Bump `docs/watch-target-nu.json` when a new Nushell minor lands; the
   next run queues every entry that excludes it.
 - `workflow_dispatch` accepts `target_nu` and `packages` to scope a live

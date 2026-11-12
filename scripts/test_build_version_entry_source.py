@@ -175,6 +175,29 @@ class BuildVersionEntryEvidenceTierTests(unittest.TestCase):
         self.assertNotIn("evidence_tier", version_entry)
         self.assertNotIn("deferral_reason", version_entry)
 
+    def test_passes_yanked_through_to_version_entry(self):
+        yanked = {
+            "reason_code": "nu-parser-incompatible",
+            "evidence_url": "https://example.com/evidence.md",
+        }
+        spec = {
+            "version": "1.0.0",
+            "nu_version": "*",
+            "yanked": yanked,
+            "artifact": {
+                "kind": "binary",
+                "targets": {
+                    "x86_64-unknown-linux-gnu": {
+                        "url": "https://example.invalid/a.tar.gz",
+                        "executable_path": "p",
+                    }
+                },
+            },
+        }
+        with mock.patch.object(self.ap, "download_and_hash", return_value="a" * 64):
+            version_entry = self.ap.build_version_entry(spec)
+        self.assertEqual(version_entry["yanked"], yanked)
+
 
 class SchemaProvisionalTierTests(unittest.TestCase):
     """Confirm the schema itself rejects a provisional entry missing deferral_reason."""

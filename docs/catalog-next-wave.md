@@ -23,7 +23,7 @@ From the committed index (44 packages):
 
 Notes on non-plugins already present:
 
-- **Modules:** `bash-env-nushell`, `nutest`, `dotnu`, `numd`, `nu-hooks`, `nu-git-manager` (+ sugar; archived upstream).
+- **Modules:** `bash-env-nushell`, `nutest`, `dotnu`, `numd`, `nu-hooks`, `nu-git-manager` (+ sugar; deprecated, archived upstream, no maintained fork found in the searched sources (SourceHut search blocked); `fj0r/git.nu` is the maintained alternative).
 - **Completions:** `nushell/custom-completions` (whole tree snapshot), `nushell/git-completions` (git slice), plus cargo / npm / make / winget splits (Wave 3B). All install-only mirrors at commit `f04cb44`.
 - **Scripts:** `SuaveIV/nu_script_wttr`, `nu_script_gh_status`, `nu_script_hnews`, `Sanceilaks/nufetch`, and `KamilKleina/git-aliases` (all install-only mirrors).
 
@@ -94,7 +94,7 @@ Modules can already activate. Prefer packages with clear exports and low host co
 | P1 | Refresh / add `nu_scripts` docker, kubernetes helpers if they load as modules | Real day-job demos without ABI |
 | P1 | Confirm whether `git-aliases.nu` activates cleanly as a module | Better than install-only for UX |
 | P2 | `amasialabs/nushell-modules` (snip) | Snippet manager |
-| Defer | Archived `nu-git-manager` replacements | Already have archived mirrors; avoid more archive debt |
+| Watch-off | Deprecated archived `nu-git-manager` modules | No maintained public fork/successor found in GitHub, GitLab, Codeberg web search, or nupm; SourceHut search blocked (HTTP 418) and direct paths 404; keep provisional and production-excluded; use `fj0r/git.nu` |
 
 ## Recommended Wave 3 (registry-first)
 
