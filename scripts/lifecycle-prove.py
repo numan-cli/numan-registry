@@ -199,7 +199,11 @@ def run_nu_check(
     env: dict[str, str],
 ) -> subprocess.CompletedProcess[str]:
     """Run one real-Nu check after activation in the isolated Numan home."""
-    print(f"==> nu check: {command}", flush=True)
+    display_cmd = command
+    for val in env.values():
+        if val and len(val) >= 4 and val in display_cmd:
+            display_cmd = display_cmd.replace(val, "[REDACTED]")
+    print(f"==> nu check: {display_cmd}", flush=True)
     return subprocess.run(
         [str(nu), "-c", command],
         env=env,
@@ -271,7 +275,7 @@ def forward_environment(names: list[str] | tuple[str, ...]) -> dict[str, str]:
     forwarded = {}
     for name in names:
         if not _ENV_NAME.fullmatch(name):
-            raise ValueError(f"invalid environment variable name: {name!r}")
+            raise ValueError("invalid environment variable name; expected [A-Za-z_][A-Za-z0-9_]*")
         if name.upper() in _RESERVED_ENV:
             raise ValueError(f"refusing to forward reserved environment variable: {name}")
         if name not in os.environ:
@@ -427,27 +431,29 @@ def prove(
     forward_env: tuple[str, ...] = (),
     nu_check: str | None = None,
 ) -> int:
-    # Prefer the requested Nu for `numan init` probing without mutating the
-    # caller's shell permanently: create a temporary shim that invokes the
-    # exact nu binary, ensuring numan doesn't find a different nu on PATH.
-    """
-    Run the complete lifecycle verification sequence for a package.
-    
+    """Run the complete lifecycle verification sequence for a package.
+
     Args:
         package_id: Package identifier in ``owner/name`` format.
         numan: Path to the Numan executable.
         nu: Path to the Nu executable used during initialization.
         root: Numan root directory for the verification.
         keep_root: Whether to preserve the root directory after completion.
-    
+        candidate_index: Optional path to candidate index for loopback registry.
+        package_version: Optional package version to verify.
+        forward_env: Names of environment variables to forward to the Nu check.
+        nu_check: Optional Nushell command to run after activation.
+
     Returns:
         ``0`` if every lifecycle step succeeds, ``2`` if Nu isolation fails,
         or the failing step's exit code otherwise.
-    
+
     The temporary Nu shim is removed after execution. The root directory is
     removed unless ``keep_root`` is true.
     """
-    # Create a temporary directory for the nu shim
+    # Prefer the requested Nu for `numan init` probing without mutating the
+    # caller's shell permanently: create a temporary shim that invokes the
+    # exact nu binary, ensuring numan doesn't find a different nu on PATH.
     shim_dir = Path(tempfile.mkdtemp(prefix="numan-lifecycle-prove-shim-"))
     is_windows = sys.platform == "win32"
     shim_path = shim_dir / "nu"
@@ -455,9 +461,6 @@ def prove(
     try:
         env = isolated_environment(root / "lifecycle-home")
         env["NUMAN_ROOT"] = str(root.resolve())
-        check_env = {**env, **forward_environment(forward_env)}
-        if forward_env:
-            print("forwarded to Nu check only: " + ", ".join(forward_env), flush=True)
         probe = probe_isolated_nu(nu, root / "lifecycle-home", env)
         print("isolated Nu probe: " + json.dumps(probe), flush=True)
         print("Nu SHA256: " + sha256_file(nu), flush=True)
@@ -478,6 +481,11 @@ def prove(
         path_key = "PATH"
         sep = os.pathsep
         env[path_key] = str(nu_search_dir) + sep + env.get(path_key, "")
+
+        # Build check_env only after Nu isolation succeeds
+        check_env = {**env, **forward_environment(forward_env)}
+        if forward_env:
+            print("forwarded to Nu check only: " + ", ".join(forward_env), flush=True)
 
         print(f"package: {package_id}")
         print(f"numan:   {numan}")
@@ -578,7 +586,8 @@ def main(argv: list[str] | None = None) -> int:
         "--nu-check",
         help=(
             "Exact Nushell command to run after activation and before doctor; "
-            "a nonzero exit fails the lifecycle proof."
+            "a nonzero exit fails the lifecycle proof. Must not contain credential "
+            "literals (use --forward-env instead)."
         ),
     )
     args = parser.parse_args(argv)

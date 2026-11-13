@@ -1035,10 +1035,6 @@
     {
       "id": "abusch/nu_plugin_semver",
       "blocker": "Linux/macOS tar.xz assets; pending multi-platform intake"
-    },
-    {
-      "id": "fennewald/nu_plugin_net",
-      "blocker": "Linux/macOS tar.xz assets; pending multi-platform intake"
     }
   ],
   "changelog": [

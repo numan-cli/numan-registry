@@ -1,0 +1,110 @@
+COMMAND ["D:\\Dev\\numan_workspace\\numan-registry\\.venv\\Scripts\\python.exe", "D:\\Dev\\numan_workspace\\numan-registry\\scripts\\lifecycle-prove.py", "--package", "abusch/nu_plugin_semver", "--package-version", "0.11.17", "--candidate-index", "D:\\Dev\\numan_workspace\\numan-registry\\registry\\index.json", "--numan", "D:\\Dev\\numan_workspace\\numan\\target\\debug\\numan.exe", "--nu", "D:\\Dev\\numan_workspace\\numan-registry\\.tmp-lifecycle\\nu\\0.113.1\\nu.exe"]
+isolated Nu probe: {"version": "0.113.1", "plugin_path": "D:\\Temp\\numan-lifecycle-prove-_6sc87yk\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Temp\\numan-lifecycle-prove-_6sc87yk\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Temp\\numan-lifecycle-prove-_6sc87yk\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: efcfaaf1dee8e97e3b0f6b727c108dad4ac2d920226d182a455efb100709c835
+Numan SHA256: 4b5356984ebccbaa411fefe82dbf28718b48c44bfde4def87fc0af0a1bb8a0ed
+package: abusch/nu_plugin_semver
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\numan-registry\.tmp-lifecycle\nu\0.113.1\nu.exe
+root:    D:\Temp\numan-lifecycle-prove-_6sc87yk
+
+candidate package version: 0.11.17
+candidate file SHA256: 19447b129f640a318fb8bf6af2c5a932ac17008c8a5d1dee414949e7851318b0
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-_6sc87yk init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Temp\numan-lifecycle-prove-_6sc87yk'.
+  Nu executable: D:\Temp\numan-lifecycle-prove-shim-52w5vez0\nu.exe
+  Nu version:    0.113.1
+  Plugin registry: D:\Temp\numan-lifecycle-prove-_6sc87yk\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Temp\numan-lifecycle-prove-_6sc87yk\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-_6sc87yk registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-_6sc87yk registry add lifecycle-candidate http://127.0.0.1:50941/index.json --key hZlctJJLwjYcPlmXgT7hTSeVjPxQAbEZcJsSShpq7do=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:50941/index.json
+  Fingerprint: sha256:41709b3c2cf512fc48df3c4614462c60450e4b4098cf8e37ff2502e6dd3daffa
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-_6sc87yk registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:50941/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 3120af39).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-_6sc87yk search nu_plugin_semver
+Found 1 package(s) matching 'nu_plugin_semver':
+checked against: Nu 0.113.1 (x86_64-pc-windows-msvc)
+
+  abusch/nu_plugin_semver  v0.11.17  [plugin]
+    A Nushell plugin to manipulate SemVer versions: parse, compare, sort, bump, and match against version requirements.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-_6sc87yk info abusch/nu_plugin_semver
+Package:    abusch/nu_plugin_semver
+Type:       plugin
+Status:     verified upstream artifact
+Description: A Nushell plugin to manipulate SemVer versions: parse, compare, sort, bump, and match against version requirements.
+Repository: https://github.com/abusch/nu_plugin_semver
+Tags:       plugin, semver, versioning
+Your Nu:    0.113.1 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.11.17  [nu >=0.113.0 <0.114.0]  (compatible) [host proof passed]
+    tested with: 0.113.1
+    proof:       windows/x86_64, Nu 0.113.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+    platform: x86_64-apple-darwin
+    platform: aarch64-unknown-linux-gnu
+    platform: x86_64-pc-windows-msvc
+    platform: x86_64-unknown-linux-gnu
+    platform: aarch64-apple-darwin
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Per-platform proofs list the OS/architecture tested.
+Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-_6sc87yk install abusch/nu_plugin_semver@0.11.17
+✓ Installed abusch/nu_plugin_semver@0.11.17 to D:\Temp\numan-lifecycle-prove-_6sc87yk\packages\plugins\abusch\nu_plugin_semver\0.11.17-da33f99b
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-_6sc87yk activate abusch/nu_plugin_semver
+
+Plugin registration
+  abusch/nu_plugin_semver -> D:\Temp\numan-lifecycle-prove-_6sc87yk\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Registered abusch/nu_plugin_semver — takes effect in future Nu sessions (not the current shell)
+==> doctor: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-_6sc87yk doctor
+Numan doctor — D:\Temp\numan-lifecycle-prove-_6sc87yk
+
+Initialization
+  · PATH Nu: 0.113.1
+  · Managed Nu: not installed
+
+Activation
+  · Plugin 'abusch/nu_plugin_semver' has an activation record (Issue #22). Deactivate is available; active remove stays gated (deactivate first). Active update is opt-in via NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly (default off): deactivate→upgrade→activate (https://github.com/numan-cli/numan/issues/22).
+    Fix: Remove: `numan deactivate <pkg>`, then `numan remove <pkg>`. Update: set NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly, then `numan update <pkg>` orchestrates deactivate→upgrade→activate; otherwise active update is gated (default off). See docs/active-plugin-gate.md.
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-_6sc87yk list
+Installed packages (1):
+
+  abusch/nu_plugin_semver  v0.11.17  [plugin]  activated
+==> deactivate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-_6sc87yk deactivate abusch/nu_plugin_semver
+
+Plugin deactivation
+  abusch/nu_plugin_semver (semver) <- D:\Temp\numan-lifecycle-prove-_6sc87yk\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Unregistered abusch/nu_plugin_semver — takes effect in future Nu sessions (not the current shell)
+==> remove: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-_6sc87yk remove --yes abusch/nu_plugin_semver
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed abusch/nu_plugin_semver
+==> gc: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-_6sc87yk gc
+No orphaned packages found.
+OK: lifecycle-prove passed.

@@ -1,0 +1,123 @@
+COMMAND ["D:\\Dev\\numan_workspace\\numan-registry\\.venv\\Scripts\\python.exe", "D:\\Dev\\numan_workspace\\numan-registry\\scripts\\lifecycle-prove.py", "--package", "idanarye/nu_plugin_skim", "--package-version", "0.31.0", "--candidate-index", "D:\\Dev\\numan_workspace\\numan-registry\\registry\\index.json", "--numan", "D:\\Dev\\numan_workspace\\numan\\target\\debug\\numan.exe", "--nu", "D:\\Dev\\numan_workspace\\numan-registry\\.tmp-lifecycle\\nu\\0.116.1\\nu.exe"]
+isolated Nu probe: {"version": "0.116.1", "plugin_path": "D:\\Temp\\numan-lifecycle-prove-o546_rxn\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Temp\\numan-lifecycle-prove-o546_rxn\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Temp\\numan-lifecycle-prove-o546_rxn\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: e37dff301cf52a49eb82a90e8b4634328379fffa3b244b2172a1c307e03e5d69
+Numan SHA256: 4b5356984ebccbaa411fefe82dbf28718b48c44bfde4def87fc0af0a1bb8a0ed
+package: idanarye/nu_plugin_skim
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\numan-registry\.tmp-lifecycle\nu\0.116.1\nu.exe
+root:    D:\Temp\numan-lifecycle-prove-o546_rxn
+
+candidate package version: 0.31.0
+candidate file SHA256: 19447b129f640a318fb8bf6af2c5a932ac17008c8a5d1dee414949e7851318b0
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-o546_rxn init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Temp\numan-lifecycle-prove-o546_rxn'.
+  Nu executable: D:\Temp\numan-lifecycle-prove-shim-s8ft9e9h\nu.exe
+  Nu version:    0.116.1
+  Plugin registry: D:\Temp\numan-lifecycle-prove-o546_rxn\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Temp\numan-lifecycle-prove-o546_rxn\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-o546_rxn registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-o546_rxn registry add lifecycle-candidate http://127.0.0.1:60353/index.json --key H+qrCzwIpcshecrl8cNG8ITTzbKmRpBFLlbBZbecraI=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:60353/index.json
+  Fingerprint: sha256:37ea29813bdadfdcdf2797a4d54b60b14b9d19f21df31a819f4af650fb82fef1
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-o546_rxn registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:60353/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 3120af39).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-o546_rxn search nu_plugin_skim
+Found 1 package(s) matching 'nu_plugin_skim':
+checked against: Nu 0.116.1 (x86_64-pc-windows-msvc)
+
+  idanarye/nu_plugin_skim  v0.31.0  [plugin]
+    Fuzzy finder (skim) integration for Nushell. CI-built from idanarye/nu_plugin_skim@v0.31.0 and pinned + hash-verified + signed downstream in numan-registry.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-o546_rxn info idanarye/nu_plugin_skim
+Package:    idanarye/nu_plugin_skim
+Type:       plugin
+Status:     verified upstream artifact
+Description: Fuzzy finder (skim) integration for Nushell. CI-built from idanarye/nu_plugin_skim@v0.31.0 and pinned + hash-verified + signed downstream in numan-registry.
+Repository: https://github.com/idanarye/nu_plugin_skim
+Tags:       plugin, skim, fuzzy, ci-built
+Your Nu:    0.116.1 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.29.1  [nu >=0.114.0 <0.115.0]  (needs Nu >=0.114.0 <0.115.0) [no host proof]
+    tested with: 0.114.1
+    proof:       windows/x86_64, Nu 0.114.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+    warning:     no lifecycle proof for x86_64-pc-windows-msvc on Nu 0.116.1
+    source git:  https://github.com/idanarye/nu_plugin_skim
+    source rev:  v0.29.1
+    cargo_name:  nu_plugin_skim
+    platform: x86_64-pc-windows-msvc
+    platform: aarch64-apple-darwin
+    platform: x86_64-unknown-linux-gnu
+    platform: aarch64-unknown-linux-gnu
+  v0.31.0  [nu >=0.116.0 <0.117.0]  (compatible) [host proof passed]
+    tested with: 0.116.1
+    proof:       windows/x86_64, Nu 0.116.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+    source git:  https://github.com/idanarye/nu_plugin_skim
+    source rev:  b4b7c8605f783ca8a844a7dc382963a11cae7d8f
+    cargo_name:  nu_plugin_skim
+    platform: aarch64-apple-darwin
+    platform: aarch64-unknown-linux-gnu
+    platform: x86_64-pc-windows-msvc
+    platform: x86_64-unknown-linux-gnu
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Per-platform proofs list the OS/architecture tested.
+Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-o546_rxn install idanarye/nu_plugin_skim@0.31.0
+✓ Installed idanarye/nu_plugin_skim@0.31.0 to D:\Temp\numan-lifecycle-prove-o546_rxn\packages\plugins\idanarye\nu_plugin_skim\0.31.0-c95c9c7e
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-o546_rxn activate idanarye/nu_plugin_skim
+
+Plugin registration
+  idanarye/nu_plugin_skim -> D:\Temp\numan-lifecycle-prove-o546_rxn\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Registered idanarye/nu_plugin_skim — takes effect in future Nu sessions (not the current shell)
+==> doctor: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-o546_rxn doctor
+Numan doctor — D:\Temp\numan-lifecycle-prove-o546_rxn
+
+Initialization
+  · PATH Nu: 0.116.1
+  · Managed Nu: not installed
+
+Activation
+  · Plugin 'idanarye/nu_plugin_skim' has an activation record (Issue #22). Deactivate is available; active remove stays gated (deactivate first). Active update is opt-in via NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly (default off): deactivate→upgrade→activate (https://github.com/numan-cli/numan/issues/22).
+    Fix: Remove: `numan deactivate <pkg>`, then `numan remove <pkg>`. Update: set NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly, then `numan update <pkg>` orchestrates deactivate→upgrade→activate; otherwise active update is gated (default off). See docs/active-plugin-gate.md.
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-o546_rxn list
+Installed packages (1):
+
+  idanarye/nu_plugin_skim  v0.31.0  [plugin]  activated
+==> deactivate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-o546_rxn deactivate idanarye/nu_plugin_skim
+
+Plugin deactivation
+  idanarye/nu_plugin_skim (skim) <- D:\Temp\numan-lifecycle-prove-o546_rxn\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Unregistered idanarye/nu_plugin_skim — takes effect in future Nu sessions (not the current shell)
+==> remove: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-o546_rxn remove --yes idanarye/nu_plugin_skim
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed idanarye/nu_plugin_skim
+==> gc: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-o546_rxn gc
+No orphaned packages found.
+OK: lifecycle-prove passed.

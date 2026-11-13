@@ -1,0 +1,104 @@
+COMMAND ["D:\\Dev\\numan_workspace\\numan-registry\\.venv\\Scripts\\python.exe", "D:\\Dev\\numan_workspace\\numan-registry\\scripts\\lifecycle-prove.py", "--package", "SuaveIV/nu_script_wttr", "--package-version", "0.1.0-main", "--candidate-index", "D:\\Dev\\numan_workspace\\numan-registry\\registry\\index.json", "--numan", "D:\\Dev\\numan_workspace\\numan\\target\\debug\\numan.exe", "--nu", "D:\\Dev\\numan_workspace\\numan-registry\\.tmp-lifecycle\\nu\\0.116.1\\nu.exe"]
+isolated Nu probe: {"version": "0.116.1", "plugin_path": "D:\\Temp\\numan-lifecycle-prove-4b6_l_de\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Temp\\numan-lifecycle-prove-4b6_l_de\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Temp\\numan-lifecycle-prove-4b6_l_de\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: e37dff301cf52a49eb82a90e8b4634328379fffa3b244b2172a1c307e03e5d69
+Numan SHA256: 4b5356984ebccbaa411fefe82dbf28718b48c44bfde4def87fc0af0a1bb8a0ed
+package: SuaveIV/nu_script_wttr
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\numan-registry\.tmp-lifecycle\nu\0.116.1\nu.exe
+root:    D:\Temp\numan-lifecycle-prove-4b6_l_de
+
+candidate package version: 0.1.0-main
+candidate file SHA256: 19447b129f640a318fb8bf6af2c5a932ac17008c8a5d1dee414949e7851318b0
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-4b6_l_de init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Temp\numan-lifecycle-prove-4b6_l_de'.
+  Nu executable: D:\Temp\numan-lifecycle-prove-shim-peqwmm6p\nu.exe
+  Nu version:    0.116.1
+  Plugin registry: D:\Temp\numan-lifecycle-prove-4b6_l_de\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Temp\numan-lifecycle-prove-4b6_l_de\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-4b6_l_de registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-4b6_l_de registry add lifecycle-candidate http://127.0.0.1:64163/index.json --key tSEJazMGHv6ekYns2vZCtUGQaIF8JaDoG0YQUgxjNbk=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:64163/index.json
+  Fingerprint: sha256:73710cd32b089bad7353b38667afa6627821d695452cb18cda063951078ae091
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-4b6_l_de registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:64163/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 3120af39).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-4b6_l_de search nu_script_wttr
+Found 1 package(s) matching 'nu_script_wttr':
+checked against: Nu 0.116.1 (x86_64-pc-windows-msvc)
+
+  SuaveIV/nu_script_wttr  v0.1.0-main  [script] [install-only; activation deferred; verified with 0.113.1, 0.116.1]
+    Weather fetcher for Nushell using wttr.in. Registry-hosted mirror of upstream @ main. Declares a script entry point for weather for activation with `numan activate`.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-4b6_l_de info SuaveIV/nu_script_wttr
+Package:    SuaveIV/nu_script_wttr
+Type:       script
+Activation: explicit `numan activate` required; install does not wire Nu
+Status:     verified upstream artifact
+Description: Weather fetcher for Nushell using wttr.in. Registry-hosted mirror of upstream @ main. Declares a script entry point for weather for activation with `numan activate`.
+Repository: https://github.com/SuaveIV/nu_script_wttr
+Tags:       script, weather, mirror
+Your Nu:    0.116.1 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.1.0-main  [nu *]  (compatible) [host proof passed]
+    script: weather -> weather.nu (inactive until activated)
+    tested with: 0.113.1, 0.116.1
+    proof:       windows/x86_64, Nu 0.113.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+    proof:       windows/x86_64, Nu 0.116.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Per-platform proofs list the OS/architecture tested.
+Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-4b6_l_de install SuaveIV/nu_script_wttr@0.1.0-main
+✓ Installed SuaveIV/nu_script_wttr@0.1.0-main to D:\Temp\numan-lifecycle-prove-4b6_l_de\packages\scripts\SuaveIV\nu_script_wttr\0.1.0-main-d66eaee7
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-4b6_l_de activate SuaveIV/nu_script_wttr
+
+Script startup autoload
+  SuaveIV/nu_script_wttr (weather) -> D:\Temp\numan-lifecycle-prove-4b6_l_de\lifecycle-home\xdg\data\nushell\vendor\autoload/numan.nu
+
+✓ Script SuaveIV/nu_script_wttr added to autoload (commands: weather) — takes effect in future Nu sessions
+==> doctor: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-4b6_l_de doctor
+Numan doctor — D:\Temp\numan-lifecycle-prove-4b6_l_de
+
+Initialization
+  · PATH Nu: 0.116.1
+  · Managed Nu: not installed
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-4b6_l_de list
+Installed packages (1):
+
+  SuaveIV/nu_script_wttr  v0.1.0-main  [script]  installed
+==> deactivate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-4b6_l_de deactivate SuaveIV/nu_script_wttr
+
+Module deactivation
+  SuaveIV/nu_script_wttr <- D:\Temp\numan-lifecycle-prove-4b6_l_de\lifecycle-home\xdg\data\nushell\vendor\autoload/numan.nu
+
+✓ Module SuaveIV/nu_script_wttr removed from autoload — takes effect in future Nu sessions
+==> remove: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-4b6_l_de remove --yes SuaveIV/nu_script_wttr
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed SuaveIV/nu_script_wttr
+==> gc: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-4b6_l_de gc
+No orphaned packages found.
+OK: lifecycle-prove passed.

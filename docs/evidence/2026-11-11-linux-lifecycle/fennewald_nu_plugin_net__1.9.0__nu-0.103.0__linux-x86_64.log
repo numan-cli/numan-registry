@@ -1,0 +1,122 @@
+package=fennewald/nu_plugin_net
+package_version=1.9.0
+nu_version=0.103.0
+started_at=2026-11-11T11:13:33Z
+platform=linux/x86_64
+numan_sha256=1dcb395699479799b16883338b65eb0fb6194320f765d511e150e92cd73ce015
+candidate_index_sha256=c97e2b6a6ea2411c05b7ca5266b4ef05fb46222745aeaa8be153b5052a550fe5
+nu_archive_sha256=8d765a31611b3ae8fb63582a53b39111c11e2a3a6be3c76afb2c0a4bb38eebee
+nu_exe_sha256=28bd03d993f525f7c07465320641040b694f13f3666a57f496c94f45f988334a
+command: lifecycle-prove --package fennewald/nu_plugin_net --package-version 1.9.0 --candidate-index registry/index.json --numan /tmp/numan-linux-target/debug/numan --nu /tmp/numan-linux-proof/nu/0.103.0/nu-0.103.0-x86_64-unknown-linux-gnu/nu
+isolated Nu probe: {"version": "0.103.0", "plugin_path": "/tmp/numan-lifecycle-prove-oleydl1a/lifecycle-home/xdg/config/nushell/plugin.msgpackz", "data_dir": "/tmp/numan-lifecycle-prove-oleydl1a/lifecycle-home/xdg/data/nushell", "vendor": ["/tmp/numan-lifecycle-prove-oleydl1a/lifecycle-home/xdg/vendor/nushell/vendor/autoload", "/tmp/numan-lifecycle-prove-oleydl1a/lifecycle-home/xdg/data/nushell/vendor/autoload"]}
+Nu SHA256: 28bd03d993f525f7c07465320641040b694f13f3666a57f496c94f45f988334a
+Numan SHA256: 1dcb395699479799b16883338b65eb0fb6194320f765d511e150e92cd73ce015
+package: fennewald/nu_plugin_net
+numan:   /tmp/numan-linux-target/debug/numan
+nu:      /tmp/numan-linux-proof/nu/0.103.0/nu-0.103.0-x86_64-unknown-linux-gnu/nu
+root:    /tmp/numan-lifecycle-prove-oleydl1a
+
+candidate package version: 1.9.0
+candidate file SHA256: c97e2b6a6ea2411c05b7ca5266b4ef05fb46222745aeaa8be153b5052a550fe5
+==> init: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-oleydl1a init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at '/tmp/numan-lifecycle-prove-oleydl1a'.
+  Nu executable: /tmp/numan-lifecycle-prove-shim-awqcv5_2/nu
+  Nu version:    0.103.0
+  Plugin registry: /tmp/numan-lifecycle-prove-oleydl1a/lifecycle-home/xdg/config/nushell/plugin.msgpackz
+  Platform:      x86_64-unknown-linux-gnu
+  Vendor autoload: /tmp/numan-lifecycle-prove-oleydl1a/lifecycle-home/xdg/data/nushell/vendor/autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-oleydl1a registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-oleydl1a registry add lifecycle-candidate http://127.0.0.1:45519/index.json --key DKyU6wv2CsSqdXHanVJTZfbpkEUhjnsfHzE55zqPScs=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:45519/index.json
+  Fingerprint: sha256:316978f6c63405ab50e74b59c189b596e216251a805fe4744d525577be9a677c
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-oleydl1a registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:45519/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 17d580c2).
+==> search: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-oleydl1a search nu_plugin_net
+Found 1 package(s) matching 'nu_plugin_net':
+checked against: Nu 0.103.0 (x86_64-unknown-linux-gnu)
+
+  fennewald/nu_plugin_net  v1.9.0  [plugin] [provisional]
+    A Nushell plugin for enumerating network interfaces in a platform-agnostic way.
+==> info: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-oleydl1a info fennewald/nu_plugin_net
+Package:    fennewald/nu_plugin_net
+Type:       plugin
+Status:     verified upstream artifact
+Description: A Nushell plugin for enumerating network interfaces in a platform-agnostic way.
+Repository: https://github.com/fennewald/nu_plugin_net
+Tags:       plugin, net, network, interfaces
+Your Nu:    0.103.0 (x86_64-unknown-linux-gnu)
+
+Versions:
+  v1.9.0  [nu >=0.103.0 <0.104.0]  (compatible) [no host proof]
+    tested with: 0.103.0
+    proof:       windows/x86_64, Nu 0.103.0, failed (2026-11-11T10:11:03Z) https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/fennewald_nu_plugin_net__1.9.0__nu-0.103.0.log
+    warning:     no passing lifecycle proof for x86_64-unknown-linux-gnu on Nu 0.103.0; recorded: windows/x86_64
+    evidence:    provisional — Windows x86_64 lifecycle-prove failed on Nu 0.103.0: package has no x86_64-pc-windows-msvc artifact; proof requires a Linux or macOS host.
+    platform: x86_64-unknown-linux-gnu
+    platform: aarch64-apple-darwin
+    platform: x86_64-apple-darwin
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Per-platform proofs list the OS/architecture tested.
+Numan has not security-audited the upstream source.
+==> install: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-oleydl1a install fennewald/nu_plugin_net@1.9.0
+✓ Installed fennewald/nu_plugin_net@1.9.0 to /tmp/numan-lifecycle-prove-oleydl1a/packages/plugins/fennewald/nu_plugin_net/1.9.0-a6d0eecc
+! This package has not been lifecycle-tested. It passed integrity checks. (Windows x86_64 lifecycle-prove failed on Nu 0.103.0: package has no x86_64-pc-windows-msvc artifact; proof requires a Linux or macOS host.)
+==> activate: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-oleydl1a activate fennewald/nu_plugin_net
+
+Plugin registration
+  fennewald/nu_plugin_net -> /tmp/numan-lifecycle-prove-oleydl1a/lifecycle-home/xdg/config/nushell/plugin.msgpackz
+
+✓ Registered fennewald/nu_plugin_net — takes effect in future Nu sessions (not the current shell)
+==> doctor: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-oleydl1a doctor
+Numan doctor — /tmp/numan-lifecycle-prove-oleydl1a
+
+Initialization
+  · PATH Nu: 0.103.0
+  · Managed Nu: not installed
+
+Activation
+  · Plugin 'fennewald/nu_plugin_net' has an activation record (Issue #22). Deactivate is available; active remove stays gated (deactivate first). Active update is opt-in via NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly (default off): deactivate→upgrade→activate (https://github.com/numan-cli/numan/issues/22).
+    Fix: Remove: `numan deactivate <pkg>`, then `numan remove <pkg>`. Update: set NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly, then `numan update <pkg>` orchestrates deactivate→upgrade→activate; otherwise active update is gated (default off). See docs/active-plugin-gate.md.
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-oleydl1a list
+Installed packages (1):
+
+  fennewald/nu_plugin_net  v1.9.0  [plugin]  activated
+==> deactivate: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-oleydl1a deactivate fennewald/nu_plugin_net
+
+Plugin deactivation
+  fennewald/nu_plugin_net (net) <- /tmp/numan-lifecycle-prove-oleydl1a/lifecycle-home/xdg/config/nushell/plugin.msgpackz
+
+✓ Unregistered fennewald/nu_plugin_net — takes effect in future Nu sessions (not the current shell)
+==> remove: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-oleydl1a remove --yes fennewald/nu_plugin_net
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed fennewald/nu_plugin_net
+==> gc: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-oleydl1a gc
+No orphaned packages found.
+OK: lifecycle-prove passed.
+finished_at=2026-11-11T11:13:38Z
+exit_code=0

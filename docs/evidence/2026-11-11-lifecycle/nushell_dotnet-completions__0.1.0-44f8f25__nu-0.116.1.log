@@ -1,0 +1,106 @@
+COMMAND ["D:\\Dev\\numan_workspace\\numan-registry\\.venv\\Scripts\\python.exe", "D:\\Dev\\numan_workspace\\numan-registry\\scripts\\lifecycle-prove.py", "--package", "nushell/dotnet-completions", "--package-version", "0.1.0-44f8f25", "--candidate-index", "D:\\Dev\\numan_workspace\\numan-registry\\registry\\index.json", "--numan", "D:\\Dev\\numan_workspace\\numan\\target\\debug\\numan.exe", "--nu", "D:\\Dev\\numan_workspace\\numan-registry\\.tmp-lifecycle\\nu\\0.116.1\\nu.exe"]
+isolated Nu probe: {"version": "0.116.1", "plugin_path": "D:\\Temp\\numan-lifecycle-prove-qwnde0aw\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Temp\\numan-lifecycle-prove-qwnde0aw\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Temp\\numan-lifecycle-prove-qwnde0aw\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: e37dff301cf52a49eb82a90e8b4634328379fffa3b244b2172a1c307e03e5d69
+Numan SHA256: 4b5356984ebccbaa411fefe82dbf28718b48c44bfde4def87fc0af0a1bb8a0ed
+package: nushell/dotnet-completions
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\numan-registry\.tmp-lifecycle\nu\0.116.1\nu.exe
+root:    D:\Temp\numan-lifecycle-prove-qwnde0aw
+
+candidate package version: 0.1.0-44f8f25
+candidate file SHA256: 19447b129f640a318fb8bf6af2c5a932ac17008c8a5d1dee414949e7851318b0
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-qwnde0aw init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Temp\numan-lifecycle-prove-qwnde0aw'.
+  Nu executable: D:\Temp\numan-lifecycle-prove-shim-hgz0jf3e\nu.exe
+  Nu version:    0.116.1
+  Plugin registry: D:\Temp\numan-lifecycle-prove-qwnde0aw\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Temp\numan-lifecycle-prove-qwnde0aw\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-qwnde0aw registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-qwnde0aw registry add lifecycle-candidate http://127.0.0.1:53166/index.json --key tp8ZLk3mxXlC6IAa9SXzZG4hAfNwbMnrKxKXllG9fVk=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:53166/index.json
+  Fingerprint: sha256:ccc553199fd1f3f4d3b546b08f0fe0d51c8efd9bd413871d65ad47a815037a76
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-qwnde0aw registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:53166/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 3120af39).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-qwnde0aw search dotnet-completions
+Found 1 package(s) matching 'dotnet-completions':
+checked against: Nu 0.116.1 (x86_64-pc-windows-msvc)
+
+  nushell/dotnet-completions  v0.1.0-44f8f25  [completion] [install-only; activation deferred; verified with 0.116.1]
+    .NET (dotnet) custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/dotnet @ 44f8f25. Declares a completion target for dotnet for activation with `numan activate`.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-qwnde0aw info nushell/dotnet-completions
+Package:    nushell/dotnet-completions
+Type:       completion
+Activation: explicit `numan activate` required; install does not wire Nu
+Status:     verified upstream artifact
+Description: .NET (dotnet) custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/dotnet @ 44f8f25. Declares a completion target for dotnet for activation with `numan activate`.
+Repository: https://github.com/nushell/nu_scripts/tree/main/custom-completions/dotnet
+Tags:       completion, dotnet, mirror
+Your Nu:    0.116.1 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.1.0-44f8f25  [nu *]  (compatible) [host proof passed]
+    completion: dotnet -> custom-completions/dotnet/dotnet-completions.nu [command-backed] (inactive until activated)
+    note: this completion provider can execute code during completion (only when Nushell requests a completion; never at install or activation)
+    tested with: 0.116.1
+    proof:       windows/x86_64, Nu 0.116.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Per-platform proofs list the OS/architecture tested.
+Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-qwnde0aw install nushell/dotnet-completions@0.1.0-44f8f25
+✓ Installed nushell/dotnet-completions@0.1.0-44f8f25 to D:\Temp\numan-lifecycle-prove-qwnde0aw\packages\completions\nushell\dotnet-completions\0.1.0-44f8f25-8234dc9c
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-qwnde0aw activate nushell/dotnet-completions
+
+Completion startup autoload
+  nushell/dotnet-completions dotnet -> custom-completions/dotnet/dotnet-completions.nu [command-backed]
+    note: this completion provider can execute code during completion (only when Nushell requests a completion; never at install or activation)
+  -> D:\Temp\numan-lifecycle-prove-qwnde0aw\lifecycle-home\xdg\data\nushell\vendor\autoload/numan.nu
+
+✓ Completion nushell/dotnet-completions added to autoload (targets: dotnet) — takes effect in future Nu sessions
+==> doctor: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-qwnde0aw doctor
+Numan doctor — D:\Temp\numan-lifecycle-prove-qwnde0aw
+
+Initialization
+  · PATH Nu: 0.116.1
+  · Managed Nu: not installed
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-qwnde0aw list
+Installed packages (1):
+
+  nushell/dotnet-completions  v0.1.0-44f8f25  [completion]  installed
+==> deactivate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-qwnde0aw deactivate nushell/dotnet-completions
+
+Module deactivation
+  nushell/dotnet-completions <- D:\Temp\numan-lifecycle-prove-qwnde0aw\lifecycle-home\xdg\data\nushell\vendor\autoload/numan.nu
+
+✓ Module nushell/dotnet-completions removed from autoload — takes effect in future Nu sessions
+==> remove: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-qwnde0aw remove --yes nushell/dotnet-completions
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed nushell/dotnet-completions
+==> gc: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-qwnde0aw gc
+No orphaned packages found.
+OK: lifecycle-prove passed.

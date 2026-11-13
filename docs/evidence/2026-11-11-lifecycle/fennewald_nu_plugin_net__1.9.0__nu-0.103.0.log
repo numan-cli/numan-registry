@@ -1,0 +1,74 @@
+COMMAND ["D:\\Dev\\numan_workspace\\numan-registry\\.venv\\Scripts\\python.exe", "D:\\Dev\\numan_workspace\\numan-registry\\scripts\\lifecycle-prove.py", "--package", "fennewald/nu_plugin_net", "--package-version", "1.9.0", "--candidate-index", "D:\\Dev\\numan_workspace\\numan-registry\\registry\\index.json", "--numan", "D:\\Dev\\numan_workspace\\numan\\target\\debug\\numan.exe", "--nu", "D:\\Dev\\numan_workspace\\numan-registry\\.tmp-lifecycle\\nu\\0.103.0\\nu.exe"]
+isolated Nu probe: {"version": "0.103.0", "plugin_path": "D:\\Temp\\numan-lifecycle-prove-adpey0qe\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Temp\\numan-lifecycle-prove-adpey0qe\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Temp\\numan-lifecycle-prove-adpey0qe\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: 5401544b5a606a5823126655884cd844be1312178adb502a2006b7e97be2228f
+Numan SHA256: 4b5356984ebccbaa411fefe82dbf28718b48c44bfde4def87fc0af0a1bb8a0ed
+package: fennewald/nu_plugin_net
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\numan-registry\.tmp-lifecycle\nu\0.103.0\nu.exe
+root:    D:\Temp\numan-lifecycle-prove-adpey0qe
+
+candidate package version: 1.9.0
+candidate file SHA256: 19447b129f640a318fb8bf6af2c5a932ac17008c8a5d1dee414949e7851318b0
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-adpey0qe init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Temp\numan-lifecycle-prove-adpey0qe'.
+  Nu executable: D:\Temp\numan-lifecycle-prove-shim-cuvtk4xl\nu.exe
+  Nu version:    0.103.0
+  Plugin registry: D:\Temp\numan-lifecycle-prove-adpey0qe\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Temp\numan-lifecycle-prove-adpey0qe\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-adpey0qe registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-adpey0qe registry add lifecycle-candidate http://127.0.0.1:62771/index.json --key AYNRyvX0cHG8KcjWiNIyJJhTe3O3xiaVpnH0LMn7DKE=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:62771/index.json
+  Fingerprint: sha256:1f14d128308609d01f85604553f977dba47d2403b9d991ec9ee6e07c4e6621c0
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-adpey0qe registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:62771/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 3120af39).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-adpey0qe search nu_plugin_net
+Found 1 package(s) matching 'nu_plugin_net':
+checked against: Nu 0.103.0 (x86_64-pc-windows-msvc)
+
+(no compatible packages for your Nu/platform; 1 match(es) hidden)
+
+1 package(s) hidden (incompatible with Nu 0.103.0 / x86_64-pc-windows-msvc).
+Run 'numan info fennewald/nu_plugin_net' for options. Use --all to show them.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-adpey0qe info fennewald/nu_plugin_net
+Package:    fennewald/nu_plugin_net
+Type:       plugin
+Status:     verified upstream artifact
+Description: A Nushell plugin for enumerating network interfaces in a platform-agnostic way.
+Repository: https://github.com/fennewald/nu_plugin_net
+Tags:       plugin, net, network, interfaces
+Your Nu:    0.103.0 (x86_64-pc-windows-msvc)
+
+Versions:
+  v1.9.0  [nu >=0.103.0 <0.104.0]  (no artifact for x86_64-pc-windows-msvc) [host proof passed]
+    tested with: 0.103.0
+    proof:       windows/x86_64, Nu 0.103.0, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+    platform: x86_64-unknown-linux-gnu
+    platform: aarch64-apple-darwin
+    platform: x86_64-apple-darwin
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Per-platform proofs list the OS/architecture tested.
+Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-adpey0qe install fennewald/nu_plugin_net@1.9.0
+Error: Version 1.9.0 of 'fennewald/nu_plugin_net' is not compatible with your system: No binary for target 'x86_64-pc-windows-msvc'
+FAILED at step 'install' (exit 1)

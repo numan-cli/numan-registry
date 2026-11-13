@@ -117,7 +117,7 @@ No compliant upstream release asset; pack a tag/commit snapshot as a registry-ho
 | Date | Change |
 |------|--------|
 | 2026-11-11 | Linux x86_64 lifecycle proofs passed for `fennewald/nu_plugin_net@1.9.0` (Nu 0.103.0) and `dead10ck/nu_plugin_dns@4.0.10` (Nu 0.113.1); both promoted to `evidence_tier: proven`. |
-| 2026-11-11 | Lifecycle triage: marked `Trivernis/nu-plugin-dialog@0.1.0`, `dead10ck/nu_plugin_dns@4.0.10`, `fennewald/nu_plugin_net@1.9.0`, `amtoine/nu-git-manager@0.8.0`, and `amtoine/nu-git-manager-sugar@0.7.0` provisional after their Windows failure logs; production candidate then excluded them. |
+| 2026-11-11 | Lifecycle triage: marked `Trivernis/nu-plugin-dialog@0.1.0`, `amtoine/nu-git-manager@0.8.0`, and `amtoine/nu-git-manager-sugar@0.7.0` provisional after their Windows failure logs; `dead10ck/nu_plugin_dns@4.0.10` and `fennewald/nu_plugin_net@1.9.0` were later restored to `proven` by the Linux proofs above. |
 | 2026-11-11 | galuszkak/nu_plugin_bigquery@0.3.0: credentialed Windows x86_64 lifecycle-prove passed on Nu 0.114.1; live BigQuery `SELECT 1` returned 1; promoted to `evidence_tier: proven`. |
 | 2026-10-25 | SuaveIV/nu_plugin_audio@0.2.13 (Nu >=0.116 <0.117): full-platform upstream assets; lifecycle-prove OK on Nu 0.116.1. Retain 0.2.10 for Nu 0.114. |
 | 2026-10-18 | Wave 6 completions: nushell/bat-completions, aws-completions, rg-completions @ 0.1.0-44f8f25 (install-only mirrors). |

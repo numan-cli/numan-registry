@@ -56,9 +56,9 @@ local candidate run is package lifecycle evidence, not production trust or a
 production deployment.
 
 Child processes receive a private home, config, data, cache and temp directory
-under the test root. Inherited credentials, `NUPM_HOME` and unsigned-verification
-bypasses are not forwarded unless explicitly named with `--forward-env`, and
-then only to the Nu check process. A real-Nu preflight refuses plugin registry or data
+under the test root. Inherited credentials are not forwarded unless explicitly
+named with `--forward-env`, and then only to the Nu check process; `NUPM_HOME`,
+`NUMAN_ROOT` and unsigned-verification bypasses are always refused. A real-Nu preflight refuses plugin registry or data
 paths outside that home. Modules also require an isolated vendor-autoload target;
 plugins can be proved on older Nu versions without that module target. Each step
 has a five-minute timeout. Logs print executable hashes and the candidate file
@@ -82,8 +82,8 @@ are recorded with `2026-10-19T00:00:00Z` for the same reason; each evidence URL
 points at commit `82b2ce7`. On 2026-11-11, the 76 remaining activatable versions were run on Windows
 x86_64 against their exact `verified_with` Nu versions (83 runs). The
 candidate index was served over a loopback registry with an ephemeral key;
-the client was `numan 0.4.0` (debug) and every Nu archive was verified
-against the release `SHA256SUMS`. The logs and per-run metadata are in
+the client was `numan 0.4.0` (debug); downloaded Nu archives were verified
+against the release `SHA256SUMS`, and 0.113.1 reused a cached real-Nu root pinned by `nu_exe_sha256`. The logs and per-run metadata are in
 [`evidence/2026-11-11-lifecycle/`](evidence/2026-11-11-lifecycle/).
 The batch produced 78 passes and 5 failures. Passing runs are
 recorded with their actual timestamps; failed runs are recorded with
