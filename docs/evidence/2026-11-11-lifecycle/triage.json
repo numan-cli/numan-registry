@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "record_type": "lifecycle-triage",
+  "date": "2026-11-11",
+  "decision": "remediated-on-linux-remaining-three-provisional",
+  "reason": "Linux x86_64 proofs passed for nu_plugin_net and nu_plugin_dns; the three remaining Windows-run failures stay provisional.",
+  "versions": [
+    {
+      "package": "fennewald/nu_plugin_net",
+      "version": "1.9.0",
+      "nu_version": "0.103.0",
+      "failure": "No x86_64-pc-windows-msvc artifact; install rejected the host target.",
+      "evidence": "docs/evidence/2026-11-11-lifecycle/fennewald_nu_plugin_net__1.9.0__nu-0.103.0.log",
+      "linux_proof": {
+        "platform": "linux/x86_64",
+        "nu_version": "0.103.0",
+        "result": "passed",
+        "evidence": "docs/evidence/2026-11-11-linux-lifecycle/fennewald_nu_plugin_net__1.9.0__nu-0.103.0__linux-x86_64.log"
+      },
+      "disposition": "proven"
+    },
+    {
+      "package": "Trivernis/nu-plugin-dialog",
+      "version": "0.1.0",
+      "nu_version": "0.107.0",
+      "failure": "Plugin registration returned a protocol decode error (unknown variant Error); requires an upstream rebuild against Nu 0.107.x.",
+      "evidence": "docs/evidence/2026-11-11-lifecycle/Trivernis_nu-plugin-dialog__0.1.0__nu-0.107.0.log",
+      "disposition": "provisional"
+    },
+    {
+      "package": "amtoine/nu-git-manager",
+      "version": "0.8.0",
+      "nu_version": "0.113.1",
+      "failure": "Module activation failed with nu::parser::operator_incompatible_types in mod.nu; upstream is archived.",
+      "evidence": "docs/evidence/2026-11-11-lifecycle/amtoine_nu-git-manager__0.8.0__nu-0.113.1.log",
+      "disposition": "provisional"
+    },
+    {
+      "package": "amtoine/nu-git-manager-sugar",
+      "version": "0.7.0",
+      "nu_version": "0.113.1",
+      "failure": "Module activation failed with nu::parser::extra_positional in git/mod.nu; upstream is archived.",
+      "evidence": "docs/evidence/2026-11-11-lifecycle/amtoine_nu-git-manager-sugar__0.7.0__nu-0.113.1.log",
+      "disposition": "provisional"
+    },
+    {
+      "package": "dead10ck/nu_plugin_dns",
+      "version": "4.0.10",
+      "nu_version": "0.113.1",
+      "failure": "No x86_64-pc-windows-msvc artifact because the upstream Windows build conflicts on windows-sys; proof requires a Linux or macOS host.",
+      "evidence": "docs/evidence/2026-11-11-lifecycle/dead10ck_nu_plugin_dns__4.0.10__nu-0.113.1.log",
+      "linux_proof": {
+        "platform": "linux/x86_64",
+        "nu_version": "0.113.1",
+        "result": "passed",
+        "evidence": "docs/evidence/2026-11-11-linux-lifecycle/dead10ck_nu_plugin_dns__4.0.10__nu-0.113.1__linux-x86_64.log"
+      },
+      "disposition": "proven"
+    }
+  ]
+}

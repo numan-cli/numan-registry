@@ -1,0 +1,110 @@
+COMMAND ["D:\\Dev\\numan_workspace\\numan-registry\\.venv\\Scripts\\python.exe", "D:\\Dev\\numan_workspace\\numan-registry\\scripts\\lifecycle-prove.py", "--package", "nushell-works/nu_plugin_nw_ulid", "--package-version", "0.2.0", "--candidate-index", "D:\\Dev\\numan_workspace\\numan-registry\\registry\\index.json", "--numan", "D:\\Dev\\numan_workspace\\numan\\target\\debug\\numan.exe", "--nu", "D:\\Dev\\numan_workspace\\numan-registry\\.tmp-lifecycle\\nu\\0.111.0\\nu.exe"]
+isolated Nu probe: {"version": "0.111.0", "plugin_path": "D:\\Temp\\numan-lifecycle-prove-lg_q8pl6\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Temp\\numan-lifecycle-prove-lg_q8pl6\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Temp\\numan-lifecycle-prove-lg_q8pl6\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: f9d00b99d1c20aae86baf27c1a4cada1f8ed21290982240debd83023d3ce2b4f
+Numan SHA256: 4b5356984ebccbaa411fefe82dbf28718b48c44bfde4def87fc0af0a1bb8a0ed
+package: nushell-works/nu_plugin_nw_ulid
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\numan-registry\.tmp-lifecycle\nu\0.111.0\nu.exe
+root:    D:\Temp\numan-lifecycle-prove-lg_q8pl6
+
+candidate package version: 0.2.0
+candidate file SHA256: 19447b129f640a318fb8bf6af2c5a932ac17008c8a5d1dee414949e7851318b0
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-lg_q8pl6 init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Temp\numan-lifecycle-prove-lg_q8pl6'.
+  Nu executable: D:\Temp\numan-lifecycle-prove-shim-zdybm_yn\nu.exe
+  Nu version:    0.111.0
+  Plugin registry: D:\Temp\numan-lifecycle-prove-lg_q8pl6\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Temp\numan-lifecycle-prove-lg_q8pl6\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-lg_q8pl6 registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-lg_q8pl6 registry add lifecycle-candidate http://127.0.0.1:62879/index.json --key MaW9us971IXFiydaIDRHsQ0b9MQug5pUrqng+ubgnLY=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:62879/index.json
+  Fingerprint: sha256:a4266212ab455fb24b6f6575dd9eeed7770dd9bf965be1b7b91b76b4e5817ff7
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-lg_q8pl6 registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:62879/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 3120af39).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-lg_q8pl6 search nu_plugin_nw_ulid
+Found 1 package(s) matching 'nu_plugin_nw_ulid':
+checked against: Nu 0.111.0 (x86_64-pc-windows-msvc)
+
+  nushell-works/nu_plugin_nw_ulid  v0.2.0  [plugin]
+    Nushell plugin for ULID generation, parsing, and manipulation. Full cross-platform release assets in Numan-supported formats (.tar.gz and .zip).
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-lg_q8pl6 info nushell-works/nu_plugin_nw_ulid
+Package:    nushell-works/nu_plugin_nw_ulid
+Type:       plugin
+Status:     verified upstream artifact
+Description: Nushell plugin for ULID generation, parsing, and manipulation. Full cross-platform release assets in Numan-supported formats (.tar.gz and .zip).
+Repository: https://github.com/nushell-works/nu_plugin_nw_ulid
+Tags:       plugin, ulid, utility
+Your Nu:    0.111.0 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.2.0  [nu >=0.111.0 <0.112.0]  (compatible) [host proof passed]
+    tested with: 0.111.0
+    proof:       windows/x86_64, Nu 0.111.0, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+    platform: x86_64-pc-windows-msvc
+    platform: aarch64-unknown-linux-gnu
+    platform: aarch64-apple-darwin
+    platform: x86_64-unknown-linux-gnu
+    platform: x86_64-apple-darwin
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Per-platform proofs list the OS/architecture tested.
+Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-lg_q8pl6 install nushell-works/nu_plugin_nw_ulid@0.2.0
+✓ Installed nushell-works/nu_plugin_nw_ulid@0.2.0 to D:\Temp\numan-lifecycle-prove-lg_q8pl6\packages\plugins\nushell-works\nu_plugin_nw_ulid\0.2.0-ad31d02d
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-lg_q8pl6 activate nushell-works/nu_plugin_nw_ulid
+
+Plugin registration
+  nushell-works/nu_plugin_nw_ulid -> D:\Temp\numan-lifecycle-prove-lg_q8pl6\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Registered nushell-works/nu_plugin_nw_ulid — takes effect in future Nu sessions (not the current shell)
+==> doctor: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-lg_q8pl6 doctor
+Numan doctor — D:\Temp\numan-lifecycle-prove-lg_q8pl6
+
+Initialization
+  · PATH Nu: 0.111.0
+  · Managed Nu: not installed
+
+Activation
+  · Plugin 'nushell-works/nu_plugin_nw_ulid' has an activation record (Issue #22). Deactivate is available; active remove stays gated (deactivate first). Active update is opt-in via NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly (default off): deactivate→upgrade→activate (https://github.com/numan-cli/numan/issues/22).
+    Fix: Remove: `numan deactivate <pkg>`, then `numan remove <pkg>`. Update: set NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly, then `numan update <pkg>` orchestrates deactivate→upgrade→activate; otherwise active update is gated (default off). See docs/active-plugin-gate.md.
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-lg_q8pl6 list
+Installed packages (1):
+
+  nushell-works/nu_plugin_nw_ulid  v0.2.0  [plugin]  activated
+==> deactivate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-lg_q8pl6 deactivate nushell-works/nu_plugin_nw_ulid
+
+Plugin deactivation
+  nushell-works/nu_plugin_nw_ulid (nw_ulid) <- D:\Temp\numan-lifecycle-prove-lg_q8pl6\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Unregistered nushell-works/nu_plugin_nw_ulid — takes effect in future Nu sessions (not the current shell)
+==> remove: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-lg_q8pl6 remove --yes nushell-works/nu_plugin_nw_ulid
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed nushell-works/nu_plugin_nw_ulid
+==> gc: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-lg_q8pl6 gc
+No orphaned packages found.
+OK: lifecycle-prove passed.

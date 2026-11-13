@@ -1,0 +1,123 @@
+COMMAND ["D:\\Dev\\numan_workspace\\numan-registry\\.venv\\Scripts\\python.exe", "D:\\Dev\\numan_workspace\\numan-registry\\scripts\\lifecycle-prove.py", "--package", "fdncred/nu_plugin_json_path", "--package-version", "0.24.0", "--candidate-index", "D:\\Dev\\numan_workspace\\numan-registry\\registry\\index.json", "--numan", "D:\\Dev\\numan_workspace\\numan\\target\\debug\\numan.exe", "--nu", "D:\\Dev\\numan_workspace\\numan-registry\\.tmp-lifecycle\\nu\\0.114.1\\nu.exe"]
+isolated Nu probe: {"version": "0.114.1", "plugin_path": "D:\\Temp\\numan-lifecycle-prove-r3ql_2tn\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Temp\\numan-lifecycle-prove-r3ql_2tn\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Temp\\numan-lifecycle-prove-r3ql_2tn\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: 49fb6abfefc74325d398138ce4d3dc0e9ea68aac5a739e638e0f00cb081e445f
+Numan SHA256: 4b5356984ebccbaa411fefe82dbf28718b48c44bfde4def87fc0af0a1bb8a0ed
+package: fdncred/nu_plugin_json_path
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\numan-registry\.tmp-lifecycle\nu\0.114.1\nu.exe
+root:    D:\Temp\numan-lifecycle-prove-r3ql_2tn
+
+candidate package version: 0.24.0
+candidate file SHA256: 19447b129f640a318fb8bf6af2c5a932ac17008c8a5d1dee414949e7851318b0
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-r3ql_2tn init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Temp\numan-lifecycle-prove-r3ql_2tn'.
+  Nu executable: D:\Temp\numan-lifecycle-prove-shim-9bgyzic9\nu.exe
+  Nu version:    0.114.1
+  Plugin registry: D:\Temp\numan-lifecycle-prove-r3ql_2tn\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Temp\numan-lifecycle-prove-r3ql_2tn\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-r3ql_2tn registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-r3ql_2tn registry add lifecycle-candidate http://127.0.0.1:53645/index.json --key bk0uyXjp8a2GaBZ5f2SnEkjkyjsrj6B+EtxEY7QjCEY=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:53645/index.json
+  Fingerprint: sha256:7896fdad383c3433713d229319c5782f87eeee5f51a8e331439549785f5be936
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-r3ql_2tn registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:53645/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 3120af39).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-r3ql_2tn search nu_plugin_json_path
+Found 1 package(s) matching 'nu_plugin_json_path':
+checked against: Nu 0.114.1 (x86_64-pc-windows-msvc)
+
+  fdncred/nu_plugin_json_path  v0.24.0  [plugin]
+    Query JSON data with JSONPath expressions in Nushell. CI-built from fdncred/nu_plugin_json_path@v0.26.1 and pinned + hash-verified + signed downstream in numan-registry.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-r3ql_2tn info fdncred/nu_plugin_json_path
+Package:    fdncred/nu_plugin_json_path
+Type:       plugin
+Status:     verified upstream artifact
+Description: Query JSON data with JSONPath expressions in Nushell. CI-built from fdncred/nu_plugin_json_path@v0.26.1 and pinned + hash-verified + signed downstream in numan-registry.
+Repository: https://github.com/fdncred/nu_plugin_json_path
+Tags:       plugin, json, jsonpath, ci-built
+Your Nu:    0.114.1 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.24.0  [nu >=0.114.0 <0.115.0]  (compatible) [host proof passed]
+    tested with: 0.114.1
+    proof:       windows/x86_64, Nu 0.114.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+    source git:  https://github.com/fdncred/nu_plugin_json_path
+    source rev:  2c7296394cec4519d42eb63ed7758aa332a01a26
+    cargo_name:  nu_plugin_json_path
+    platform: x86_64-unknown-linux-gnu
+    platform: aarch64-apple-darwin
+    platform: aarch64-unknown-linux-gnu
+    platform: x86_64-pc-windows-msvc
+  v0.26.1  [nu >=0.116.0 <0.117.0]  (needs Nu >=0.116.0 <0.117.0) [no host proof]
+    tested with: 0.116.1
+    proof:       windows/x86_64, Nu 0.116.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+    warning:     no lifecycle proof for x86_64-pc-windows-msvc on Nu 0.114.1
+    source git:  https://github.com/fdncred/nu_plugin_json_path
+    source rev:  1b7fe7a981ae85cf3d3db74b17dffdb81d48471a
+    cargo_name:  nu_plugin_json_path
+    platform: aarch64-apple-darwin
+    platform: aarch64-unknown-linux-gnu
+    platform: x86_64-unknown-linux-gnu
+    platform: x86_64-pc-windows-msvc
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Per-platform proofs list the OS/architecture tested.
+Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-r3ql_2tn install fdncred/nu_plugin_json_path@0.24.0
+✓ Installed fdncred/nu_plugin_json_path@0.24.0 to D:\Temp\numan-lifecycle-prove-r3ql_2tn\packages\plugins\fdncred\nu_plugin_json_path\0.24.0-0a74541a
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-r3ql_2tn activate fdncred/nu_plugin_json_path
+
+Plugin registration
+  fdncred/nu_plugin_json_path -> D:\Temp\numan-lifecycle-prove-r3ql_2tn\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Registered fdncred/nu_plugin_json_path — takes effect in future Nu sessions (not the current shell)
+==> doctor: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-r3ql_2tn doctor
+Numan doctor — D:\Temp\numan-lifecycle-prove-r3ql_2tn
+
+Initialization
+  · PATH Nu: 0.114.1
+  · Managed Nu: not installed
+
+Activation
+  · Plugin 'fdncred/nu_plugin_json_path' has an activation record (Issue #22). Deactivate is available; active remove stays gated (deactivate first). Active update is opt-in via NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly (default off): deactivate→upgrade→activate (https://github.com/numan-cli/numan/issues/22).
+    Fix: Remove: `numan deactivate <pkg>`, then `numan remove <pkg>`. Update: set NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly, then `numan update <pkg>` orchestrates deactivate→upgrade→activate; otherwise active update is gated (default off). See docs/active-plugin-gate.md.
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-r3ql_2tn list
+Installed packages (1):
+
+  fdncred/nu_plugin_json_path  v0.24.0  [plugin]  activated
+==> deactivate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-r3ql_2tn deactivate fdncred/nu_plugin_json_path
+
+Plugin deactivation
+  fdncred/nu_plugin_json_path (json_path) <- D:\Temp\numan-lifecycle-prove-r3ql_2tn\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Unregistered fdncred/nu_plugin_json_path — takes effect in future Nu sessions (not the current shell)
+==> remove: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-r3ql_2tn remove --yes fdncred/nu_plugin_json_path
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed fdncred/nu_plugin_json_path
+==> gc: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-r3ql_2tn gc
+No orphaned packages found.
+OK: lifecycle-prove passed.

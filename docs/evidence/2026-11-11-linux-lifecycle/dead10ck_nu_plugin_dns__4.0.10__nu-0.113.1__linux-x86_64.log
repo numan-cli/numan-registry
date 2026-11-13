@@ -1,0 +1,122 @@
+package=dead10ck/nu_plugin_dns
+package_version=4.0.10
+nu_version=0.113.1
+started_at=2026-11-11T11:13:38Z
+platform=linux/x86_64
+numan_sha256=1dcb395699479799b16883338b65eb0fb6194320f765d511e150e92cd73ce015
+candidate_index_sha256=c97e2b6a6ea2411c05b7ca5266b4ef05fb46222745aeaa8be153b5052a550fe5
+nu_archive_sha256=9008d309aaa35e29ed5d5985306a83e2bf5093e31677d4cd969914552d12b8fb
+nu_exe_sha256=26359341b4ddcb69c20c1d3ec52ffeec3b014f14d4ebff20369287bd29ebce03
+command: lifecycle-prove --package dead10ck/nu_plugin_dns --package-version 4.0.10 --candidate-index registry/index.json --numan /tmp/numan-linux-target/debug/numan --nu /tmp/numan-linux-proof/nu/0.113.1/nu-0.113.1-x86_64-unknown-linux-gnu/nu
+isolated Nu probe: {"version": "0.113.1", "plugin_path": "/tmp/numan-lifecycle-prove-_yen4ghp/lifecycle-home/xdg/config/nushell/plugin.msgpackz", "data_dir": "/tmp/numan-lifecycle-prove-_yen4ghp/lifecycle-home/xdg/data/nushell", "vendor": ["/tmp/numan-lifecycle-prove-_yen4ghp/lifecycle-home/xdg/vendor/nushell/vendor/autoload", "/tmp/numan-lifecycle-prove-_yen4ghp/lifecycle-home/xdg/data/nushell/vendor/autoload"]}
+Nu SHA256: 26359341b4ddcb69c20c1d3ec52ffeec3b014f14d4ebff20369287bd29ebce03
+Numan SHA256: 1dcb395699479799b16883338b65eb0fb6194320f765d511e150e92cd73ce015
+package: dead10ck/nu_plugin_dns
+numan:   /tmp/numan-linux-target/debug/numan
+nu:      /tmp/numan-linux-proof/nu/0.113.1/nu-0.113.1-x86_64-unknown-linux-gnu/nu
+root:    /tmp/numan-lifecycle-prove-_yen4ghp
+
+candidate package version: 4.0.10
+candidate file SHA256: c97e2b6a6ea2411c05b7ca5266b4ef05fb46222745aeaa8be153b5052a550fe5
+==> init: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-_yen4ghp init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at '/tmp/numan-lifecycle-prove-_yen4ghp'.
+  Nu executable: /tmp/numan-lifecycle-prove-shim-v1x3t4de/nu
+  Nu version:    0.113.1
+  Plugin registry: /tmp/numan-lifecycle-prove-_yen4ghp/lifecycle-home/xdg/config/nushell/plugin.msgpackz
+  Platform:      x86_64-unknown-linux-gnu
+  Vendor autoload: /tmp/numan-lifecycle-prove-_yen4ghp/lifecycle-home/xdg/data/nushell/vendor/autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-_yen4ghp registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-_yen4ghp registry add lifecycle-candidate http://127.0.0.1:45383/index.json --key 2L4FldEE9zcmyGI51BpAfM7kHfHfDzDKkX8kP5KjAIg=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:45383/index.json
+  Fingerprint: sha256:83911e47cc83e80969b41a91ba258746c2ecf6bb76141ceb18be9d21fed83497
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-_yen4ghp registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:45383/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 17d580c2).
+==> search: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-_yen4ghp search nu_plugin_dns
+Found 1 package(s) matching 'nu_plugin_dns':
+checked against: Nu 0.113.1 (x86_64-unknown-linux-gnu)
+
+  dead10ck/nu_plugin_dns  v4.0.10  [plugin] [provisional]
+    DNS utility for Nushell. CI-built from dead10ck/nu_plugin_dns@v4.0.10. Pending official trust-root signing on production publish. Linux and macOS only for now: upstream's Cargo.lock pulls conflicting windows-sys versions that fail to build against nu-protocol 0.113 on Windows.
+==> info: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-_yen4ghp info dead10ck/nu_plugin_dns
+Package:    dead10ck/nu_plugin_dns
+Type:       plugin
+Status:     verified upstream artifact
+Description: DNS utility for Nushell. CI-built from dead10ck/nu_plugin_dns@v4.0.10. Pending official trust-root signing on production publish. Linux and macOS only for now: upstream's Cargo.lock pulls conflicting windows-sys versions that fail to build against nu-protocol 0.113 on Windows.
+Repository: https://github.com/dead10ck/nu_plugin_dns
+Tags:       plugin, dns, network, ci-built, no-windows
+Your Nu:    0.113.1 (x86_64-unknown-linux-gnu)
+
+Versions:
+  v4.0.10  [nu >=0.113.0 <0.114.0]  (compatible) [no host proof]
+    tested with: 0.113.1
+    proof:       windows/x86_64, Nu 0.113.1, failed (2026-11-11T10:12:33Z) https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/dead10ck_nu_plugin_dns__4.0.10__nu-0.113.1.log
+    warning:     no passing lifecycle proof for x86_64-unknown-linux-gnu on Nu 0.113.1; recorded: windows/x86_64
+    evidence:    provisional — Windows x86_64 lifecycle-prove failed on Nu 0.113.1: package has no x86_64-pc-windows-msvc artifact because the upstream Windows build conflicts on windows-sys; proof requires a Linux or macOS host.
+    platform: x86_64-unknown-linux-gnu
+    platform: aarch64-unknown-linux-gnu
+    platform: aarch64-apple-darwin
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Per-platform proofs list the OS/architecture tested.
+Numan has not security-audited the upstream source.
+==> install: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-_yen4ghp install dead10ck/nu_plugin_dns@4.0.10
+✓ Installed dead10ck/nu_plugin_dns@4.0.10 to /tmp/numan-lifecycle-prove-_yen4ghp/packages/plugins/dead10ck/nu_plugin_dns/4.0.10-b394eecb
+! This package has not been lifecycle-tested. It passed integrity checks. (Windows x86_64 lifecycle-prove failed on Nu 0.113.1: package has no x86_64-pc-windows-msvc artifact because the upstream Windows build conflicts on windows-sys; proof requires a Linux or macOS host.)
+==> activate: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-_yen4ghp activate dead10ck/nu_plugin_dns
+
+Plugin registration
+  dead10ck/nu_plugin_dns -> /tmp/numan-lifecycle-prove-_yen4ghp/lifecycle-home/xdg/config/nushell/plugin.msgpackz
+
+✓ Registered dead10ck/nu_plugin_dns — takes effect in future Nu sessions (not the current shell)
+==> doctor: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-_yen4ghp doctor
+Numan doctor — /tmp/numan-lifecycle-prove-_yen4ghp
+
+Initialization
+  · PATH Nu: 0.113.1
+  · Managed Nu: not installed
+
+Activation
+  · Plugin 'dead10ck/nu_plugin_dns' has an activation record (Issue #22). Deactivate is available; active remove stays gated (deactivate first). Active update is opt-in via NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly (default off): deactivate→upgrade→activate (https://github.com/numan-cli/numan/issues/22).
+    Fix: Remove: `numan deactivate <pkg>`, then `numan remove <pkg>`. Update: set NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly, then `numan update <pkg>` orchestrates deactivate→upgrade→activate; otherwise active update is gated (default off). See docs/active-plugin-gate.md.
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-_yen4ghp list
+Installed packages (1):
+
+  dead10ck/nu_plugin_dns  v4.0.10  [plugin]  activated
+==> deactivate: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-_yen4ghp deactivate dead10ck/nu_plugin_dns
+
+Plugin deactivation
+  dead10ck/nu_plugin_dns (dns) <- /tmp/numan-lifecycle-prove-_yen4ghp/lifecycle-home/xdg/config/nushell/plugin.msgpackz
+
+✓ Unregistered dead10ck/nu_plugin_dns — takes effect in future Nu sessions (not the current shell)
+==> remove: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-_yen4ghp remove --yes dead10ck/nu_plugin_dns
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed dead10ck/nu_plugin_dns
+==> gc: /tmp/numan-linux-target/debug/numan --root /tmp/numan-lifecycle-prove-_yen4ghp gc
+No orphaned packages found.
+OK: lifecycle-prove passed.
+finished_at=2026-11-11T11:13:52Z
+exit_code=0

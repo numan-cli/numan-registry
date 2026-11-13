@@ -1,0 +1,107 @@
+COMMAND ["D:\\Dev\\numan_workspace\\numan-registry\\.venv\\Scripts\\python.exe", "D:\\Dev\\numan_workspace\\numan-registry\\scripts\\lifecycle-prove.py", "--package", "nushell/cargo-completions", "--package-version", "0.1.0-f04cb44", "--candidate-index", "D:\\Dev\\numan_workspace\\numan-registry\\registry\\index.json", "--numan", "D:\\Dev\\numan_workspace\\numan\\target\\debug\\numan.exe", "--nu", "D:\\Dev\\numan_workspace\\numan-registry\\.tmp-lifecycle\\nu\\0.116.1\\nu.exe"]
+isolated Nu probe: {"version": "0.116.1", "plugin_path": "D:\\Temp\\numan-lifecycle-prove-ktv1xz0u\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Temp\\numan-lifecycle-prove-ktv1xz0u\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Temp\\numan-lifecycle-prove-ktv1xz0u\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: e37dff301cf52a49eb82a90e8b4634328379fffa3b244b2172a1c307e03e5d69
+Numan SHA256: 4b5356984ebccbaa411fefe82dbf28718b48c44bfde4def87fc0af0a1bb8a0ed
+package: nushell/cargo-completions
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\numan-registry\.tmp-lifecycle\nu\0.116.1\nu.exe
+root:    D:\Temp\numan-lifecycle-prove-ktv1xz0u
+
+candidate package version: 0.1.0-f04cb44
+candidate file SHA256: 19447b129f640a318fb8bf6af2c5a932ac17008c8a5d1dee414949e7851318b0
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ktv1xz0u init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Temp\numan-lifecycle-prove-ktv1xz0u'.
+  Nu executable: D:\Temp\numan-lifecycle-prove-shim-5rl0ieh1\nu.exe
+  Nu version:    0.116.1
+  Plugin registry: D:\Temp\numan-lifecycle-prove-ktv1xz0u\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Temp\numan-lifecycle-prove-ktv1xz0u\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ktv1xz0u registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ktv1xz0u registry add lifecycle-candidate http://127.0.0.1:63814/index.json --key w/a+/7YnGl9lFiMK0P4qI6f0lgvo3ZQOjsF67mTHTiA=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:63814/index.json
+  Fingerprint: sha256:8d5b90f39fc37987fcd2e7a64e06534a57771e523c1e79d14caa5a0eb10c37fe
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ktv1xz0u registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:63814/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 3120af39).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ktv1xz0u search cargo-completions
+Found 1 package(s) matching 'cargo-completions':
+checked against: Nu 0.116.1 (x86_64-pc-windows-msvc)
+
+  nushell/cargo-completions  v0.1.0-f04cb44  [completion] [install-only; activation deferred; verified with 0.113.1, 0.116.1]
+    Cargo custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/cargo @ f04cb44. Declares a completion target for cargo for activation with `numan activate`.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ktv1xz0u info nushell/cargo-completions
+Package:    nushell/cargo-completions
+Type:       completion
+Activation: explicit `numan activate` required; install does not wire Nu
+Status:     verified upstream artifact
+Description: Cargo custom completions from nu_scripts. Registry-hosted mirror of nu_scripts/custom-completions/cargo @ f04cb44. Declares a completion target for cargo for activation with `numan activate`.
+Repository: https://github.com/nushell/nu_scripts/tree/main/custom-completions/cargo
+Tags:       completion, cargo, mirror
+Your Nu:    0.116.1 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.1.0-f04cb44  [nu *]  (compatible) [host proof passed]
+    completion: cargo -> custom-completions/cargo/cargo-completions.nu [command-backed] (inactive until activated)
+    note: this completion provider can execute code during completion (only when Nushell requests a completion; never at install or activation)
+    tested with: 0.113.1, 0.116.1
+    proof:       windows/x86_64, Nu 0.113.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+    proof:       windows/x86_64, Nu 0.116.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Per-platform proofs list the OS/architecture tested.
+Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ktv1xz0u install nushell/cargo-completions@0.1.0-f04cb44
+✓ Installed nushell/cargo-completions@0.1.0-f04cb44 to D:\Temp\numan-lifecycle-prove-ktv1xz0u\packages\completions\nushell\cargo-completions\0.1.0-f04cb44-c8c41b1e
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ktv1xz0u activate nushell/cargo-completions
+
+Completion startup autoload
+  nushell/cargo-completions cargo -> custom-completions/cargo/cargo-completions.nu [command-backed]
+    note: this completion provider can execute code during completion (only when Nushell requests a completion; never at install or activation)
+  -> D:\Temp\numan-lifecycle-prove-ktv1xz0u\lifecycle-home\xdg\data\nushell\vendor\autoload/numan.nu
+
+✓ Completion nushell/cargo-completions added to autoload (targets: cargo) — takes effect in future Nu sessions
+==> doctor: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ktv1xz0u doctor
+Numan doctor — D:\Temp\numan-lifecycle-prove-ktv1xz0u
+
+Initialization
+  · PATH Nu: 0.116.1
+  · Managed Nu: not installed
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ktv1xz0u list
+Installed packages (1):
+
+  nushell/cargo-completions  v0.1.0-f04cb44  [completion]  installed
+==> deactivate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ktv1xz0u deactivate nushell/cargo-completions
+
+Module deactivation
+  nushell/cargo-completions <- D:\Temp\numan-lifecycle-prove-ktv1xz0u\lifecycle-home\xdg\data\nushell\vendor\autoload/numan.nu
+
+✓ Module nushell/cargo-completions removed from autoload — takes effect in future Nu sessions
+==> remove: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ktv1xz0u remove --yes nushell/cargo-completions
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed nushell/cargo-completions
+==> gc: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ktv1xz0u gc
+No orphaned packages found.
+OK: lifecycle-prove passed.

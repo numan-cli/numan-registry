@@ -22,3 +22,6 @@ __pycache__/
 /.mrge/
 /.freebuff
 .coverage
+
+# Un-ignore evidence log files so global gitignores do not omit auditable proofs
+!docs/evidence/**/*.log

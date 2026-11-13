@@ -1,0 +1,86 @@
+COMMAND ["D:\\Dev\\numan_workspace\\numan-registry\\.venv\\Scripts\\python.exe", "D:\\Dev\\numan_workspace\\numan-registry\\scripts\\lifecycle-prove.py", "--package", "Trivernis/nu-plugin-dialog", "--package-version", "0.1.0", "--candidate-index", "D:\\Dev\\numan_workspace\\numan-registry\\registry\\index.json", "--numan", "D:\\Dev\\numan_workspace\\numan\\target\\debug\\numan.exe", "--nu", "D:\\Dev\\numan_workspace\\numan-registry\\.tmp-lifecycle\\nu\\0.107.0\\nu.exe"]
+isolated Nu probe: {"version": "0.107.0", "plugin_path": "D:\\Temp\\numan-lifecycle-prove-5f20w0rt\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Temp\\numan-lifecycle-prove-5f20w0rt\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Temp\\numan-lifecycle-prove-5f20w0rt\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: 3cb6fdc05c1380841e2cdcbd92535044dfdc49d46a2dc67ade98bd9bd3ab295c
+Numan SHA256: 4b5356984ebccbaa411fefe82dbf28718b48c44bfde4def87fc0af0a1bb8a0ed
+package: Trivernis/nu-plugin-dialog
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\numan-registry\.tmp-lifecycle\nu\0.107.0\nu.exe
+root:    D:\Temp\numan-lifecycle-prove-5f20w0rt
+
+candidate package version: 0.1.0
+candidate file SHA256: 19447b129f640a318fb8bf6af2c5a932ac17008c8a5d1dee414949e7851318b0
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-5f20w0rt init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Temp\numan-lifecycle-prove-5f20w0rt'.
+  Nu executable: D:\Temp\numan-lifecycle-prove-shim-bdhil416\nu.exe
+  Nu version:    0.107.0
+  Plugin registry: D:\Temp\numan-lifecycle-prove-5f20w0rt\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Temp\numan-lifecycle-prove-5f20w0rt\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-5f20w0rt registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-5f20w0rt registry add lifecycle-candidate http://127.0.0.1:62785/index.json --key 5TD/Lc4lZ2q9A91aa1TTQ23HRS6fw684IZDQ7tFO2YU=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:62785/index.json
+  Fingerprint: sha256:905afdffcdf889a9abf098aeb61229a7599b3266323cb41d604d59a6f2164b5d
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-5f20w0rt registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:62785/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 3120af39).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-5f20w0rt search nu-plugin-dialog
+Found 1 package(s) matching 'nu-plugin-dialog':
+checked against: Nu 0.107.0 (x86_64-pc-windows-msvc)
+
+  Trivernis/nu-plugin-dialog  v0.1.0  [plugin]
+    Nushell plugin for user interaction dialogs.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-5f20w0rt info Trivernis/nu-plugin-dialog
+Package:    Trivernis/nu-plugin-dialog
+Type:       plugin
+Status:     verified upstream artifact
+Description: Nushell plugin for user interaction dialogs.
+Repository: https://github.com/Trivernis/nu-plugin-dialog
+Tags:       plugin, dialog, ui
+Your Nu:    0.107.0 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.1.0  [nu >=0.107.0 <0.108.0]  (compatible) [host proof passed]
+    tested with: 0.107.0
+    proof:       windows/x86_64, Nu 0.107.0, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+    platform: x86_64-pc-windows-msvc
+    platform: x86_64-apple-darwin
+    platform: x86_64-unknown-linux-gnu
+    platform: aarch64-apple-darwin
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Per-platform proofs list the OS/architecture tested.
+Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-5f20w0rt install Trivernis/nu-plugin-dialog@0.1.0
+✓ Installed Trivernis/nu-plugin-dialog@0.1.0 to D:\Temp\numan-lifecycle-prove-5f20w0rt\packages\plugins\Trivernis\nu-plugin-dialog\0.1.0-13455361
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-5f20w0rt activate Trivernis/nu-plugin-dialog
+
+Plugin registration
+  Trivernis/nu-plugin-dialog -> D:\Temp\numan-lifecycle-prove-5f20w0rt\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✗ Failed to register Trivernis/nu-plugin-dialog: plugin add failed:
+Error: nu::shell::plugin_failed_to_decode
+
+  x Plugin failed to decode: unknown variant `Error`, expected one of `Hello`,
+  | `Option`, `CallResponse`, `EngineCall`, `Data`, `End`, `Drop`, `Ack`
+
+
+Error: One or more packages failed to activate. Successful activations have been persisted.
+FAILED at step 'activate' (exit 1)

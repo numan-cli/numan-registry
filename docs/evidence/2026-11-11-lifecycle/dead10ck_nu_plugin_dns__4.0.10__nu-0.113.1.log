@@ -1,0 +1,74 @@
+COMMAND ["D:\\Dev\\numan_workspace\\numan-registry\\.venv\\Scripts\\python.exe", "D:\\Dev\\numan_workspace\\numan-registry\\scripts\\lifecycle-prove.py", "--package", "dead10ck/nu_plugin_dns", "--package-version", "4.0.10", "--candidate-index", "D:\\Dev\\numan_workspace\\numan-registry\\registry\\index.json", "--numan", "D:\\Dev\\numan_workspace\\numan\\target\\debug\\numan.exe", "--nu", "D:\\Dev\\numan_workspace\\numan-registry\\.tmp-lifecycle\\nu\\0.113.1\\nu.exe"]
+isolated Nu probe: {"version": "0.113.1", "plugin_path": "D:\\Temp\\numan-lifecycle-prove-q162v6zi\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Temp\\numan-lifecycle-prove-q162v6zi\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Temp\\numan-lifecycle-prove-q162v6zi\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: efcfaaf1dee8e97e3b0f6b727c108dad4ac2d920226d182a455efb100709c835
+Numan SHA256: 4b5356984ebccbaa411fefe82dbf28718b48c44bfde4def87fc0af0a1bb8a0ed
+package: dead10ck/nu_plugin_dns
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\numan-registry\.tmp-lifecycle\nu\0.113.1\nu.exe
+root:    D:\Temp\numan-lifecycle-prove-q162v6zi
+
+candidate package version: 4.0.10
+candidate file SHA256: 19447b129f640a318fb8bf6af2c5a932ac17008c8a5d1dee414949e7851318b0
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-q162v6zi init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Temp\numan-lifecycle-prove-q162v6zi'.
+  Nu executable: D:\Temp\numan-lifecycle-prove-shim-idvjym_7\nu.exe
+  Nu version:    0.113.1
+  Plugin registry: D:\Temp\numan-lifecycle-prove-q162v6zi\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Temp\numan-lifecycle-prove-q162v6zi\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-q162v6zi registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-q162v6zi registry add lifecycle-candidate http://127.0.0.1:63060/index.json --key mydYzFEDJSyTLYrUbdV6xTEuui5SsAyXY0q7/xePnXQ=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:63060/index.json
+  Fingerprint: sha256:c2128cb218aaf76bd6ae54e567e63b24b8df0f0d216f04013edfc965298e4b47
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-q162v6zi registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:63060/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 3120af39).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-q162v6zi search nu_plugin_dns
+Found 1 package(s) matching 'nu_plugin_dns':
+checked against: Nu 0.113.1 (x86_64-pc-windows-msvc)
+
+(no compatible packages for your Nu/platform; 1 match(es) hidden)
+
+1 package(s) hidden (incompatible with Nu 0.113.1 / x86_64-pc-windows-msvc).
+Run 'numan info dead10ck/nu_plugin_dns' for options. Use --all to show them.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-q162v6zi info dead10ck/nu_plugin_dns
+Package:    dead10ck/nu_plugin_dns
+Type:       plugin
+Status:     verified upstream artifact
+Description: DNS utility for Nushell. CI-built from dead10ck/nu_plugin_dns@v4.0.10. Pending official trust-root signing on production publish. Linux and macOS only for now: upstream's Cargo.lock pulls conflicting windows-sys versions that fail to build against nu-protocol 0.113 on Windows.
+Repository: https://github.com/dead10ck/nu_plugin_dns
+Tags:       plugin, dns, network, ci-built, no-windows
+Your Nu:    0.113.1 (x86_64-pc-windows-msvc)
+
+Versions:
+  v4.0.10  [nu >=0.113.0 <0.114.0]  (no artifact for x86_64-pc-windows-msvc) [host proof passed]
+    tested with: 0.113.1
+    proof:       windows/x86_64, Nu 0.113.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+    platform: aarch64-apple-darwin
+    platform: aarch64-unknown-linux-gnu
+    platform: x86_64-unknown-linux-gnu
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Per-platform proofs list the OS/architecture tested.
+Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-q162v6zi install dead10ck/nu_plugin_dns@4.0.10
+Error: Version 4.0.10 of 'dead10ck/nu_plugin_dns' is not compatible with your system: No binary for target 'x86_64-pc-windows-msvc'
+FAILED at step 'install' (exit 1)

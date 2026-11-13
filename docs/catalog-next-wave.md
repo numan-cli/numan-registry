@@ -35,10 +35,10 @@ Notes on non-plugins already present:
 
 | Status | Count | Implication |
 |--------|------:|-------------|
-| PROMOTED | 19 | Already in registry via CI-built or related path |
+| PROMOTED | 20 | Already in registry via CI-built or related path |
 | NO_RELEASE | 38 | Needs upstream tags or commit-snapshot policy |
 | PRE_0_112 | 10 | Deferred until upstream Nu bump |
-| CREDENTIALS | 1 | `galuszkak/nu_plugin_bigquery` (needs cred lifecycle plan) |
+| CREDENTIALS | 0 | `galuszkak/nu_plugin_bigquery` credentialed proof passed 2026-11-11 |
 | ELIGIBLE | 1 | `SuaveIV/nu_plugin_audio` already live in registry |
 
 Highest-demand **deferred** plugins (outreach / wait, not next registry PR):
@@ -125,7 +125,7 @@ Intake steps per package: `scripts/discover.py` → `build-mirror-zip.py` → re
 
 - Commit-snapshot CI for `nu_plugin_plot` / other NO_RELEASE plugins (now unblocked via P1 commit-snapshot mode in numan-plugins)
 - Non-binary archive intake for standalone scripts & modules (now automated via P2 `intake-archive.py`)
-- Credentialed BigQuery promotion (now unblocked via P6 `evidence_tier: provisional`)
+- Credentialed BigQuery promotion (completed 2026-11-11 with a real-Nu lifecycle proof)
 - Transparent maintained forks for abandoned high-demand plugins (now governed via P4 ADR 0001)
 
 ## Wave 4 (Intake Reform Execution: Plugins, Modules & Expansions)
@@ -158,9 +158,9 @@ Automated via `scripts/intake-archive.py` with commit-level SHA256 pinning:
 - [ ] `freepicheep/nu-salesforce` & `freepicheep/nu-quickbooks` — enterprise data clients
 - [x] `Yethal/terraform-importer` — Terraform state importer
 
-### 3. Credential-Bound Packages (P6 Provisional Evidence Tier)
+### 3. Credential-Bound Packages (P6)
 
-- [x] `galuszkak/nu_plugin_bigquery` — BigQuery query plugin; ship with `evidence_tier: provisional` and deferral reason documenting GCP credentials requirement.
+- [x] `galuszkak/nu_plugin_bigquery` — BigQuery query plugin; credentialed Windows x86_64 lifecycle proof passed on Nu 0.114.1 (live `SELECT 1` returned `1`); promoted to `evidence_tier: proven`.
 
 ### 4. Multi-OS Expansions & Upstream `.tar.xz` Assets (P3)
 

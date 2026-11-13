@@ -20,11 +20,11 @@ Upstream ships byte-stable release assets in Numan-supported formats.
 | [`fdncred/nu_plugin_file`](https://github.com/fdncred/nu_plugin_file) | plugin | v0.26.0 | linux x64/aarch64, macOS aarch64, Windows x64 (intel mac excluded) | live (ci-built asset) — index@0.28.0 — ci-built via numan-plugins; wave1; Nu 0.114; run 30976612373 |
 | [`b4nst/nu_plugin_format_pcap`](https://github.com/b4nst/nu_plugin_format_pcap) | plugin | v0.1.0 | linux, macOS, Windows (full matrix, `.tar.gz`) | live (upstream asset) |
 | [`alex-kattathra-johnson/nu_plugin_ws`](https://github.com/alex-kattathra-johnson/nu_plugin_ws) | plugin | v1.0.6 | linux, macOS, Windows (full matrix, `.tar.gz` + `.zip`) | live (upstream asset) |
-| [`Trivernis/nu-plugin-dialog`](https://github.com/Trivernis/nu-plugin-dialog) | plugin | v0.1.0 | Windows zip; Linux x86_64 + macOS tar.xz (nested cargo-dist paths) | live (upstream asset) — multi-OS upstream assets (.tar.xz + .zip) |
+| [`Trivernis/nu-plugin-dialog`](https://github.com/Trivernis/nu-plugin-dialog) | plugin | v0.1.0 | Windows zip; Linux x86_64 + macOS tar.xz (nested cargo-dist paths) | live (upstream asset) — multi-OS upstream assets (.tar.xz + .zip); Windows lifecycle-prove failed on Nu 0.107.0 (protocol decode); marked provisional 2026-11-11 |
 | [`tesujimath/bash-env-nushell`](https://github.com/tesujimath/bash-env-nushell) | module | v0.19.0 | all platforms (`.zip` archive — platform-agnostic Nu module) | live (upstream asset) |
 | [`cptpiepmatz/nu_plugin_highlight`](https://github.com/cptpiepmatz/nu-plugin-highlight) | plugin | v1.4.16 | linux x64/aarch64, macOS aarch64, Windows x64 (intel mac excluded) | live (ci-built asset) — index@1.4.17 — ci-built via numan-plugins; wave1; Nu 0.114; run 30976612373 |
 | [`fdncred/nu_plugin_regex`](https://github.com/fdncred/nu_plugin_regex) | plugin | v0.23.0 | linux x64/aarch64, macOS aarch64, Windows x64 (intel mac excluded) | live (ci-built asset) — index@0.25.0 — ci-built via numan-plugins; wave1; Nu 0.114; run 30976612373 |
-| [`dead10ck/nu_plugin_dns`](https://github.com/dead10ck/nu_plugin_dns) | plugin | v4.0.10 | linux x64/arm64, macOS arm64 only | live (ci-built asset) — ci-built via numan-plugins; no Windows (upstream build fails on Windows) |
+| [`dead10ck/nu_plugin_dns`](https://github.com/dead10ck/nu_plugin_dns) | plugin | v4.0.10 | linux x64/arm64, macOS arm64 only | live (ci-built asset) — ci-built via numan-plugins; no Windows (upstream build fails on Windows); Linux x86_64 lifecycle-prove passed 2026-11-11 with Nu 0.113.1; promoted to index.json as proven |
 | [`dead10ck/nu_plugin_dns`](https://github.com/dead10ck/nu_plugin_dns) | plugin | v4.0.11 | linux x64/arm64, macOS arm64 only | live (ci-built asset) — index@4.0.10 — ci-built via numan-plugins; no Windows (upstream build fails on Windows); Wave P6 gap-fill; Quarantined in registry/provisional.json; lifecycle-prove deferred to staging CI |
 | [`FMotalleb/nu_plugin_port_extension`](https://github.com/FMotalleb/nu_plugin_port_extension) | plugin | v0.114.1 | linux x64/aarch64, macOS aarch64, Windows x64 (intel mac excluded) | live (ci-built asset) — index@0.116.0 — ci-built via numan-plugins; wave1; Nu 0.114; run 30976612373 |
 | [`FMotalleb/nu_plugin_image`](https://github.com/FMotalleb/nu_plugin_image) | plugin | v0.112.2 | linux x64/arm64, macOS x64/arm64, Windows x64 | live (ci-built asset) — index@0.116.0 — ci-built via numan-plugins; wave1; Nu 0.112 |
@@ -52,8 +52,8 @@ Upstream ships byte-stable release assets in Numan-supported formats.
 | [`yybit/nu_plugin_x509`](https://github.com/yybit/nu_plugin_x509) | plugin | v0.0.0-snapshot.20260816.15518dd | linux x64/aarch64, macOS aarch64, Windows x64 | live (ci-built asset) — ci-built commit-snapshot; Wave 4 Lane 1; Windows x86_64 lifecycle-prove passed 2026-10-18 with Nu 0.109.0 |
 | [`oderwat/nu_plugin_logfmt`](https://github.com/oderwat/nu_plugin_logfmt) | plugin | v0.0.0-snapshot.20260816.892c4f9 | linux x64/aarch64, macOS aarch64, Windows x64 | live (ci-built asset) — ci-built commit-snapshot (Go); Wave 4 Lane 1; Windows x86_64 lifecycle-prove passed 2026-10-18 with Nu 0.101.0 |
 | [`abusch/nu_plugin_semver`](https://github.com/abusch/nu_plugin_semver) | plugin | v0.11.17 | Windows zip; Linux + macOS tar.xz (nested cargo-dist paths) | live (upstream asset) — multi-OS upstream assets (.tar.xz + .zip) |
-| [`fennewald/nu_plugin_net`](https://github.com/fennewald/nu_plugin_net) | plugin | v1.9.0 | Linux x86_64 + macOS tar.xz (nested cargo-dist paths) | live (upstream asset) — multi-OS upstream assets (.tar.xz) |
-| [`galuszkak/nu_plugin_bigquery`](https://github.com/galuszkak/nu_plugin_bigquery) | plugin | v0.3.0 | linux x64/aarch64, macOS aarch64, Windows x64 | live (ci-built asset) — ci-built via numan-plugins; P6 provisional tier (GCP credential requirement) |
+| [`fennewald/nu_plugin_net`](https://github.com/fennewald/nu_plugin_net) | plugin | v1.9.0 | Linux x86_64 + macOS tar.xz (nested cargo-dist paths) | live (upstream asset) — multi-OS upstream assets (.tar.xz); Linux x86_64 lifecycle-prove passed 2026-11-11 with Nu 0.103.0; promoted to index.json as proven |
+| [`galuszkak/nu_plugin_bigquery`](https://github.com/galuszkak/nu_plugin_bigquery) | plugin | v0.3.0 | linux x64/aarch64, macOS aarch64, Windows x64 | live (ci-built asset) — ci-built via numan-plugins; credentialed Windows x86_64 lifecycle-prove passed 2026-11-11 with Nu 0.114.1 (live BigQuery `SELECT 1`); promoted to index.json as proven |
 | [`JosephTLyons/nu_plugin_units`](https://github.com/JosephTLyons/nu_plugin_units) | plugin | v0.1.9 | linux x64/arm64, macOS arm64, Windows x64 | live (ci-built asset) — ci-built via numan-plugins; Wave P6 gap-fill; lifecycle-proved on real Nu 0.116.1 (loopback candidate, search->gc full passes); promoted to index.json as proven |
 | [`kaathewisegit/nu_plugin_endecode`](https://github.com/kaathewisegit/nugins) | plugin | v0.0.0-snapshot.20261019.2fe5276 | linux x64/arm64, macOS arm64, Windows x64 | live (ci-built asset) — ci-built commit-snapshot via numan-plugins; Wave P6 gap-fill; lifecycle-proved on real Nu 0.114.1 (loopback candidate, search->gc full passes); promoted to index.json as proven |
 | [`idanarye/nu_plugin_handlebars`](https://github.com/idanarye/nu_plugin_handlebars) | plugin | v0.3.0 | linux x64/arm64, macOS arm64, Windows x64 | live (ci-built asset) — ci-built via numan-plugins; Wave P6 gap-fill; lifecycle-proved on real Nu 0.116.1 (loopback candidate, search->gc full passes); promoted to index.json as proven |
@@ -66,7 +66,7 @@ No compliant upstream release asset; pack a tag/commit snapshot as a registry-ho
 
 | Package | Type | Source | Status |
 |---------|------|--------|--------|
-| [`amtoine/nu-git-manager`](https://github.com/amtoine/nu-git-manager) | module | tag 0.8.0 | live (registry mirror) — outreach: blocked (repo archived (read-only); cannot open issues or comments) |
+| [`amtoine/nu-git-manager`](https://github.com/amtoine/nu-git-manager) | module | tag 0.8.0 | live (registry mirror) — outreach: blocked (repo archived (read-only); cannot open issues or comments); Windows lifecycle-prove failed 2026-11-11 (Nu 0.113.1 parser incompatibility); marked provisional |
 | [`nushell-prophet/dotnu`](https://github.com/nushell-prophet/dotnu) | module | tag 0.0.18 | live (registry mirror) — outreach: issue open (nushell-prophet/numd#115) |
 | [`nushell-prophet/numd`](https://github.com/nushell-prophet/numd) | module | tag 0.4.0 | live (registry mirror) — index@0.5.0 — outreach: issue open (nushell-prophet/numd#115) |
 | [`nushell/nu-hooks`](https://github.com/nushell/nu_scripts) | module | commit f04cb44 | live (registry mirror) — outreach: issue closed (nushell/nu_scripts#1266) — install-only |
@@ -75,7 +75,7 @@ No compliant upstream release asset; pack a tag/commit snapshot as a registry-ho
 | [`SuaveIV/nu_script_gh_status`](https://github.com/SuaveIV/nu_script_gh_status) | script | commit 81756dcd71a75e27b80def9730cb57d52a2383fe | live (registry mirror) — install-only; Wave 3A |
 | [`SuaveIV/nu_script_hnews`](https://github.com/SuaveIV/nu_script_hnews) | script | commit 6cd8aef809789da9c4f6033195181fd86d690835 | live (registry mirror) — install-only; Wave 3A |
 | [`Sanceilaks/nufetch`](https://github.com/Sanceilaks/nufetch) | script | commit 15e0645a489f538e582fa09d6deda047e710185e | live (registry mirror) — nu-script activation declared; Wave 3A; upstream has no LICENSE at pin |
-| [`amtoine/nu-git-manager-sugar`](https://github.com/amtoine/nu-git-manager) | module | tag 0.7.0 | live (registry mirror) — outreach: blocked (repo archived (read-only); cannot open issues or comments) |
+| [`amtoine/nu-git-manager-sugar`](https://github.com/amtoine/nu-git-manager) | module | tag 0.7.0 | live (registry mirror) — outreach: blocked (repo archived (read-only); cannot open issues or comments); Windows lifecycle-prove failed 2026-11-11 (Nu 0.113.1 parser incompatibility); marked provisional |
 | [`nushell/git-completions`](https://github.com/nushell/nu_scripts/tree/main/custom-completions/git) | completion | commit f04cb44 | live (registry mirror) — outreach: issue closed (nushell/nu_scripts#1266) — nu-completion activation declared |
 | [`nushell/cargo-completions`](https://github.com/nushell/nu_scripts/tree/main/custom-completions/cargo) | completion | commit f04cb445e4f5e02daf2c7e96d3dcd41e48453346 | live (registry mirror) — outreach: issue closed (nushell/nu_scripts#1266) — nu-completion activation declared; Wave 3B |
 | [`nushell/npm-completions`](https://github.com/nushell/nu_scripts/tree/main/custom-completions/npm) | completion | commit f04cb445e4f5e02daf2c7e96d3dcd41e48453346 | live (registry mirror) — outreach: issue closed (nushell/nu_scripts#1266) — nu-completion activation declared; Wave 3B |
@@ -108,9 +108,7 @@ No compliant upstream release asset; pack a tag/commit snapshot as a registry-ho
 | Package | Blocker |
 |---------|---------|
 | [`FMotalleb/nu_plugin_clipboard`](https://github.com/FMotalleb/nu_plugin_clipboard) | evaluated under ADR 0001: rejected for fork stewardship; superseded by Nushell 0.111+ core builtin `clip` commands |
-| [`galuszkak/nu_plugin_bigquery`](https://github.com/galuszkak/nu_plugin_bigquery) | requires GCP credentials; pending provisional evidence tier intake |
 | [`abusch/nu_plugin_semver`](https://github.com/abusch/nu_plugin_semver) | Linux/macOS tar.xz assets; pending multi-platform intake |
-| [`fennewald/nu_plugin_net`](https://github.com/fennewald/nu_plugin_net) | Linux/macOS tar.xz assets; pending multi-platform intake |
 
 ---
 
@@ -118,6 +116,9 @@ No compliant upstream release asset; pack a tag/commit snapshot as a registry-ho
 
 | Date | Change |
 |------|--------|
+| 2026-11-11 | Linux x86_64 lifecycle proofs passed for `fennewald/nu_plugin_net@1.9.0` (Nu 0.103.0) and `dead10ck/nu_plugin_dns@4.0.10` (Nu 0.113.1); both promoted to `evidence_tier: proven`. |
+| 2026-11-11 | Lifecycle triage: marked `Trivernis/nu-plugin-dialog@0.1.0`, `amtoine/nu-git-manager@0.8.0`, and `amtoine/nu-git-manager-sugar@0.7.0` provisional after their Windows failure logs; `dead10ck/nu_plugin_dns@4.0.10` and `fennewald/nu_plugin_net@1.9.0` were later restored to `proven` by the Linux proofs above. |
+| 2026-11-11 | galuszkak/nu_plugin_bigquery@0.3.0: credentialed Windows x86_64 lifecycle-prove passed on Nu 0.114.1; live BigQuery `SELECT 1` returned 1; promoted to `evidence_tier: proven`. |
 | 2026-10-25 | SuaveIV/nu_plugin_audio@0.2.13 (Nu >=0.116 <0.117): full-platform upstream assets; lifecycle-prove OK on Nu 0.116.1. Retain 0.2.10 for Nu 0.114. |
 | 2026-10-18 | Wave 6 completions: nushell/bat-completions, aws-completions, rg-completions @ 0.1.0-44f8f25 (install-only mirrors). |
 | 2026-10-18 | Wave 5 completions: nushell/docker-completions, gh-completions, dotnet-completions, uv-completions, pnpm-completions, ssh-completions @ 0.1.0-44f8f25 (install-only mirrors). |

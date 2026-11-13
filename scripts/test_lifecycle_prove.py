@@ -209,6 +209,117 @@ class LifecycleProveTests(unittest.TestCase):
             ["init", "registry sync", "search", "info", "install"],
         )
 
+    def test_prove_runs_nu_check_after_activate_and_fails_before_doctor(self):
+        calls: list[str] = []
+
+        def fake_run(step, **_kwargs):
+            calls.append(step.name)
+            return mock.Mock(returncode=0)
+
+        def fake_check(_command, **_kwargs):
+            calls.append("nu check")
+            return mock.Mock(returncode=9)
+
+        with (
+            mock.patch.object(self.mod, "run_step", side_effect=fake_run),
+            mock.patch.object(self.mod, "run_nu_check", side_effect=fake_check),
+            mock.patch.object(
+                self.mod,
+                "prepare_nu_search_dir",
+                side_effect=lambda _nu, shim_dir: shim_dir,
+            ),
+            mock.patch.object(self.mod, "forward_environment", return_value={}),
+        ):
+            code = self.mod.prove(
+                "acme/pkg",
+                numan=Path("numan"),
+                nu=Path("nu"),
+                root=Path("root"),
+                keep_root=True,
+                nu_check="bq query \"SELECT 1 AS proof\"",
+            )
+        self.assertEqual(code, 9)
+        self.assertEqual(
+            calls,
+            [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "nu check",
+            ],
+        )
+
+    def test_prove_forwards_credentials_only_to_nu_check(self):
+        step_envs: list[tuple[str, dict[str, str]]] = []
+        check_envs: list[tuple[str, dict[str, str]]] = []
+
+        def fake_run(step, env, **_kwargs):
+            step_envs.append((step.name, dict(env)))
+            return mock.Mock(returncode=0)
+
+        def fake_check(command, env, **_kwargs):
+            check_envs.append((command, dict(env)))
+            return mock.Mock(returncode=0)
+
+        with (
+            mock.patch.object(self.mod, "run_step", side_effect=fake_run),
+            mock.patch.object(self.mod, "run_nu_check", side_effect=fake_check),
+            mock.patch.object(
+                self.mod,
+                "prepare_nu_search_dir",
+                side_effect=lambda _nu, shim_dir: shim_dir,
+            ),
+            mock.patch.object(
+                self.mod,
+                "forward_environment",
+                return_value={"SECRET_TOKEN": "shh-secret"},
+            ),
+        ):
+            code = self.mod.prove(
+                "acme/pkg",
+                numan=Path("numan"),
+                nu=Path("nu"),
+                root=Path("root"),
+                keep_root=True,
+                forward_env=("SECRET_TOKEN",),
+                nu_check="echo test",
+            )
+        self.assertEqual(code, 0)
+        for name, env in step_envs:
+            self.assertNotIn("SECRET_TOKEN", env, f"SECRET_TOKEN leaked to step {name}")
+        self.assertEqual(len(check_envs), 1)
+        self.assertIn("SECRET_TOKEN", check_envs[0][1])
+        self.assertEqual(check_envs[0][1]["SECRET_TOKEN"], "shh-secret")
+
+    def test_nu_check_redacts_environment_values_from_printed_command(self):
+        env = {"TOKEN": "supersecrettoken"}
+        with (
+            mock.patch.object(self.mod.subprocess, "run", return_value=mock.Mock(returncode=0)),
+            mock.patch("builtins.print") as mock_print,
+        ):
+            self.mod.run_nu_check("echo supersecrettoken", nu=Path("nu"), env=env)
+        mock_print.assert_called_once_with("==> nu check: echo [REDACTED]", flush=True)
+
+    def test_forward_environment_rejects_malformed_name(self):
+        with self.assertRaises(ValueError) as ctx:
+            self.mod.forward_environment(["FOO=BAR"])
+        self.assertIn("invalid environment variable name; expected", str(ctx.exception))
+        self.assertNotIn("FOO=BAR", str(ctx.exception))
+
+    def test_nu_check_uses_exact_command_and_isolated_environment(self):
+        env = {"HOME": "isolated-home"}
+        with mock.patch.object(self.mod.subprocess, "run", return_value=mock.Mock(returncode=0)) as run:
+            result = self.mod.run_nu_check("bq query \"SELECT 1 AS proof\"", nu=Path("nu"), env=env)
+        self.assertEqual(result.returncode, 0)
+        run.assert_called_once()
+        args, kwargs = run.call_args
+        self.assertEqual(args[0], ["nu", "-c", 'bq query "SELECT 1 AS proof"'])
+        self.assertEqual(kwargs["env"], env)
+        self.assertFalse(kwargs["capture_output"])
+
     def test_prove_runs_complete_lifecycle_and_cleans_temporary_paths(self):
         calls: list[str] = []
         paths: list[str] = []

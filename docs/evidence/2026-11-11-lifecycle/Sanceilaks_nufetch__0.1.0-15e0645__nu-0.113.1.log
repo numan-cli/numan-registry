@@ -1,0 +1,104 @@
+COMMAND ["D:\\Dev\\numan_workspace\\numan-registry\\.venv\\Scripts\\python.exe", "D:\\Dev\\numan_workspace\\numan-registry\\scripts\\lifecycle-prove.py", "--package", "Sanceilaks/nufetch", "--package-version", "0.1.0-15e0645", "--candidate-index", "D:\\Dev\\numan_workspace\\numan-registry\\registry\\index.json", "--numan", "D:\\Dev\\numan_workspace\\numan\\target\\debug\\numan.exe", "--nu", "D:\\Dev\\numan_workspace\\numan-registry\\.tmp-lifecycle\\nu\\0.113.1\\nu.exe"]
+isolated Nu probe: {"version": "0.113.1", "plugin_path": "D:\\Temp\\numan-lifecycle-prove-8e2y7dfq\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Temp\\numan-lifecycle-prove-8e2y7dfq\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Temp\\numan-lifecycle-prove-8e2y7dfq\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: efcfaaf1dee8e97e3b0f6b727c108dad4ac2d920226d182a455efb100709c835
+Numan SHA256: 4b5356984ebccbaa411fefe82dbf28718b48c44bfde4def87fc0af0a1bb8a0ed
+package: Sanceilaks/nufetch
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\numan-registry\.tmp-lifecycle\nu\0.113.1\nu.exe
+root:    D:\Temp\numan-lifecycle-prove-8e2y7dfq
+
+candidate package version: 0.1.0-15e0645
+candidate file SHA256: 19447b129f640a318fb8bf6af2c5a932ac17008c8a5d1dee414949e7851318b0
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-8e2y7dfq init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Temp\numan-lifecycle-prove-8e2y7dfq'.
+  Nu executable: D:\Temp\numan-lifecycle-prove-shim-1src4h54\nu.exe
+  Nu version:    0.113.1
+  Plugin registry: D:\Temp\numan-lifecycle-prove-8e2y7dfq\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Temp\numan-lifecycle-prove-8e2y7dfq\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-8e2y7dfq registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-8e2y7dfq registry add lifecycle-candidate http://127.0.0.1:56653/index.json --key CsD9q3nFxOM2ugKYJcHoubFTbWBPIVwrBB/4gO9dpDg=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:56653/index.json
+  Fingerprint: sha256:0c8657ee4a5d97e530440799c96082219267c8d3df094ee80ae61ffd9237be8d
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-8e2y7dfq registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:56653/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 3120af39).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-8e2y7dfq search nufetch
+Found 1 package(s) matching 'nufetch':
+checked against: Nu 0.113.1 (x86_64-pc-windows-msvc)
+
+  Sanceilaks/nufetch  v0.1.0-15e0645  [script] [install-only; activation deferred; verified with 0.113.1, 0.116.1]
+    neofetch-like system info script in Nushell. Registry-hosted mirror of upstream commit 15e0645. Declares a script entry point for nufetch for activation with `numan activate`. Note: upstream repo has no LICENSE file at this pin.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-8e2y7dfq info Sanceilaks/nufetch
+Package:    Sanceilaks/nufetch
+Type:       script
+Activation: explicit `numan activate` required; install does not wire Nu
+Status:     verified upstream artifact
+Description: neofetch-like system info script in Nushell. Registry-hosted mirror of upstream commit 15e0645. Declares a script entry point for nufetch for activation with `numan activate`. Note: upstream repo has no LICENSE file at this pin.
+Repository: https://github.com/Sanceilaks/nufetch
+Tags:       script, system, mirror
+Your Nu:    0.113.1 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.1.0-15e0645  [nu *]  (compatible) [host proof passed]
+    script: nufetch -> nufetch.nu (inactive until activated)
+    tested with: 0.113.1, 0.116.1
+    proof:       windows/x86_64, Nu 0.113.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+    proof:       windows/x86_64, Nu 0.116.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Per-platform proofs list the OS/architecture tested.
+Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-8e2y7dfq install Sanceilaks/nufetch@0.1.0-15e0645
+✓ Installed Sanceilaks/nufetch@0.1.0-15e0645 to D:\Temp\numan-lifecycle-prove-8e2y7dfq\packages\scripts\Sanceilaks\nufetch\0.1.0-15e0645-cabc915d
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-8e2y7dfq activate Sanceilaks/nufetch
+
+Script startup autoload
+  Sanceilaks/nufetch (nufetch) -> D:\Temp\numan-lifecycle-prove-8e2y7dfq\lifecycle-home\xdg\data\nushell\vendor\autoload/numan.nu
+
+✓ Script Sanceilaks/nufetch added to autoload (commands: nufetch) — takes effect in future Nu sessions
+==> doctor: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-8e2y7dfq doctor
+Numan doctor — D:\Temp\numan-lifecycle-prove-8e2y7dfq
+
+Initialization
+  · PATH Nu: 0.113.1
+  · Managed Nu: not installed
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-8e2y7dfq list
+Installed packages (1):
+
+  Sanceilaks/nufetch  v0.1.0-15e0645  [script]  installed
+==> deactivate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-8e2y7dfq deactivate Sanceilaks/nufetch
+
+Module deactivation
+  Sanceilaks/nufetch <- D:\Temp\numan-lifecycle-prove-8e2y7dfq\lifecycle-home\xdg\data\nushell\vendor\autoload/numan.nu
+
+✓ Module Sanceilaks/nufetch removed from autoload — takes effect in future Nu sessions
+==> remove: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-8e2y7dfq remove --yes Sanceilaks/nufetch
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed Sanceilaks/nufetch
+==> gc: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-8e2y7dfq gc
+No orphaned packages found.
+OK: lifecycle-prove passed.

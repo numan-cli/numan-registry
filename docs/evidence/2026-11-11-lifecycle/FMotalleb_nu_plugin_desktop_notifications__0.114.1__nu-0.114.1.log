@@ -1,0 +1,123 @@
+COMMAND ["D:\\Dev\\numan_workspace\\numan-registry\\.venv\\Scripts\\python.exe", "D:\\Dev\\numan_workspace\\numan-registry\\scripts\\lifecycle-prove.py", "--package", "FMotalleb/nu_plugin_desktop_notifications", "--package-version", "0.114.1", "--candidate-index", "D:\\Dev\\numan_workspace\\numan-registry\\registry\\index.json", "--numan", "D:\\Dev\\numan_workspace\\numan\\target\\debug\\numan.exe", "--nu", "D:\\Dev\\numan_workspace\\numan-registry\\.tmp-lifecycle\\nu\\0.114.1\\nu.exe"]
+isolated Nu probe: {"version": "0.114.1", "plugin_path": "D:\\Temp\\numan-lifecycle-prove-ojm8hv0a\\lifecycle-home\\xdg\\config\\nushell\\plugin.msgpackz", "data_dir": "D:\\Temp\\numan-lifecycle-prove-ojm8hv0a\\lifecycle-home\\xdg\\data\\nushell", "vendor": ["C:\\ProgramData\\nushell\\vendor\\autoload", "D:\\Temp\\numan-lifecycle-prove-ojm8hv0a\\lifecycle-home\\xdg\\data\\nushell\\vendor\\autoload"]}
+Nu SHA256: 49fb6abfefc74325d398138ce4d3dc0e9ea68aac5a739e638e0f00cb081e445f
+Numan SHA256: 4b5356984ebccbaa411fefe82dbf28718b48c44bfde4def87fc0af0a1bb8a0ed
+package: FMotalleb/nu_plugin_desktop_notifications
+numan:   D:\Dev\numan_workspace\numan\target\debug\numan.exe
+nu:      D:\Dev\numan_workspace\numan-registry\.tmp-lifecycle\nu\0.114.1\nu.exe
+root:    D:\Temp\numan-lifecycle-prove-ojm8hv0a
+
+candidate package version: 0.114.1
+candidate file SHA256: 19447b129f640a318fb8bf6af2c5a932ac17008c8a5d1dee414949e7851318b0
+==> init: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ojm8hv0a init
+Configured official registry 'official' at https://numan-cli.github.io/numan-registry/index.json.
+Initialized Numan at 'D:\Temp\numan-lifecycle-prove-ojm8hv0a'.
+  Nu executable: D:\Temp\numan-lifecycle-prove-shim-03ogf38y\nu.exe
+  Nu version:    0.114.1
+  Plugin registry: D:\Temp\numan-lifecycle-prove-ojm8hv0a\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+  Platform:      x86_64-pc-windows-msvc
+  Vendor autoload: D:\Temp\numan-lifecycle-prove-ojm8hv0a\lifecycle-home\xdg\data\nushell\vendor\autoload
+
+Next steps:
+  1. Sync the registry index:
+     numan registry sync
+  2. Prove it works (installs + activates a package for your Nu):
+     numan try
+  3. Or search and install manually:
+     numan search <query>
+     numan install owner/name
+     numan activate
+
+Run 'numan doctor' to verify setup and apply safe repairs (use 'numan doctor --scan' for report-only output).
+Install tab completion: run 'numan completions nushell' (writes to Nushell vendor autoload; use --print for manual install steps).
+==> remove official test-root registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ojm8hv0a registry remove official
+Removed registry 'official'.
+==> add signed candidate registry: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ojm8hv0a registry add lifecycle-candidate http://127.0.0.1:53720/index.json --key k4dmsf2hq32VRduBYiInuYy79XC0gPzuK6NdJEeR/9o=
+Added registry 'lifecycle-candidate'.
+  URL: http://127.0.0.1:53720/index.json
+  Fingerprint: sha256:92b95d290cf545f7c7d7026163e01c0a3f0e25ae3d1f4d0b9d04a3cf55be9c39
+
+Run 'numan registry sync' to fetch the index.
+==> registry sync: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ojm8hv0a registry sync
+Syncing 'lifecycle-candidate' from http://127.0.0.1:53720/index.json...
+  Synced 'lifecycle-candidate' successfully (key_id: lifecycle-candidate, index_sha256: 3120af39).
+==> search: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ojm8hv0a search nu_plugin_desktop_notifications
+Found 1 package(s) matching 'nu_plugin_desktop_notifications':
+checked against: Nu 0.114.1 (x86_64-pc-windows-msvc)
+
+  FMotalleb/nu_plugin_desktop_notifications  v0.114.1  [plugin]
+    Send desktop notifications from Nushell. CI-built from FMotalleb/nu_plugin_desktop_notifications@v0.116.0 and pinned + hash-verified + signed downstream in numan-registry.
+==> info: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ojm8hv0a info FMotalleb/nu_plugin_desktop_notifications
+Package:    FMotalleb/nu_plugin_desktop_notifications
+Type:       plugin
+Status:     verified upstream artifact
+Description: Send desktop notifications from Nushell. CI-built from FMotalleb/nu_plugin_desktop_notifications@v0.116.0 and pinned + hash-verified + signed downstream in numan-registry.
+Repository: https://github.com/FMotalleb/nu_plugin_desktop_notifications
+Tags:       plugin, notifications, desktop, ci-built
+Your Nu:    0.114.1 (x86_64-pc-windows-msvc)
+
+Versions:
+  v0.114.1  [nu >=0.114.0 <0.115.0]  (compatible) [host proof passed]
+    tested with: 0.114.1
+    proof:       windows/x86_64, Nu 0.114.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+    source git:  https://github.com/FMotalleb/nu_plugin_desktop_notifications
+    source rev:  v0.114.1
+    cargo_name:  nu_plugin_desktop_notifications
+    platform: aarch64-apple-darwin
+    platform: x86_64-unknown-linux-gnu
+    platform: x86_64-pc-windows-msvc
+    platform: aarch64-unknown-linux-gnu
+  v0.116.0  [nu >=0.116.0 <0.117.0]  (needs Nu >=0.116.0 <0.117.0) [no host proof]
+    tested with: 0.116.1
+    proof:       windows/x86_64, Nu 0.116.1, passed (2026-11-02T00:00:00Z) steps: init, registry sync, search, info, install, activate, doctor, list, deactivate, remove, gc
+    warning:     no lifecycle proof for x86_64-pc-windows-msvc on Nu 0.114.1
+    source git:  https://github.com/FMotalleb/nu_plugin_desktop_notifications
+    source rev:  6d02f4217d29f413fecbe278a7cd89c3e2c5164b
+    cargo_name:  nu_plugin_desktop_notifications
+    platform: aarch64-unknown-linux-gnu
+    platform: x86_64-pc-windows-msvc
+    platform: x86_64-unknown-linux-gnu
+    platform: aarch64-apple-darwin
+
+Note: verified means provenance, integrity, and install/activate
+checks were recorded. Per-platform proofs list the OS/architecture tested.
+Numan has not security-audited the upstream source.
+==> install: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ojm8hv0a install FMotalleb/nu_plugin_desktop_notifications@0.114.1
+✓ Installed FMotalleb/nu_plugin_desktop_notifications@0.114.1 to D:\Temp\numan-lifecycle-prove-ojm8hv0a\packages\plugins\FMotalleb\nu_plugin_desktop_notifications\0.114.1-471ea2cb
+==> activate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ojm8hv0a activate FMotalleb/nu_plugin_desktop_notifications
+
+Plugin registration
+  FMotalleb/nu_plugin_desktop_notifications -> D:\Temp\numan-lifecycle-prove-ojm8hv0a\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Registered FMotalleb/nu_plugin_desktop_notifications — takes effect in future Nu sessions (not the current shell)
+==> doctor: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ojm8hv0a doctor
+Numan doctor — D:\Temp\numan-lifecycle-prove-ojm8hv0a
+
+Initialization
+  · PATH Nu: 0.114.1
+  · Managed Nu: not installed
+
+Activation
+  · Plugin 'FMotalleb/nu_plugin_desktop_notifications' has an activation record (Issue #22). Deactivate is available; active remove stays gated (deactivate first). Active update is opt-in via NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly (default off): deactivate→upgrade→activate (https://github.com/numan-cli/numan/issues/22).
+    Fix: Remove: `numan deactivate <pkg>`, then `numan remove <pkg>`. Update: set NUMAN_ENABLE_ACTIVE_PLUGIN_MUTATION=1 exactly, then `numan update <pkg>` orchestrates deactivate→upgrade→activate; otherwise active update is gated (default off). See docs/active-plugin-gate.md.
+
+nupm coexistence
+  · nupm home not configured (pass --nupm-home or set NUPM_HOME)
+
+Summary: 0 error(s), 0 warning(s)
+==> list: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ojm8hv0a list
+Installed packages (1):
+
+  FMotalleb/nu_plugin_desktop_notifications  v0.114.1  [plugin]  activated
+==> deactivate: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ojm8hv0a deactivate FMotalleb/nu_plugin_desktop_notifications
+
+Plugin deactivation
+  FMotalleb/nu_plugin_desktop_notifications (desktop_notifications) <- D:\Temp\numan-lifecycle-prove-ojm8hv0a\lifecycle-home\xdg\config\nushell\plugin.msgpackz
+
+✓ Unregistered FMotalleb/nu_plugin_desktop_notifications — takes effect in future Nu sessions (not the current shell)
+==> remove: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ojm8hv0a remove --yes FMotalleb/nu_plugin_desktop_notifications
+(audit) explicit --yes accepted for package removal; proceeding without interactive prompt.
+✓ Removed FMotalleb/nu_plugin_desktop_notifications
+==> gc: D:\Dev\numan_workspace\numan\target\debug\numan.exe --root D:\Temp\numan-lifecycle-prove-ojm8hv0a gc
+No orphaned packages found.
+OK: lifecycle-prove passed.
