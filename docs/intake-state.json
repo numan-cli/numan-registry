@@ -430,7 +430,7 @@
       "platforms": "linux x64/aarch64, macOS aarch64, Windows x64",
       "repo": "https://github.com/galuszkak/nu_plugin_bigquery",
       "spec": "specs/galuszkak-nu_plugin_bigquery-0.3.0.json",
-      "note": "ci-built via numan-plugins; P6 provisional tier (GCP credential requirement)"
+      "note": "ci-built via numan-plugins; credentialed Windows x86_64 lifecycle-prove passed 2026-11-11 with Nu 0.114.1 (live BigQuery SELECT 1); promoted to index.json as proven"
     },
     {
       "id": "JosephTLyons/nu_plugin_units",
@@ -1033,10 +1033,6 @@
       "blocker": "evaluated under ADR 0001: rejected for fork stewardship; superseded by Nushell 0.111+ core builtin `clip` commands"
     },
     {
-      "id": "galuszkak/nu_plugin_bigquery",
-      "blocker": "requires GCP credentials; pending provisional evidence tier intake"
-    },
-    {
       "id": "abusch/nu_plugin_semver",
       "blocker": "Linux/macOS tar.xz assets; pending multi-platform intake"
     },
@@ -1046,6 +1042,10 @@
     }
   ],
   "changelog": [
+    {
+      "date": "2026-11-11",
+      "change": "galuszkak/nu_plugin_bigquery@0.3.0: credentialed Windows x86_64 lifecycle-prove passed on Nu 0.114.1; live BigQuery SELECT 1 returned 1; promoted to evidence_tier proven."
+    },
     {
       "date": "2026-10-25",
       "change": "SuaveIV/nu_plugin_audio@0.2.13 (Nu >=0.116 <0.117): full-platform upstream assets; lifecycle-prove OK on Nu 0.116.1. Retain 0.2.10 for Nu 0.114."

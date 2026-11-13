@@ -48,7 +48,7 @@
       "license": "MIT",
       "last_activity": "2026-09-23",
       "status": "CANDIDATE",
-      "note": "Typed Salesforce client module: auth, bulk, query, rest, sobject. 53 export defs. Live proof will need Salesforce credentials, same pattern as the BigQuery credential-gated proof."
+      "note": "Typed Salesforce client module: auth, bulk, query, rest, sobject. 53 export defs. Live proof will need Salesforce credentials, same pattern as the BigQuery credentialed proof."
     },
     {
       "repo": "freepicheep/nu-quickbooks",
@@ -60,7 +60,7 @@
       "license": "MIT",
       "last_activity": "2026-07-06",
       "status": "CANDIDATE",
-      "note": "QuickBooks client module: auth, batch, cdc, entity, query. 24 export defs. Live proof will need QuickBooks credentials (credential-gated, like BigQuery)."
+      "note": "QuickBooks client module: auth, batch, cdc, entity, query. 24 export defs. Live proof will need QuickBooks credentials (credential-gated, like the BigQuery proof)."
     },
     {
       "repo": "nushell-prophet/nu-cmd-stack",

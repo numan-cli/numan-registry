@@ -29,6 +29,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -191,6 +192,24 @@ def run_step(
     )
 
 
+def run_nu_check(
+    command: str,
+    *,
+    nu: Path,
+    env: dict[str, str],
+) -> subprocess.CompletedProcess[str]:
+    """Run one real-Nu check after activation in the isolated Numan home."""
+    print(f"==> nu check: {command}", flush=True)
+    return subprocess.run(
+        [str(nu), "-c", command],
+        env=env,
+        text=True,
+        capture_output=False,
+        check=False,
+        timeout=300,
+    )
+
+
 def isolated_environment(home: Path) -> dict[str, str]:
     """Give child processes private Nu config/data paths and no inherited secrets."""
     allowed = {"PATH", "SYSTEMROOT", "WINDIR", "SYSTEMDRIVE", "COMSPEC", "PATHEXT", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR"}
@@ -214,6 +233,51 @@ def isolated_environment(home: Path) -> dict[str, str]:
         path.mkdir(parents=True, exist_ok=True)
     env["NO_COLOR"] = "1"
     return env
+
+
+_ENV_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+_RESERVED_ENV = {
+    "APPDATA",
+    "COMSPEC",
+    "HOME",
+    "LOCALAPPDATA",
+    "NO_COLOR",
+    "NUPM_HOME",
+    "NUMAN_ALLOW_UNSIGNED",
+    "NUMAN_ROOT",
+    "PATH",
+    "PATHEXT",
+    "SYSTEMDRIVE",
+    "SYSTEMROOT",
+    "TEMP",
+    "TMP",
+    "USERPROFILE",
+    "WINDIR",
+    "XDG_CACHE_HOME",
+    "XDG_CONFIG_HOME",
+    "XDG_DATA_DIRS",
+    "XDG_DATA_HOME",
+}
+
+
+def forward_environment(names: list[str] | tuple[str, ...]) -> dict[str, str]:
+    """Collect explicitly named caller variables without printing values.
+
+    The lifecycle steps do not receive these variables. They are merged only
+    into the optional post-activation Nu check, so a proof that needs cloud
+    credentials cannot leak the rest of the caller's environment into install,
+    activation, or cleanup.
+    """
+    forwarded = {}
+    for name in names:
+        if not _ENV_NAME.fullmatch(name):
+            raise ValueError(f"invalid environment variable name: {name!r}")
+        if name.upper() in _RESERVED_ENV:
+            raise ValueError(f"refusing to forward reserved environment variable: {name}")
+        if name not in os.environ:
+            raise ValueError(f"requested environment variable is not set: {name}")
+        forwarded[name] = os.environ[name]
+    return forwarded
 
 
 def sha256_file(path: Path) -> str:
@@ -360,6 +424,8 @@ def prove(
     keep_root: bool,
     candidate_index: Path | None = None,
     package_version: str | None = None,
+    forward_env: tuple[str, ...] = (),
+    nu_check: str | None = None,
 ) -> int:
     # Prefer the requested Nu for `numan init` probing without mutating the
     # caller's shell permanently: create a temporary shim that invokes the
@@ -389,6 +455,9 @@ def prove(
     try:
         env = isolated_environment(root / "lifecycle-home")
         env["NUMAN_ROOT"] = str(root.resolve())
+        check_env = {**env, **forward_environment(forward_env)}
+        if forward_env:
+            print("forwarded to Nu check only: " + ", ".join(forward_env), flush=True)
         probe = probe_isolated_nu(nu, root / "lifecycle-home", env)
         print("isolated Nu probe: " + json.dumps(probe), flush=True)
         print("Nu SHA256: " + sha256_file(nu), flush=True)
@@ -432,6 +501,11 @@ def prove(
                 if result.returncode != 0:
                     print(f"FAILED at step {step.name!r} (exit {result.returncode})", file=sys.stderr)
                     return result.returncode
+                if step.name == "activate" and nu_check:
+                    check = run_nu_check(nu_check, nu=nu, env=check_env)
+                    if check.returncode != 0:
+                        print(f"FAILED at step 'nu check' (exit {check.returncode})", file=sys.stderr)
+                        return check.returncode
                 if step.name == "install" and candidate_index is not None:
                     lockfile = json.loads((root / "lockfile").read_text(encoding="utf-8"))
                     if lockfile["packages"][package_id]["version"] != version["version"]:
@@ -490,6 +564,23 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--candidate-index", type=Path, help="Prove this local candidate through a loopback registry signed with an ephemeral key; never uses production keys")
     parser.add_argument("--package-version", help="Install and prove this exact catalog version")
+    parser.add_argument(
+        "--forward-env",
+        action="append",
+        default=[],
+        metavar="NAME",
+        help=(
+            "Forward this caller environment variable to the post-activation Nu "
+            "check only; repeatable. Values are never printed."
+        ),
+    )
+    parser.add_argument(
+        "--nu-check",
+        help=(
+            "Exact Nushell command to run after activation and before doctor; "
+            "a nonzero exit fails the lifecycle proof."
+        ),
+    )
     args = parser.parse_args(argv)
 
     try:
@@ -536,6 +627,8 @@ def main(argv: list[str] | None = None) -> int:
         keep_root=keep_root,
         candidate_index=args.candidate_index.resolve() if args.candidate_index else None,
         package_version=args.package_version,
+        forward_env=tuple(args.forward_env),
+        nu_check=args.nu_check,
     )
 
 
