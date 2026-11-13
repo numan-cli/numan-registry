@@ -8,7 +8,7 @@ This repository is **not** the package manager itself. It publishes the signed r
 
 The official production registry is live at [numan-cli.github.io/numan-registry](https://numan-cli.github.io/numan-registry/) (human landing page) and signed with the `official-2026-07-01` trust root built into Numan. Clients sync [`index.json`](https://numan-cli.github.io/numan-registry/index.json) and verify [`index.json.sig`](https://numan-cli.github.io/numan-registry/index.json.sig); do not treat the HTML landing page as machine input.
 
-**Catalog (committed production candidate):** **56** packages (34 plugins, 10 modules, 6 completions, 6 scripts). The public CDN updates only after production signing/publish. Six failed lifecycle candidates are preserved in [`registry/provisional.json`](registry/provisional.json), outside the production index; staging merges them with the production catalog before ephemeral signing. See the generated master list with Nu constraints in [`docs/catalog-compat.md`](docs/catalog-compat.md) and the [October 18 lifecycle evidence](docs/evidence/2026-10-18-lifecycle/summary.json). Demand-ranked *plugin candidates* still outside the catalog live in [`numan-plugins/docs/backlog.json`](https://github.com/numan-cli/numan-plugins/blob/main/docs/backlog.json).
+**Catalog (committed production candidate):** **56** packages (34 plugins, 10 modules, 6 completions, 6 scripts). The public CDN updates only after production signing/publish. Six failed lifecycle candidates are preserved in [`registry/provisional.json`](registry/provisional.json), outside the production index; staging merges them with the production catalog before ephemeral signing. See the generated master list with Nu constraints in [`docs/catalog-compat.md`](docs/catalog-compat.md) and the [October 18](docs/evidence/2026-10-18-lifecycle/summary.json) and [October 19](docs/evidence/2026-10-19-lifecycle/summary.json) lifecycle evidence. Demand-ranked *plugin candidates* still outside the catalog live in [`numan-plugins/docs/backlog.json`](https://github.com/numan-cli/numan-plugins/blob/main/docs/backlog.json).
 
 This `main` branch is the catalog source. Its committed `registry/index.json.sig` is deliberately a placeholder: the protected production workflow signs the catalog with `NUMAN_REGISTRY_PRIVATE_KEY` and publishes the resulting detached signature to GitHub Pages. Do not use the source-tree signature for an install; use Numan's `official` registry URL.
 
@@ -138,6 +138,21 @@ signed version entry's `verified_with` list records the Nu versions with a
 successful real-Nu lifecycle proof. Each value is an exact `MAJOR.MINOR.PATCH`
 version satisfying `nu_version`; the intake PR carries the command, OS, package
 version, and detailed result.
+
+Optional per-platform `proofs` records can accompany `verified_with`:
+`{os, arch, nu_version, result, commands?, timestamp, evidence_url?}`. They
+record which OS and architecture each lifecycle run covered, so clients do not
+present Windows-only evidence as an all-platform guarantee. `numan info` and
+`numan try` display them, and schema validation rejects unknown OS, arch, or
+result values.
+
+Production/release signing runs `ci-sign.py --production`. It refuses to
+sign any plugin or explicitly activated version whose `proofs` has no
+`result: "passed"` record with a `nu_version` satisfying the version's
+`nu_version` range. Staging and local signing are unchanged. There is no
+production bypass: a missing or non-matching proof refuses the signature.
+Provisional versions are excluded by `materialize_candidate.py` before this
+gate runs.
 
 ## Security
 

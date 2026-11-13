@@ -175,3 +175,11 @@ staging proves the unsigned catalog and ephemeral signature path; neither is a
 substitute for exercising install, activation, deactivation, removal, and
 cleanup against a real Nu. If the lifecycle prove cannot run, keep the package
 out of the production catalog until the evidence is available.
+
+## Production signing gate
+
+Production signing (`scripts/ci-sign.py --production`) refuses to sign an
+activatable package version unless `proofs` contains a `result: "passed"`
+record whose exact `nu_version` satisfies the version's `nu_version` range.
+This is stricter than the existing `verified_with` validation. There is no
+production bypass: a missing or non-matching proof refuses the signature.
