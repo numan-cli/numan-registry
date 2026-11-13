@@ -321,6 +321,8 @@ def build_version_entry(spec, *, deferral_reason=None):
     }
     if "verified_with" in spec:
         version_entry["verified_with"] = spec["verified_with"]
+    if "proofs" in spec:
+        version_entry["proofs"] = spec["proofs"]
     if deferral_reason is not None:
         version_entry["evidence_tier"] = "provisional"
         version_entry["deferral_reason"] = deferral_reason

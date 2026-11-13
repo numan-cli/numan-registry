@@ -6,6 +6,7 @@ from __future__ import annotations
 import base64
 import importlib.util
 import json
+import jsonschema
 import sys
 import tempfile
 import unittest
@@ -643,6 +644,189 @@ class MainEndToEndTests(unittest.TestCase):
             self.assertIn("Validation passed", output)
             self.assertIn("Ed25519 signature verified", output)
             self.assertIn("fixture URL skipped", output)
+
+
+class ActivationKindSchemaTests(unittest.TestCase):
+    """Lock the closed activation.kind set and its per-kind requirements."""
+
+    SCHEMA = ROOT / "schemas" / "index-v1.json"
+
+    def _index_with(self, activation):
+        return {
+            "schema_version": 1,
+            "updated_at": "2026-07-29T00:00:00Z",
+            "packages": [
+                {
+                    "id": {"owner": "acme", "name": "pkg"},
+                    "description": "d",
+                    "repo": "https://example.com/repo",
+                    "type": "module",
+                    "tags": [],
+                    "versions": [
+                        {
+                            "version": "1.0.0",
+                            "nu_version": "*",
+                            "artifact": {
+                                "kind": "archive",
+                                "url": "https://example.com/a.tar.gz",
+                                "sha256": "a" * 64,
+                            },
+                            "activation": activation,
+                        }
+                    ],
+                }
+            ],
+        }
+
+    def test_rejects_unknown_activation_kind(self):
+        with self.assertRaises(jsonschema.ValidationError):
+            VALIDATE.validate_schema(
+                self._index_with({"kind": "nu-moduel"}), str(self.SCHEMA)
+            )
+
+    def test_accepts_each_closed_activation_kind(self):
+        activations = [
+            {"kind": "nu-module"},
+            {"kind": "nu-overlay", "entry": "overlay.nu"},
+            {
+                "kind": "nu-hook",
+                "bindings": [
+                    {"id": "b", "event": "pre_prompt", "handler": "h.nu"}
+                ],
+            },
+            {"kind": "nu-script", "entry_points": [{"name": "run", "path": "run.nu"}]},
+            {
+                "kind": "nu-completion",
+                "targets": [{"command": "git", "path": "git.nu", "kind": "static"}],
+            },
+        ]
+        for activation in activations:
+            VALIDATE.validate_schema(self._index_with(activation), str(self.SCHEMA))
+
+    def test_requires_kind_specific_block(self):
+        for activation in ({"kind": "nu-hook"}, {"kind": "nu-overlay"}):
+            with self.assertRaises(jsonschema.ValidationError):
+                VALIDATE.validate_schema(self._index_with(activation), str(self.SCHEMA))
+
+
+class LifecycleProofSchemaTests(unittest.TestCase):
+    """Lock the optional per-platform lifecycle proof record."""
+
+    SCHEMA = ROOT / "schemas" / "index-v1.json"
+
+    def _index_with(self, proofs):
+        return {
+            "schema_version": 1,
+            "updated_at": "2026-07-29T00:00:00Z",
+            "packages": [
+                {
+                    "id": {"owner": "acme", "name": "pkg"},
+                    "description": "d",
+                    "repo": "https://example.com/repo",
+                    "type": "module",
+                    "tags": [],
+                    "versions": [
+                        {
+                            "version": "1.0.0",
+                            "nu_version": "*",
+                            "artifact": {
+                                "kind": "archive",
+                                "url": "https://example.com/a.tar.gz",
+                                "sha256": "a" * 64,
+                            },
+                            "proofs": proofs,
+                        }
+                    ],
+                }
+            ],
+        }
+
+    def test_accepts_minimal_and_full_proofs(self):
+        proofs = [
+            {
+                "os": "windows",
+                "arch": "x86_64",
+                "nu_version": "0.114.1",
+                "result": "passed",
+                "timestamp": "2026-10-18T12:00:00Z",
+            },
+            {
+                "os": "linux",
+                "arch": "aarch64",
+                "nu_version": "0.114.1",
+                "result": "failed",
+                "commands": ["install", "activate"],
+                "timestamp": "2026-10-18T12:00:00.123+00:00",
+                "evidence_url": "https://example.com/log",
+            },
+        ]
+        VALIDATE.validate_schema(self._index_with(proofs), str(self.SCHEMA))
+
+    def test_rejects_unknown_os(self):
+        with self.assertRaises(jsonschema.ValidationError):
+            VALIDATE.validate_schema(
+                self._index_with(
+                    [
+                        {
+                            "os": "solaris",
+                            "arch": "x86_64",
+                            "nu_version": "0.114.1",
+                            "result": "passed",
+                            "timestamp": "2026-10-18T12:00:00Z",
+                        }
+                    ]
+                ),
+                str(self.SCHEMA),
+            )
+
+    def test_rejects_missing_required_proof_fields(self):
+        with self.assertRaises(jsonschema.ValidationError):
+            VALIDATE.validate_schema(
+                self._index_with(
+                    [
+                        {
+                            "os": "linux",
+                            "arch": "x86_64",
+                            "nu_version": "0.114.1",
+                            "result": "passed",
+                        }
+                    ]
+                ),
+                str(self.SCHEMA),
+            )
+
+    def test_rejects_malformed_timestamp_and_extra_fields(self):
+        with self.assertRaises(jsonschema.ValidationError):
+            VALIDATE.validate_schema(
+                self._index_with(
+                    [
+                        {
+                            "os": "linux",
+                            "arch": "x86_64",
+                            "nu_version": "0.114.1",
+                            "result": "passed",
+                            "timestamp": "2026-10-18",
+                        }
+                    ]
+                ),
+                str(self.SCHEMA),
+            )
+        with self.assertRaises(jsonschema.ValidationError):
+            VALIDATE.validate_schema(
+                self._index_with(
+                    [
+                        {
+                            "os": "linux",
+                            "arch": "x86_64",
+                            "nu_version": "0.114.1",
+                            "result": "passed",
+                            "timestamp": "2026-10-18T12:00:00Z",
+                            "unexpected": True,
+                        }
+                    ]
+                ),
+                str(self.SCHEMA),
+            )
 
 
 if __name__ == "__main__":
