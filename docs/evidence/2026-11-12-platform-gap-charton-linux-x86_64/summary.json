@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "record_type": "lifecycle-proof",
+  "run_date": "2026-11-12",
+  "source": "local YAML-derived platform-gap executor run in an ubuntu:24.04 Docker container; not a GitHub Actions run",
+  "workflow": ".github/workflows/platform-gap-lifecycle-proof.yml",
+  "runner_workflow": ".github/workflows/lifecycle-proof.yml",
+  "workflow_ref": "local uncommitted workspace; platform-gap wrapper on this commit",
+  "package": "wangjiawen2013/nu_plugin_charton",
+  "package_version": "0.9.0",
+  "platform": {
+    "os": "linux",
+    "arch": "x86_64"
+  },
+  "status": "passed",
+  "started_at": "2026-11-12T10:33:23Z",
+  "finished_at": "2026-11-12T10:33:28Z",
+  "runner_image": "ubuntu:24.04 Docker container on Docker Desktop/WSL2; ImageOS/ImageVersion unset in the local executor",
+  "nu": {
+    "version": "0.116.1",
+    "archive_url": "https://github.com/nushell/nushell/releases/download/0.116.1/nu-0.116.1-x86_64-unknown-linux-gnu.tar.gz",
+    "archive_sha256": "d6d8ace4be491ed8abba4026e73b60c0470b4671d7039307e7d772282ef863da",
+    "nu_exe_sha256": "245c48906c1900ff663e13b02eb7d60e134bca6e737d0d517fe89d0fee59a19b",
+    "reported_version": "0.116.1"
+  },
+  "numan": {
+    "version": "0.4.0",
+    "source": "release-asset",
+    "build": "release-asset",
+    "repo": "numan-cli/numan",
+    "asset_url": "https://github.com/numan-cli/numan/releases/download/v0.4.0/numan-0.4.0-x86_64-unknown-linux-gnu.tar.gz",
+    "sha256": "d207c3644ce904a31267ae18b6ff17354bebedb729def9c0a6416d2631ba1eb9"
+  },
+  "candidate_index": {
+    "path": "registry/index.json",
+    "sha256": "9f72ebfd2ea51b5739345f01c1601e42adc3b6944b19f33e33b7324f762808d5",
+    "signing": "ephemeral Ed25519 loopback registry"
+  },
+  "artifact": {
+    "url": "https://github.com/numan-cli/numan-plugins/releases/download/nu_plugin_charton-0.9.0/nu_plugin_charton-0.9.0-x86_64-unknown-linux-gnu.tar.gz",
+    "sha256": "9f8ad0fa90c426606cdba39a41cec15404d424c1c29c64382a877efe18ad4143"
+  },
+  "lifecycle_steps": [
+    "init",
+    "registry sync",
+    "search",
+    "info",
+    "install",
+    "activate",
+    "doctor",
+    "list",
+    "deactivate",
+    "remove",
+    "gc"
+  ],
+  "notes": "This run closes the existing linux/x86_64 gap for the current 0.9.0 artifact; it does not prove linux/aarch64 or macos/aarch64. The workflow itself is report-only; after it passed, the collected proof was added to registry/index.json with this evidence_url.",
+  "log": "docs/evidence/2026-11-12-platform-gap-charton-linux-x86_64/wangjiawen2013__nu_plugin_charton__0.9.0__nu-0.116.1__linux-x86_64.log",
+  "log_sha256": "0c9d98c184a0aeae221da7219bc8402f580118d4c6fa35898220b6468f473f95",
+  "proof": "docs/evidence/2026-11-12-platform-gap-charton-linux-x86_64/proof.json",
+  "proof_sha256": "69b62d0713fb9996d5e80036e4392f7c8e0530ec889c71a9828a8dd7fe2ed4a6",
+  "proofs": "docs/evidence/2026-11-12-platform-gap-charton-linux-x86_64/proofs.json",
+  "proofs_sha256": "6342be93e3b9da17e4887f0493884ba5cfbd57cbabf2ad92873d754faed6dd6f",
+  "proofs_summary": "docs/evidence/2026-11-12-platform-gap-charton-linux-x86_64/proofs.md",
+  "proofs_summary_sha256": "9fc6a829572a59695c037ad71125b17d4a5db517763aef913cd27541186de228",
+  "executor_log": "docs/evidence/2026-11-12-platform-gap-charton-linux-x86_64/executor.log",
+  "executor_log_sha256": "3b82df39952109b95eb9a3c4957430a66ce995f436db49235fb04301044ce010"
+}

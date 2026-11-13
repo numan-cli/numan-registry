@@ -40,7 +40,12 @@
         "gc"
       ],
       "log": "docs/evidence/2026-11-11-linux-lifecycle/fennewald_nu_plugin_net__1.9.0__nu-0.103.0__linux-x86_64.log",
-      "log_sha256": "f56d20cc1d48874b04799f7efda805c8511543694ecb25da738640db6621fb5d"
+      "log_sha256": "f56d20cc1d48874b04799f7efda805c8511543694ecb25da738640db6621fb5d",
+      "proof": "docs/evidence/2026-11-11-linux-lifecycle/linux-net/proof.json",
+      "proof_sha256": "4606121994d3a270e54302b15c1ac8153ed45bab785bda36b21277101adb39bc",
+      "proofs": "docs/evidence/2026-11-11-linux-lifecycle/linux-net/proofs.json",
+      "proofs_sha256": "7cad5e0d1a75a02a9637cafcab61b44a42be044bfae0bebf5dcf34c28f1ff63a",
+      "proofs_summary": "docs/evidence/2026-11-11-linux-lifecycle/linux-net/proofs.md"
     },
     {
       "package": "dead10ck/nu_plugin_dns",
@@ -68,7 +73,12 @@
         "gc"
       ],
       "log": "docs/evidence/2026-11-11-linux-lifecycle/dead10ck_nu_plugin_dns__4.0.10__nu-0.113.1__linux-x86_64.log",
-      "log_sha256": "3e04671186f3c8daaa6cafa2935590b8d846c0ad56b96130bbfa7c31d0d89433"
+      "log_sha256": "3e04671186f3c8daaa6cafa2935590b8d846c0ad56b96130bbfa7c31d0d89433",
+      "proof": "docs/evidence/2026-11-11-linux-lifecycle/linux-dns/proof.json",
+      "proof_sha256": "b3d75d9f471ae17ce5bf9e53f8950066d85731a51d8c492896963d93cf73df25",
+      "proofs": "docs/evidence/2026-11-11-linux-lifecycle/linux-dns/proofs.json",
+      "proofs_sha256": "9a17a6863b4ab0d8f31e3ea0217509177ec387c5db8f9446181c31dd4a7ac016",
+      "proofs_summary": "docs/evidence/2026-11-11-linux-lifecycle/linux-dns/proofs.md"
     }
   ]
 }

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import re
 import subprocess
 import sys
@@ -71,24 +72,38 @@ def load_workflow(stream):
         loader.dispose()
 
 
-def workflow_files(root: Path) -> list[Path]:
+def workflow_files(root: Path, include_untracked: bool = False) -> list[Path]:
     result = subprocess.run(
         ["git", "-C", str(root), "ls-files", "-z", "--", ".github/workflows"],
         check=True,
         capture_output=True,
     )
-    return [
+    files = {
         root / rel
         for rel in result.stdout.decode("utf-8").split("\0")
         if rel and Path(rel).suffix in (".yml", ".yaml")
-    ]
+    }
+    if include_untracked:
+        workflows_dir = root / ".github" / "workflows"
+        if workflows_dir.is_dir():
+            files.update(
+                path
+                for path in workflows_dir.rglob("*")
+                if path.is_file() and path.suffix in (".yml", ".yaml")
+            )
+    return sorted(files, key=lambda path: path.relative_to(root).as_posix())
 
 
-def validate_workflows(root: Path, files: list[Path] | None = None) -> list[str]:
+def validate_workflows(
+    root: Path,
+    files: list[Path] | None = None,
+    include_untracked: bool = False,
+) -> list[str]:
     if files is None:
-        files = workflow_files(root)
+        files = workflow_files(root, include_untracked=include_untracked)
     if not files:
-        return [f"{root}: no tracked workflow files under .github/workflows"]
+        scope = "workflow" if include_untracked else "tracked workflow"
+        return [f"{root}: no {scope} files under .github/workflows"]
     errors = []
     for path in files:
         try:
@@ -99,9 +114,18 @@ def validate_workflows(root: Path, files: list[Path] | None = None) -> list[str]
     return errors
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Validate GitHub Actions workflow YAML files."
+    )
+    parser.add_argument(
+        "--include-untracked",
+        action="store_true",
+        help="also validate workflow files that are not tracked by git",
+    )
+    args = parser.parse_args(argv)
     root = Path(__file__).resolve().parent.parent
-    files = workflow_files(root)
+    files = workflow_files(root, include_untracked=args.include_untracked)
     errors = validate_workflows(root, files=files)
     for err in errors:
         print(err, file=sys.stderr)

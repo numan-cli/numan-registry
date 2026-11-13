@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "record_type": "lifecycle-proof-batch",
+  "run_date": "2026-11-11",
+  "source": "https://github.com/numan-cli/numan-registry/actions/runs/43017573551",
+  "workflow": ".github/workflows/lifecycle-proof.yml",
+  "package": "JosephTLyons/nu_plugin_units",
+  "package_version": "0.1.9",
+  "nu_version": "0.116.1",
+  "scope": {
+    "platforms": [
+      "linux/aarch64",
+      "macos/aarch64"
+    ],
+    "versions": 1,
+    "runs": 2
+  },
+  "numan": {
+    "version": "0.4.0",
+    "source": "release-asset",
+    "repo": "numan-cli/numan"
+  },
+  "candidate_index_sha256": "d2bb346312c636fa1276018c83de95bc5b75369975fb6d785d1a1b63b18c7cd0",
+  "results": [
+    {
+      "platform": "linux/aarch64",
+      "runner_image": "ubuntu24-arm64 20261101.172.1",
+      "status": "passed",
+      "started_at": "2026-11-11T12:07:32Z",
+      "finished_at": "2026-11-11T12:07:33Z",
+      "numan_source": "release-asset",
+      "numan_asset_url": "https://github.com/numan-cli/numan/releases/download/v0.4.0/numan-0.4.0-aarch64-unknown-linux-gnu.tar.gz",
+      "numan_sha256": "8df6aac5890ca432cf7b757f2819331cadcf96bb0b2c360fd60faf411d7e4c3e",
+      "nu": {
+        "archive_url": "https://github.com/nushell/nushell/releases/download/0.116.1/nu-0.116.1-aarch64-unknown-linux-gnu.tar.gz",
+        "archive_sha256": "e7bbb1639253fb83e2391600b957ba3e918f04a2c81850e9f30a68cb1ef20ef8",
+        "nu_exe_sha256": "8d63a5089023b062ce15a7d4e5b7d7e8420e412c2c5ef68aefe5ab9875e58633"
+      },
+      "steps": [
+        "init",
+        "registry sync",
+        "search",
+        "info",
+        "install",
+        "activate",
+        "doctor",
+        "list",
+        "deactivate",
+        "remove",
+        "gc"
+      ],
+      "log": "docs/evidence/2026-11-11-reusable-lifecycle-proof/JosephTLyons__nu_plugin_units__0.1.9__nu-0.116.1__linux-aarch64.log",
+      "log_sha256": "787513ee58f00c60ddf9e933ee09331c4539b51ca6ea78dc7bccd313d376a400"
+    },
+    {
+      "platform": "macos/aarch64",
+      "runner_image": "macos15 20261104.0514.1",
+      "status": "passed",
+      "started_at": "2026-11-11T12:07:36Z",
+      "finished_at": "2026-11-11T12:08:13Z",
+      "numan_source": "release-asset",
+      "numan_asset_url": "https://github.com/numan-cli/numan/releases/download/v0.4.0/numan-0.4.0-aarch64-apple-darwin.tar.gz",
+      "numan_sha256": "8064d22229b09199170f50111e892db8eccf6e5f000e35fc7c9ada943f58b259",
+      "nu": {
+        "archive_url": "https://github.com/nushell/nushell/releases/download/0.116.1/nu-0.116.1-aarch64-apple-darwin.tar.gz",
+        "archive_sha256": "302fb3dfc5d44e7fe0d5b8227be8e75b4c3956ca8d4804234e5c68fbdd3e4917",
+        "nu_exe_sha256": "bb8ff097eb77f38c1a8397c22b0744f6806f0f19824cd735d8869c04cb8258a6"
+      },
+      "steps": [
+        "init",
+        "registry sync",
+        "search",
+        "info",
+        "install",
+        "activate",
+        "doctor",
+        "list",
+        "deactivate",
+        "remove",
+        "gc"
+      ],
+      "log": "docs/evidence/2026-11-11-reusable-lifecycle-proof/JosephTLyons__nu_plugin_units__0.1.9__nu-0.116.1__macos-aarch64.log",
+      "log_sha256": "c3d2030ab4dd0162b767aca7416bc88c2c1212677d3658f644bec3b27c08d3b5"
+    }
+  ]
+}

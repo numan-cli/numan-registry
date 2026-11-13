@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-02T07:51:19Z",
+  "updated_at": "2026-11-12T14:03:58Z",
   "registry_revision": "seed-2026-07-02",
   "packages": [
     {
@@ -610,6 +610,27 @@
               ],
               "timestamp": "2026-11-11T10:20:28Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/fdncred_nu_plugin_file__0.28.0__nu-0.116.1.log"
+            },
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "nu_version": "0.116.1",
+              "result": "passed",
+              "timestamp": "2026-11-12T11:56:40Z",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/fdncred__nu_plugin_file__0.28.0__nu-0.116.1__linux-x86_64.log"
             }
           ]
         }
@@ -909,7 +930,7 @@
         "owner": "nushell",
         "name": "custom-completions"
       },
-      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, \u2026). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Declares completion targets for its curated custom-completions files for activation with `numan activate`.",
+      "description": "Community custom completions from nu_scripts (git, cargo, npm, gh, …). Registry-hosted mirror of nu_scripts/custom-completions @ f04cb44. Declares completion targets for its curated custom-completions files for activation with `numan activate`.",
       "repo": "https://github.com/nushell/nu_scripts",
       "type": "completion",
       "tags": [
@@ -1219,6 +1240,27 @@
               ],
               "timestamp": "2026-11-11T10:11:24Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/alex-kattathra-johnson_nu_plugin_ws__1.0.6__nu-0.107.0.log"
+            },
+            {
+              "os": "macos",
+              "arch": "x86_64",
+              "nu_version": "0.107.0",
+              "result": "passed",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "timestamp": "2026-11-11T22:04:48Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-macos-x86_64-source-build/alex-kattathra-johnson__nu_plugin_ws__1.0.6__nu-0.107.0__macos-x86_64.log"
             }
           ]
         }
@@ -1691,6 +1733,27 @@
               ],
               "timestamp": "2026-11-11T10:18:11Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/cptpiepmatz_nu_plugin_highlight__1.4.17__nu-0.115.1.log"
+            },
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "nu_version": "0.115.1",
+              "result": "passed",
+              "timestamp": "2026-11-12T11:48:24Z",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/cptpiepmatz__nu_plugin_highlight__1.4.17__nu-0.115.1__linux-x86_64.log"
             }
           ]
         }
@@ -1883,6 +1946,27 @@
               ],
               "timestamp": "2026-11-11T10:21:15Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/fdncred_nu_plugin_regex__0.25.0__nu-0.116.1.log"
+            },
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "nu_version": "0.116.1",
+              "result": "passed",
+              "timestamp": "2026-11-12T12:08:17Z",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/fdncred__nu_plugin_regex__0.25.0__nu-0.116.1__linux-x86_64.log"
             }
           ]
         }
@@ -1959,7 +2043,49 @@
                 "gc"
               ],
               "timestamp": "2026-11-11T11:13:52Z",
-              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-linux-lifecycle/dead10ck_nu_plugin_dns__4.0.10__nu-0.113.1__linux-x86_64.log"
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-linux-lifecycle/linux-dns/proof.json"
+            },
+            {
+              "os": "linux",
+              "arch": "aarch64",
+              "nu_version": "0.113.1",
+              "result": "passed",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "timestamp": "2026-11-11T11:41:19Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-cross-platform-lifecycle/dead10ck_nu_plugin_dns__4.0.10__nu-0.113.1__linux-aarch64.log"
+            },
+            {
+              "os": "macos",
+              "arch": "aarch64",
+              "nu_version": "0.113.1",
+              "result": "passed",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "timestamp": "2026-11-11T11:42:46Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-cross-platform-lifecycle/dead10ck_nu_plugin_dns__4.0.10__nu-0.113.1__macos-aarch64.log"
             }
           ]
         }
@@ -2097,6 +2223,27 @@
               ],
               "timestamp": "2026-11-11T10:21:54Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/idanarye_nu_plugin_skim__0.31.0__nu-0.116.1.log"
+            },
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "nu_version": "0.116.1",
+              "result": "passed",
+              "timestamp": "2026-11-12T11:47:25Z",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/idanarye__nu_plugin_skim__0.31.0__nu-0.116.1__linux-x86_64.log"
             }
           ]
         }
@@ -2234,6 +2381,27 @@
               ],
               "timestamp": "2026-11-11T10:18:47Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/FMotalleb_nu_plugin_desktop_notifications__0.116.0__nu-0.116.1.log"
+            },
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "nu_version": "0.116.1",
+              "result": "passed",
+              "timestamp": "2026-11-12T12:22:41Z",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/FMotalleb__nu_plugin_desktop_notifications__0.116.0__nu-0.116.1__linux-x86_64.log"
             }
           ]
         }
@@ -2436,6 +2604,27 @@
               ],
               "timestamp": "2026-11-11T10:19:25Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/FMotalleb_nu_plugin_port_extension__0.116.0__nu-0.116.1.log"
+            },
+            {
+              "arch": "x86_64",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "nu_version": "0.116.1",
+              "os": "linux",
+              "result": "passed",
+              "timestamp": "2026-11-12T13:13:37Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/FMotalleb__nu_plugin_port_extension__0.116.0__nu-0.116.1__linux-x86_64.log"
             }
           ]
         }
@@ -2583,6 +2772,27 @@
               ],
               "timestamp": "2026-11-11T10:19:02Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/FMotalleb_nu_plugin_image__0.116.0__nu-0.116.1.log"
+            },
+            {
+              "arch": "x86_64",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "nu_version": "0.116.1",
+              "os": "linux",
+              "result": "passed",
+              "timestamp": "2026-11-12T13:14:09Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/FMotalleb__nu_plugin_image__0.116.0__nu-0.116.1__linux-x86_64.log"
             }
           ]
         }
@@ -2720,6 +2930,27 @@
               ],
               "timestamp": "2026-11-11T10:18:35Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/drbrain_nu_plugin_prometheus__0.13.0__nu-0.115.1.log"
+            },
+            {
+              "arch": "x86_64",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "nu_version": "0.115.1",
+              "os": "linux",
+              "result": "passed",
+              "timestamp": "2026-11-12T13:14:08Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/drbrain__nu_plugin_prometheus__0.13.0__nu-0.115.1__linux-x86_64.log"
             }
           ]
         }
@@ -2857,6 +3088,27 @@
               ],
               "timestamp": "2026-11-11T10:20:18Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/fdncred_nu_plugin_emoji__0.25.0__nu-0.116.1.log"
+            },
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "nu_version": "0.116.1",
+              "result": "passed",
+              "timestamp": "2026-11-12T12:22:22Z",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/fdncred__nu_plugin_emoji__0.25.0__nu-0.116.1__linux-x86_64.log"
             }
           ]
         }
@@ -2994,6 +3246,27 @@
               ],
               "timestamp": "2026-11-11T10:20:44Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/fdncred_nu_plugin_json_path__0.26.1__nu-0.116.1.log"
+            },
+            {
+              "arch": "x86_64",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "nu_version": "0.116.1",
+              "os": "linux",
+              "result": "passed",
+              "timestamp": "2026-11-12T12:59:42Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/fdncred__nu_plugin_json_path__0.26.1__nu-0.116.1__linux-x86_64.log"
             }
           ]
         }
@@ -3131,6 +3404,27 @@
               ],
               "timestamp": "2026-11-11T10:20:52Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/fdncred_nu_plugin_parquet__0.26.0__nu-0.116.1.log"
+            },
+            {
+              "arch": "x86_64",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "nu_version": "0.116.1",
+              "os": "linux",
+              "result": "passed",
+              "timestamp": "2026-11-12T13:13:52Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/fdncred__nu_plugin_parquet__0.26.0__nu-0.116.1__linux-x86_64.log"
             }
           ]
         }
@@ -3422,6 +3716,27 @@
               ],
               "timestamp": "2026-11-11T10:15:33Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/Yethal_nu_plugin_hcl__0.114.1__nu-0.114.1.log"
+            },
+            {
+              "arch": "x86_64",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "nu_version": "0.114.1",
+              "os": "linux",
+              "result": "passed",
+              "timestamp": "2026-11-12T13:40:05Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/Yethal__nu_plugin_hcl__0.114.1__nu-0.114.1__linux-x86_64.log"
             }
           ]
         }
@@ -3499,6 +3814,27 @@
               ],
               "timestamp": "2026-11-11T10:16:44Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/fdncred_nu_plugin_jwalk__0.26.0__nu-0.114.1.log"
+            },
+            {
+              "arch": "x86_64",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "nu_version": "0.114.1",
+              "os": "linux",
+              "result": "passed",
+              "timestamp": "2026-11-12T13:14:04Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/fdncred__nu_plugin_jwalk__0.26.0__nu-0.114.1__linux-x86_64.log"
             }
           ]
         }
@@ -3636,6 +3972,27 @@
               ],
               "timestamp": "2026-11-11T10:21:30Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/fdncred_nu_plugin_strutils__0.25.0__nu-0.116.1.log"
+            },
+            {
+              "arch": "x86_64",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "nu_version": "0.116.1",
+              "os": "linux",
+              "result": "passed",
+              "timestamp": "2026-11-12T13:40:32Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/fdncred__nu_plugin_strutils__0.25.0__nu-0.116.1__linux-x86_64.log"
             }
           ]
         }
@@ -3773,6 +4130,27 @@
               ],
               "timestamp": "2026-11-11T10:21:07Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/fdncred_nu_plugin_query_git__0.26.0__nu-0.116.1.log"
+            },
+            {
+              "arch": "x86_64",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "nu_version": "0.116.1",
+              "os": "linux",
+              "result": "passed",
+              "timestamp": "2026-11-12T13:14:00Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/fdncred__nu_plugin_query_git__0.26.0__nu-0.116.1__linux-x86_64.log"
             }
           ]
         }
@@ -3850,6 +4228,27 @@
               ],
               "timestamp": "2026-11-11T10:17:46Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/lizclipse_nu_plugin_ulid__0.23.0__nu-0.114.1.log"
+            },
+            {
+              "arch": "x86_64",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "nu_version": "0.114.1",
+              "os": "linux",
+              "result": "passed",
+              "timestamp": "2026-11-12T13:39:26Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/lizclipse__nu_plugin_ulid__0.23.0__nu-0.114.1__linux-x86_64.log"
             }
           ]
         }
@@ -4544,6 +4943,27 @@
               ],
               "timestamp": "2026-10-18T00:00:00Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/e38d353f80c70a47d904ed9a0faaf16c6423711a/docs/evidence/2026-10-18-lifecycle/kik4444__nu_plugin_mime.log"
+            },
+            {
+              "arch": "x86_64",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "nu_version": "0.114.1",
+              "os": "linux",
+              "result": "passed",
+              "timestamp": "2026-11-12T13:40:18Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/kik4444__nu_plugin_mime__0.0.0-snapshot.20260816.8e5872a__nu-0.114.1__linux-x86_64.log"
             }
           ]
         }
@@ -4623,6 +5043,27 @@
               ],
               "timestamp": "2026-10-18T00:00:00Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/e38d353f80c70a47d904ed9a0faaf16c6423711a/docs/evidence/2026-10-18-lifecycle/WindSoilder__nu_plugin_mongo.log"
+            },
+            {
+              "arch": "x86_64",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "nu_version": "0.114.1",
+              "os": "linux",
+              "result": "passed",
+              "timestamp": "2026-11-12T13:40:33Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/WindSoilder__nu_plugin_mongo__0.0.0-snapshot.20260816.47854d9__nu-0.114.1__linux-x86_64.log"
             }
           ]
         }
@@ -5327,7 +5768,49 @@
                 "gc"
               ],
               "timestamp": "2026-11-11T11:13:38Z",
-              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-linux-lifecycle/fennewald_nu_plugin_net__1.9.0__nu-0.103.0__linux-x86_64.log"
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-linux-lifecycle/linux-net/proof.json"
+            },
+            {
+              "os": "macos",
+              "arch": "x86_64",
+              "nu_version": "0.103.0",
+              "result": "passed",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "timestamp": "2026-11-11T11:46:40Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-cross-platform-lifecycle/fennewald_nu_plugin_net__1.9.0__nu-0.103.0__macos-x86_64.log"
+            },
+            {
+              "os": "macos",
+              "arch": "aarch64",
+              "nu_version": "0.103.0",
+              "result": "passed",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "timestamp": "2026-11-11T11:42:48Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-cross-platform-lifecycle/fennewald_nu_plugin_net__1.9.0__nu-0.103.0__macos-aarch64.log"
             }
           ]
         }
@@ -5965,6 +6448,48 @@
               ],
               "timestamp": "2026-10-19T00:00:00Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/82b2ce7957d011a63320c8831e7dc34c8ebcfa9f/docs/evidence/2026-10-19-lifecycle/JosephTLyons__nu_plugin_units.log"
+            },
+            {
+              "os": "linux",
+              "arch": "aarch64",
+              "nu_version": "0.116.1",
+              "result": "passed",
+              "timestamp": "2026-11-11T12:07:33Z",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-reusable-lifecycle-proof/JosephTLyons__nu_plugin_units__0.1.9__nu-0.116.1__linux-aarch64.log"
+            },
+            {
+              "os": "macos",
+              "arch": "aarch64",
+              "nu_version": "0.116.1",
+              "result": "passed",
+              "timestamp": "2026-11-11T12:08:13Z",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-reusable-lifecycle-proof/JosephTLyons__nu_plugin_units__0.1.9__nu-0.116.1__macos-aarch64.log"
             }
           ]
         }
@@ -6122,6 +6647,27 @@
               ],
               "timestamp": "2026-10-19T00:00:00Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/82b2ce7957d011a63320c8831e7dc34c8ebcfa9f/docs/evidence/2026-10-19-lifecycle/idanarye__nu_plugin_handlebars.log"
+            },
+            {
+              "arch": "x86_64",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "nu_version": "0.116.1",
+              "os": "linux",
+              "result": "passed",
+              "timestamp": "2026-11-12T13:40:39Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/idanarye__nu_plugin_handlebars__0.3.0__nu-0.116.1__linux-x86_64.log"
             }
           ]
         }
@@ -6259,6 +6805,48 @@
               ],
               "timestamp": "2026-11-11T10:24:13Z",
               "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-11-lifecycle/wangjiawen2013_nu_plugin_charton__0.9.0__nu-0.116.1.log"
+            },
+            {
+              "os": "linux",
+              "arch": "x86_64",
+              "nu_version": "0.116.1",
+              "result": "passed",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "timestamp": "2026-11-12T10:33:28Z",
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-platform-gap-charton-linux-x86_64/wangjiawen2013__nu_plugin_charton__0.9.0__nu-0.116.1__linux-x86_64.log"
+            },
+            {
+              "os": "linux",
+              "arch": "aarch64",
+              "nu_version": "0.116.1",
+              "result": "passed",
+              "timestamp": "2026-11-12T12:34:33Z",
+              "commands": [
+                "init",
+                "registry sync",
+                "search",
+                "info",
+                "install",
+                "activate",
+                "doctor",
+                "list",
+                "deactivate",
+                "remove",
+                "gc"
+              ],
+              "evidence_url": "https://github.com/numan-cli/numan-registry/blob/main/docs/evidence/2026-11-12-backlog-linux/wangjiawen2013__nu_plugin_charton__0.9.0__nu-0.116.1__linux-aarch64.log"
             }
           ]
         }

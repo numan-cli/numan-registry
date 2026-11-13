@@ -1,0 +1,20 @@
+{
+  "os": "linux",
+  "arch": "x86_64",
+  "nu_version": "0.116.1",
+  "result": "passed",
+  "timestamp": "2026-11-12T12:22:41Z",
+  "commands": [
+    "init",
+    "registry sync",
+    "search",
+    "info",
+    "install",
+    "activate",
+    "doctor",
+    "list",
+    "deactivate",
+    "remove",
+    "gc"
+  ]
+}

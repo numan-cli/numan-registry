@@ -106,7 +106,7 @@
       "type": "plugin",
       "version": "4.0.10",
       "platforms": "linux x64/arm64, macOS arm64 only",
-      "note": "ci-built via numan-plugins; no Windows (upstream build fails on Windows)",
+      "note": "ci-built via numan-plugins; no Windows (upstream build fails on Windows); Linux x86_64, Linux arm64, and macOS arm64 lifecycle-prove passed 2026-11-11 with Nu 0.113.1; full published target coverage; promoted to index.json as proven",
       "repo": "https://github.com/dead10ck/nu_plugin_dns",
       "spec": "specs/dead10ck-nu_plugin_dns-4.0.10.json"
     },
@@ -417,7 +417,7 @@
       "type": "plugin",
       "version": "1.9.0",
       "platforms": "Linux x86_64 + macOS tar.xz (nested cargo-dist paths)",
-      "note": "multi-OS upstream assets (.tar.xz)",
+      "note": "multi-OS upstream assets (.tar.xz); Linux x86_64, macOS x86_64, and macOS arm64 lifecycle-prove passed 2026-11-11 with Nu 0.103.0; full published target coverage; promoted to index.json as proven",
       "repo": "https://github.com/fennewald/nu_plugin_net",
       "spec": "specs/fennewald-nu_plugin_net-1.9.0.json"
     },
@@ -439,7 +439,7 @@
       "type": "plugin",
       "version": "0.1.9",
       "platforms": "linux x64/arm64, macOS arm64, Windows x64",
-      "note": "ci-built via numan-plugins; Wave P6 gap-fill; lifecycle-proved on real Nu 0.116.1 (loopback candidate, search->gc full passes); promoted to index.json as proven",
+      "note": "ci-built via numan-plugins; Wave P6 gap-fill; lifecycle-proved on real Nu 0.116.1 (loopback candidate, search->gc full passes); Linux arm64 and macOS arm64 reusable-workflow proofs passed 2026-11-11; promoted to index.json as proven",
       "repo": "https://github.com/JosephTLyons/nu_plugin_units",
       "spec": "specs/JosephTLyons-nu_plugin_units-0.1.9.json"
     },
@@ -1042,6 +1042,14 @@
     }
   ],
   "changelog": [
+    {
+      "date": "2026-11-11",
+      "change": "Reusable lifecycle proof workflow proved JosephTLyons/nu_plugin_units@0.1.9 on Linux arm64 and macOS arm64 with Nu 0.116.1; logs and proof records are in the new reusable-run evidence batch."
+    },
+    {
+      "date": "2026-11-11",
+      "change": "Cross-platform lifecycle proofs passed for fennewald/nu_plugin_net@1.9.0 (macOS x86_64/arm64, Nu 0.103.0) and dead10ck/nu_plugin_dns@4.0.10 (Linux arm64/macOS arm64, Nu 0.113.1); both now cover every published target."
+    },
     {
       "date": "2026-11-11",
       "change": "galuszkak/nu_plugin_bigquery@0.3.0: credentialed Windows x86_64 lifecycle-prove passed on Nu 0.114.1; live BigQuery SELECT 1 returned 1; promoted to evidence_tier proven."
